@@ -1,0 +1,47 @@
+!!!
+%html{ lang: 'en-GB' }
+  %head
+    %title Project
+
+    %meta{ :'http-equiv' => "content-type", content: "text/html; charset=utf-8" }
+    %meta{ :'http-equiv' => 'X-UA-Compatible', content: 'IE=edge' }
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1.0, shrink-to-fit=no" }
+
+    - if content_for(:description)
+      %meta{ content: content_for(:description), name: 'description' }
+
+    %title= ["Project", content_for(:title)].compact.join(' - ')
+
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    = stylesheet_pack_tag 'styles', media: 'all'
+    = javascript_pack_tag 'application'
+
+  %body
+    %header.navbar.navbar-expand-lg.bg-light.mb-3
+      .container-fluid
+        = link_to '#', class: 'navbar-brand' do
+          = image_pack_tag 'images/logo.png', height: 40
+        %button.navbar-toggler{ type: :button, data: { bs_toggle: :collapse, bs_target: '#navbar-content' }, aria: { controls: 'navbar-content', expanded: 'false', label: 'Toggle navigation' } }
+          %span.navbar-toggler-icon
+        #navbar-content.navbar-collapse.collapse
+          %nav.navbar-nav
+            = link_to '/', class: 'active nav-link' do
+              %i.bi-house-fill
+              Home
+
+    - if flash.present?
+      .container-fluid.flash-messages
+        - flash.each do |message_type, message|
+          - next unless message_type == 'alert' || message_type == 'notice'
+          .alert{ class: "alert-#{ message_type == 'notice' ? 'success' : 'danger' }" }= message
+
+    %main
+      .container-fluid
+        = yield
+
+    %footer
+      .container-fluid
+        .d-flex.p-3
+          Footer text
