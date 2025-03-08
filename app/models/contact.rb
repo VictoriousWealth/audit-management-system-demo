@@ -11,5 +11,6 @@
 #  updated_at    :datetime         not null
 #
 class Contact < ApplicationRecord
-  has_and_belongs_to_many :companies
+  has_one :company_contact, dependent: :destroy
+  has_one :company, through: :company_contact
 end

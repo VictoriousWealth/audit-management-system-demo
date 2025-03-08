@@ -9,5 +9,6 @@
 #  updated_at :datetime         not null
 #
 class Company < ApplicationRecord
-  has_and_belongs_to_many :contacts
+  has_many :company_contacts, dependent: :destroy
+  has_many :contacts, through: :company_contacts
 end
