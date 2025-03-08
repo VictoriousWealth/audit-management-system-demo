@@ -11,4 +11,5 @@
 #  updated_at    :datetime         not null
 #
 class Contact < ApplicationRecord
+  has_and_belongs_to_many :companies
 end
