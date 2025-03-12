@@ -37,5 +37,4 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_25_101256) do
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
-
 end
