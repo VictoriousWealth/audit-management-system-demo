@@ -10,9 +10,165 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_25_101256) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_12_172922) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "audit_assignments", force: :cascade do |t|
+    t.integer "role"
+    t.integer "status"
+    t.datetime "time_accepted"
+    t.bigint "user_id", null: false
+    t.bigint "audit_assignments_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "audit_id", null: false
+    t.index ["audit_assignments_id"], name: "index_audit_assignments_on_audit_assignments_id"
+    t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
+    t.index ["user_id"], name: "index_audit_assignments_on_user_id"
+  end
+
+  create_table "audit_closure_letters", force: :cascade do |t|
+    t.string "content"
+    t.datetime "time_of_creation"
+    t.datetime "time_of_verification"
+    t.datetime "time_of_distribution"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["audit_id"], name: "index_audit_closure_letters_on_audit_id"
+    t.index ["user_id"], name: "index_audit_closure_letters_on_user_id"
+  end
+
+  create_table "audit_details", force: :cascade do |t|
+    t.string "scope"
+    t.string "purpose"
+    t.string "objectives"
+    t.string "boundaries"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "audit_id", null: false
+    t.index ["audit_id"], name: "index_audit_details_on_audit_id"
+  end
+
+  create_table "audit_findings", force: :cascade do |t|
+    t.string "description"
+    t.integer "category"
+    t.integer "risk_level"
+    t.datetime "due_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "report_id", null: false
+    t.index ["report_id"], name: "index_audit_findings_on_report_id"
+  end
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.string "log_action"
+    t.datetime "timestamp"
+    t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["audit_id"], name: "index_audit_logs_on_audit_id"
+    t.index ["user_id"], name: "index_audit_logs_on_user_id"
+  end
+
+  create_table "audit_questionnaires", force: :cascade do |t|
+    t.datetime "time_of_verification"
+    t.datetime "time_of_distribution"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "audit_id", null: false
+    t.bigint "custom_questionnaire_id", null: false
+    t.index ["audit_id"], name: "index_audit_questionnaires_on_audit_id"
+    t.index ["custom_questionnaire_id"], name: "index_audit_questionnaires_on_custom_questionnaire_id"
+  end
+
+  create_table "audit_schedules", force: :cascade do |t|
+    t.string "task"
+    t.datetime "expected_start"
+    t.datetime "expected_end"
+    t.datetime "actual_start"
+    t.datetime "actual_end"
+    t.integer "status"
+    t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["audit_id"], name: "index_audit_schedules_on_audit_id"
+    t.index ["user_id"], name: "index_audit_schedules_on_user_id"
+  end
+
+  create_table "audit_standards", force: :cascade do |t|
+    t.string "standard"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "audit_detail_id", null: false
+    t.index ["audit_detail_id"], name: "index_audit_standards_on_audit_detail_id"
+  end
+
+  create_table "audits", force: :cascade do |t|
+    t.datetime "scheduled_start_date"
+    t.datetime "scheduled_end_date"
+    t.datetime "actual_start_date"
+    t.datetime "actual_end_date"
+    t.integer "status"
+    t.integer "score"
+    t.integer "final_outcome"
+    t.datetime "time_of_creation"
+    t.datetime "time_of_verification"
+    t.datetime "time_of_closure"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.bigint "company_id", null: false
+    t.index ["company_id"], name: "index_audits_on_company_id"
+    t.index ["user_id"], name: "index_audits_on_user_id"
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "contacts", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "contact_email"
+    t.string "contact_phone"
+    t.boolean "representative_contact"
+    t.string "additional_notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "company_id", null: false
+    t.index ["company_id"], name: "index_contacts_on_company_id"
+  end
+
+  create_table "corrective_actions", force: :cascade do |t|
+    t.bigint "audit_id", null: false
+    t.string "action_description"
+    t.datetime "due_date"
+    t.integer "status"
+    t.datetime "time_of_creation"
+    t.datetime "time_of_verification"
+    t.datetime "time_of_distribution"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["audit_id"], name: "index_corrective_actions_on_audit_id"
+  end
+
+  create_table "custom_questionnaires", force: :cascade do |t|
+    t.string "name"
+    t.datetime "time_of_creation"
+    t.datetime "time_of_response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_custom_questionnaires_on_user_id"
+  end
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer "priority", default: 0, null: false
@@ -29,6 +185,101 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_25_101256) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "document_updates", force: :cascade do |t|
+    t.datetime "time_updated"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "document_id", null: false
+    t.index ["document_id"], name: "index_document_updates_on_document_id"
+    t.index ["user_id"], name: "index_document_updates_on_user_id"
+  end
+
+  create_table "documents", force: :cascade do |t|
+    t.string "name"
+    t.string "document_type"
+    t.datetime "uploaded_at"
+    t.string "content"
+    t.string "location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "electronic_signatures", force: :cascade do |t|
+    t.datetime "signed_at"
+    t.integer "signature_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "audit_id", null: false
+    t.index ["audit_id"], name: "index_electronic_signatures_on_audit_id"
+    t.index ["user_id"], name: "index_electronic_signatures_on_user_id"
+  end
+
+  create_table "login_attempts", force: :cascade do |t|
+    t.datetime "attempt_time"
+    t.boolean "success"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_login_attempts_on_user_id"
+  end
+
+  create_table "question_banks", force: :cascade do |t|
+    t.string "question_text"
+    t.integer "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "questionnaire_sections", force: :cascade do |t|
+    t.string "name"
+    t.integer "section_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "custom_questionnaire_id", null: false
+    t.index ["custom_questionnaire_id"], name: "index_questionnaire_sections_on_custom_questionnaire_id"
+  end
+
+  create_table "reports", force: :cascade do |t|
+    t.integer "status"
+    t.datetime "time_of_creation"
+    t.datetime "time_of_verification"
+    t.datetime "time_of_distribution"
+    t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "audit_finding_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["audit_finding_id"], name: "index_reports_on_audit_finding_id"
+    t.index ["audit_id"], name: "index_reports_on_audit_id"
+    t.index ["user_id"], name: "index_reports_on_user_id"
+  end
+
+  create_table "response_choices", force: :cascade do |t|
+    t.integer "response_type"
+    t.string "response_text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "section_questions", force: :cascade do |t|
+    t.bigint "questionnaire_section_id", null: false
+    t.bigint "question_bank_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_bank_id"], name: "index_section_questions_on_question_bank_id"
+    t.index ["questionnaire_section_id"], name: "index_section_questions_on_questionnaire_section_id"
+  end
+
+  create_table "selected_responses", force: :cascade do |t|
+    t.bigint "response_choice_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["response_choice_id"], name: "index_selected_responses_on_response_choice_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
@@ -37,4 +288,61 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_25_101256) do
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
+
+  create_table "supporting_documents", force: :cascade do |t|
+    t.string "name"
+    t.string "content"
+    t.string "location"
+    t.datetime "uploaded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "audit_id", null: false
+    t.index ["audit_id"], name: "index_supporting_documents_on_audit_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "password"
+    t.integer "role"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "company_id"
+    t.index ["company_id"], name: "index_users_on_company_id"
+  end
+
+  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
+  add_foreign_key "audit_assignments", "audits"
+  add_foreign_key "audit_assignments", "users"
+  add_foreign_key "audit_closure_letters", "audits"
+  add_foreign_key "audit_closure_letters", "users"
+  add_foreign_key "audit_details", "audits"
+  add_foreign_key "audit_findings", "reports"
+  add_foreign_key "audit_logs", "audits"
+  add_foreign_key "audit_logs", "users"
+  add_foreign_key "audit_questionnaires", "audits"
+  add_foreign_key "audit_questionnaires", "custom_questionnaires"
+  add_foreign_key "audit_schedules", "audits"
+  add_foreign_key "audit_schedules", "users"
+  add_foreign_key "audit_standards", "audit_details"
+  add_foreign_key "audits", "companies"
+  add_foreign_key "audits", "users"
+  add_foreign_key "contacts", "companies"
+  add_foreign_key "corrective_actions", "audits"
+  add_foreign_key "custom_questionnaires", "users"
+  add_foreign_key "document_updates", "documents"
+  add_foreign_key "document_updates", "users"
+  add_foreign_key "electronic_signatures", "audits"
+  add_foreign_key "electronic_signatures", "users"
+  add_foreign_key "login_attempts", "users"
+  add_foreign_key "questionnaire_sections", "custom_questionnaires"
+  add_foreign_key "reports", "audit_findings"
+  add_foreign_key "reports", "audits"
+  add_foreign_key "reports", "users"
+  add_foreign_key "section_questions", "question_banks"
+  add_foreign_key "section_questions", "questionnaire_sections"
+  add_foreign_key "selected_responses", "response_choices"
+  add_foreign_key "supporting_documents", "audits"
+  add_foreign_key "users", "companies"
 end
