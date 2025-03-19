@@ -29,7 +29,7 @@ class User < ApplicationRecord
   }
 
   has_many :audit_assignments
-  has_one :company, optional: true
+  has_one :company
   has_many :audits
   has_many :electronic_signatures
   has_many :login_attempts
