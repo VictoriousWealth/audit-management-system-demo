@@ -9,6 +9,7 @@
 #  updated_at    :datetime         not null
 #
 class QuestionBank < ApplicationRecord
+  # change this to a string rather than enum
   enum category:{
     general: 0,
     compliance: 1,
