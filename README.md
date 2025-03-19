@@ -25,7 +25,7 @@ Things you may want to cover:
 
 # TEAM 17 - Project
 
-<small>**Topics Covered:** How to run the project and access the system</small><br><br>
+<small>**Topics Covered:** How to run the project and access the system</small><br>
 
 In this read me we will inform you some of the essential info to setup and run the project.
 
