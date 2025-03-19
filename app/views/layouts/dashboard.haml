@@ -1,0 +1,66 @@
+!!!
+%html{ lang: 'en-GB' }
+  %head
+    %title Dashboard
+
+    %meta{ :'http-equiv' => "content-type", content: "text/html; charset=utf-8" }
+    %meta{ :'http-equiv' => 'X-UA-Compatible', content: 'IE=edge' }
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1.0, shrink-to-fit=no" }
+
+    - if content_for(:description)
+      %meta{ content: content_for(:description), name: 'description' }
+
+    %title= ["Project", content_for(:title)].compact.join(' - ')
+
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    = stylesheet_pack_tag 'styles', media: 'all'
+    = javascript_pack_tag 'application'
+
+  %body
+    %header.navbar.navbar-expand-lg.bg-white.shadow-sm.mb-3
+      .container-fluid.d-flex.justify-content-between.align-items-center
+        / Left: Logo
+        = link_to '#', class: 'navbar-brand me-auto' do
+          = image_pack_tag 'images/logo.png', height: 60
+
+        / Center: QA Dashboard centered
+        %div.position-absolute.start-50.translate-middle-x
+          %h3.mb-0 QA Dashboard
+
+        / Right: User Info + Bell + Burger
+        .d-flex.align-items-center.gap-3
+          / User Info
+          %div.text-end
+            %span.text-secondary-emphasis.mb-0{ style: "color: #444444; font-family: 'Helvetica';" } Efe Tomilore
+            %br/
+            %span.text-muted.opacity-50{ style: "color: #AAAAAA; font-family: 'Helvetica';" } QA Manager
+
+          / Bell Icon
+          = link_to '#', class: 'text-decoration-none text-dark position-relative' do
+            %i.bi.bi-bell-fill.fs-4
+
+          / Burger Menu Button
+          %button.navbar-toggler.ms-2{ type: :button, data: { bs_toggle: :collapse, bs_target: '#navbar-content' }, aria: { controls: 'navbar-content', expanded: 'false', label: 'Toggle navigation' } }
+            %span.navbar-toggler-icon
+
+
+
+          
+
+    - if flash.present?
+      .container-fluid.flash-messages
+        - flash.each do |message_type, message|
+          - next unless message_type == 'alert' || message_type == 'notice'
+          .alert{ class: "alert-#{ message_type == 'notice' ? 'success' : 'danger' }" }= message
+
+    %main
+      .container-fluid
+        = yield
+
+    %footer
+      .container-fluid.text-bg-success.opacity-75.p-3
+        .d-flex.flex-row.justify-content-around
+          %div.p.mb-0 © GTIMC 2025
+        
