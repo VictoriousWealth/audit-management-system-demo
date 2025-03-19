@@ -46,6 +46,17 @@ margin-bottom: 0 !important;
 }
 
 #Audit table {
-    font-size: 13.25px !important; // Or any size you prefer
-  }
-  
+    font-size: 13.25px !important;
+}
+
+.progress {
+    background-color: $active-tab-color;
+    height: 15px;
+    padding: 0;
+    border: black solid 1px;
+}
+
+.progress-bar {
+    background-color: $active-tab-bg;
+}
+
