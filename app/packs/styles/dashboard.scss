@@ -1,0 +1,51 @@
+$active-tab-bg: #42CA68; 
+$active-tab-color: white; 
+$non-active-tab-bg: #F8F5F5; 
+$non-active-tab-color: #000000; 
+
+
+*{
+    font-family: Helvetica, Arial, sans-serif;
+}
+.nav-tabs .nav-link.active {
+    background-color: $active-tab-bg; 
+    color: $active-tab-color; 
+    border-color: black;
+    font-weight: 700;
+}
+
+.nav-tabs .nav-link {
+    background-color: $non-active-tab-bg; 
+    color: $non-active-tab-color; 
+    border-color: black;
+    text-align: center;
+    font-weight: 500;
+}
+
+.custom-tab-container {
+    width: 650px;
+    height: 529px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+  
+.nav-tabs {
+margin-bottom: 0 !important;
+}
+
+.table-bordered-black {
+    border: 1px solid black;
+  
+    th,
+    td {
+        border: 1px solid black !important;
+    }
+}
+
+#Audit table {
+    font-size: 13.25px !important; // Or any size you prefer
+  }
+  

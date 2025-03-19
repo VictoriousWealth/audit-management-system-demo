@@ -1,2 +1,113 @@
-%h1 Dashboard#index
-%p Find me in app/views/dashboard/index.html.haml
+.container{id: 'Audit'}
+  .container.custom-tab-container.p-0.border.border-dark
+    / Top disabled "Audits" tab
+    %ul.nav.nav-tabs.mb-0
+      %li.nav-item.w-100
+        %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Audits
+
+    / Bottom tabs fill full width, evenly spaced
+    %ul.nav.nav-tabs.nav-fill.mb-0
+      %li.nav-item
+        %a.nav-link.active{href: '#scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} Scheduled
+      %li.nav-item
+        %a.nav-link{href: '#in-progress', data: { bs_toggle: 'tab' }, role: 'tab'} In Progress
+      %li.nav-item
+        %a.nav-link{href: '#completed', data: { bs_toggle: 'tab' }, role: 'tab'} Completed
+      %li.nav-item
+        %a.nav-link{href: '#to-be-scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} To Be Scheduled/Assigned
+
+    .tab-content.flex-grow-1
+      .tab-pane.fade.show.active#scheduled{role: 'tabpanel'}
+        %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+          %thead
+            %tr
+              %th Audit ID
+              %th Auditee
+              %th Vendor
+              %th Type
+              %th Scheduled Start Date
+              %th Scheduled End Date
+          %tbody
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 133/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+            %tr
+              %td 0001
+              %td Chioma Ngozi
+              %td Shell
+              %td Compliance Audit
+              %td 10/05/2025
+              %td 13/05/2025
+      .tab-pane.fade#in-progress{role: 'tabpanel'}
+        %p In Progress Table Here
+      .tab-pane.fade#completed{role: 'tabpanel'}
+        %p Completed Table Here
+      .tab-pane.fade#to-be-scheduled{role: 'tabpanel'}
+        %p To Be Scheduled Table Here
