@@ -54,4 +54,26 @@ class Audit < ApplicationRecord
   has_one :audit_closure_letter
   has_many :corrective_actions
   has_many :reports
+
+
+  def auditors
+    audit_assignments.includes(:user).where(role: :auditor).map do |assignment|
+      user = assignment.user
+      user ? "#{user.first_name} #{user.last_name}" : "N/A"
+    end.join(', ')
+  end
+
+  def formatted_auditors
+    assignments = audit_assignments.includes(:user)
+  
+    lead = assignments.find { |a| a.role == "lead_auditor" }&.user
+    supports = assignments.select { |a| a.role == "auditor" }.map(&:user)
+  
+    names = []
+    names << "**#{lead.first_name} #{lead.last_name}**" if lead
+    names += supports.map { |s| "#{s.first_name} #{s.last_name}" }
+  
+    names.any? ? names.join(", ") : "Unassigned"
+  end
+  
 end

@@ -2,6 +2,7 @@ $active-tab-bg: #42CA68;
 $active-tab-color: white; 
 $non-active-tab-bg: #F8F5F5; 
 $non-active-tab-color: #000000; 
+$container-height: 529px;
 
 
 *{
@@ -23,8 +24,8 @@ $non-active-tab-color: #000000;
 }
 
 .custom-tab-container {
-    width: 650px;
-    height: 529px;
+    width: 100%;
+    height: $container-height;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -60,3 +61,22 @@ margin-bottom: 0 !important;
     background-color: $active-tab-bg;
 }
 
+$table-scroll-buffer: 31px; // space taken by the tabs at top
+$table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
+
+.table-scroll-container {
+  max-height: #{$table-scroll-height};
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+
+  table {
+    margin-bottom: 0;
+  }
+}
+
+.tab-content {
+    flex-grow: 1;
+    overflow: auto;
+    max-height: calc(#{$container-height} - 42px); // 42px for both tab bars
+  }
+  

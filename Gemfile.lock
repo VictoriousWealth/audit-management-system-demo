@@ -193,6 +193,8 @@ GEM
       railties (>= 4.0.1)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
+    kramdown (2.5.1)
+      rexml (>= 3.3.9)
     launchy (3.0.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
@@ -401,6 +403,7 @@ DEPENDENCIES
   factory_bot_rails
   hamlit
   hamlit-rails
+  kramdown
   launchy
   letter_opener
   mutex_m

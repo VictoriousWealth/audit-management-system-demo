@@ -42,8 +42,9 @@ class User < ApplicationRecord
     senior_manager: 3,
   }
 
+  belongs_to :company, optional: true 
+
   has_many :audit_assignments
-  has_one :company
   has_many :audits
   has_many :electronic_signatures
   has_many :login_attempts

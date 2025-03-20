@@ -1,0 +1,32 @@
+.table-scroll-container
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+    %thead
+      %tr 
+        %th Audit ID
+        %th Auditee
+        %th Vendor
+        %th Auditor(s)
+        %th Scheduled Start Date
+        %th Scheduled End Date
+    %tbody
+      - @to_be_scheduled_audits.each do |audit|
+        %tr
+          %td= link_to audit.id.to_s.rjust(4, '0'), '#'
+          %td= audit.user ? "#{audit.user.first_name} #{audit.user.last_name}" : "N/A"
+          %td= audit.company&.name || "N/A"
+          %td
+            - auditors_text = audit.formatted_auditors
+            - if auditors_text == "Unassigned"
+              = link_to 'Assign', '#', class: 'btn btn-sm btn-primary'
+            - else
+              = markdown(auditors_text).html_safe
+          %td
+            - if audit.scheduled_start_date
+              = audit.scheduled_start_date.strftime('%d/%m/%Y')
+            - else
+              = link_to 'Set Date', '#', class: 'btn btn-sm btn-primary'
+          %td
+            - if audit.scheduled_end_date
+              = audit.scheduled_end_date.strftime('%d/%m/%Y')
+            - else
+              = link_to 'Set Date', '#', class: 'btn btn-sm btn-primary'

@@ -1,422 +1,53 @@
-.container{id: 'Audit'}
-  .container.custom-tab-container.p-0.border.border-dark
-    / Top disabled "Audits" tab
-    %ul.nav.nav-tabs.mb-0
-      %li.nav-item.w-100
-        %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Audits
+.container.d-flex.flex-row{style: "overflow: auto; border: black solid 1px; padding: 0px;"}
+  .container{id: 'Audit', style: "border: black solid 1px !important; padding: 0px;"}
+    .container.custom-tab-container.p-0.border.border-dark
+      / Top disabled "Audits" tab
+      %ul.nav.nav-tabs.mb-0
+        %li.nav-item.w-100
+          %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Audits
 
-    / Bottom tabs fill full width, evenly spaced
-    %ul.nav.nav-tabs.nav-fill.mb-0
-      %li.nav-item
-        %a.nav-link.active{href: '#scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} Scheduled
-      %li.nav-item
-        %a.nav-link{href: '#in-progress', data: { bs_toggle: 'tab' }, role: 'tab'} In Progress
-      %li.nav-item
-        %a.nav-link{href: '#completed', data: { bs_toggle: 'tab' }, role: 'tab'} Completed
-      %li.nav-item
-        %a.nav-link{href: '#to-be-scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} To Be Scheduled/Assigned
+      / Bottom tabs fill full width, evenly spaced
+      %ul.nav.nav-tabs.nav-fill.mb-0.table-scroll-container
 
-    .tab-content.flex-grow-1
-      .tab-pane.fade.show.active#scheduled{role: 'tabpanel'}
-        %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
-          %thead
-            %tr
-              %th Audit ID
-              %th Auditee
-              %th Vendor
-              %th Type
-              %th Scheduled Start Date
-              %th Scheduled End Date
-          %tbody
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 133/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 13/05/2025
-      .tab-pane.fade#in-progress{role: 'tabpanel'}
-        %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
-          %thead
-            %tr
-              %th Audit ID
-              %th Auditee
-              %th Vendor
-              %th Type
-              %th Start Date
-              %th Progress
-          %tbody
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 60%"}
-                    %span.visually-hidden 60%
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0002
-              %td John Doe
-              %td ExxonMobil
-              %td Financial Audit
-              %td 12/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 30%"} 
-                    %span.visually-hidden 30%
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0003
-              %td Adebayo Adedayo
-              %td Chevron
-              %td Operational Audit
-              %td 14/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 80%"}
-                    %span.visually-hidden 80%
+        %li.nav-item
+          %a.nav-link.active{href: '#scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} Scheduled
+        %li.nav-item
+          %a.nav-link{href: '#in-progress', data: { bs_toggle: 'tab' }, role: 'tab'} In Progress
+        %li.nav-item
+          %a.nav-link{href: '#completed', data: { bs_toggle: 'tab' }, role: 'tab'} Completed
+        %li.nav-item
+          %a.nav-link{href: '#to-be-scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} To Be Scheduled/Assigned
 
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0004
-              %td Ngozi Okonkwo
-              %td MTN Nigeria
-              %td Compliance Audit
-              %td 15/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 45%"}
-                    %span.visually-hidden 45%
+      .tab-content.flex-grow-1
+        .tab-pane.fade.show.active#scheduled{role: 'tabpanel'}
+          = render partial: 'scheduled_table' 
 
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0005
-              %td Ibrahim Musa
-              %td Airtel
-              %td Risk Assessment
-              %td 16/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 70%"}
-                    %span.visually-hidden 70%
+        .tab-pane.fade#in-progress{role: 'tabpanel'}
+          = render partial: 'in_progress_table'
 
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0006
-              %td Ifeoma Eze
-              %td NNPC
-              %td Financial Audit
-              %td 17/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 50%"}
-                    %span.visually-hidden 50%
+        .tab-pane.fade#completed{role: 'tabpanel'}
+          = render partial: 'completed_table'
 
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0007
-              %td Chukwuemeka Umeh
-              %td Dangote Group
-              %td IT Security Audit
-              %td 18/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 25%"}
-                    %span.visually-hidden 25%
+        .tab-pane.fade#to-be-scheduled{role: 'tabpanel'}
+          = render partial: 'to_be_scheduled_table'
 
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0008
-              %td Halima Bello
-              %td Zenith Bank
-              %td Compliance Audit
-              %td 19/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 90%"}
-                    %span.visually-hidden 90%
+  .container{id: 'Audits Status Overview'}
+    .container.custom-tab-container.p-0.border.border-dark
+      / Top disabled "Audits" tab
+      %ul.nav.nav-tabs.mb-0
+        %li.nav-item.w-100
+          %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Audits Status Overview
 
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0009
-              %td Tunde Afolabi
-              %td First Bank
-              %td Operational Audit
-              %td 20/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 60%"}
-                    %span.visually-hidden 60%
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0010
-              %td Fatima Yusuf
-              %td UBA
-              %td Risk Assessment
-              %td 21/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 40%"}
-                    %span.visually-hidden 40%
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0011
-              %td Fatima Yusuf
-              %td UBA
-              %td Risk Assessment
-              %td 21/05/2025
-              %td
-                .progress
-                  .progress-bar{style: "width: 40%"}
-                    %span.visually-hidden 93%
+      / Bottom tabs fill full width, evenly spaced
+      %ul.nav.nav-tabs.nav-fill.mb-0
+        %li.nav-item
+          %a.nav-link.active{href: '#pie-chart', data: { bs_toggle: 'tab' }, role: 'tab'} Pie Chart
+        %li.nav-item
+          %a.nav-link{href: '#bar-chart', data: { bs_toggle: 'tab' }, role: 'tab'} Bar Chart
 
-      .tab-pane.fade#completed{role: 'tabpanel'}
-        %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
-          %thead
-            %tr 
-              %th Audit ID
-              %th Auditee
-              %th Vendor
-              %th Type
-              %th Start Date
-              %th End Date
-              %th Risk Level
-          %tbody
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0001
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-success{data: { bs_toggle: 'tooltip' }, title: 'This audit has low risk'} Low Risk
+      .tab-content.flex-grow-1
+        .tab-pane.fade.show.active#pie-chart{role: 'tabpanel'}
+          = render partial: 'pie_chart', locals: { pie_data: @pie_data }
 
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0002
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-warning{data: { bs_toggle: 'tooltip' }, title: 'This audit has medium risk'} Medium Risk
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0003
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-danger{data: { bs_toggle: 'tooltip' }, title: 'This audit has high risk'} High Risk
-
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0004
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-warning{data: { bs_toggle: 'tooltip' }, title: 'This audit has medium risk'} Medium Risk
-
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0005
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-warning{data: { bs_toggle: 'tooltip' }, title: 'This audit has medium risk'} Medium Risk
-
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0006
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-success{data: { bs_toggle: 'tooltip' }, title: 'This audit has low risk'} Low Risk
-
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0007
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-success{data: { bs_toggle: 'tooltip' }, title: 'This audit has low risk'} Low Risk
-
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0008
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-danger{data: { bs_toggle: 'tooltip' }, title: 'This audit has high risk'} High Risk
-
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0009
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-danger{data: { bs_toggle: 'tooltip' }, title: 'This audit has high risk'} High Risk
-
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0010
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-warning{data: { bs_toggle: 'tooltip' }, title: 'This audit has medium risk'} Medium Risk
-
-
-            %tr
-              %td 
-                = link_to '#' do 
-                  %i 0011
-              %td Chioma Ngozi
-              %td Shell
-              %td Compliance Audit
-              %td 10/05/2025
-              %td 14/05/2025
-              %td.text-bg-success{data: { bs_toggle: 'tooltip' }, title: 'This audit has low risk'} Low Risk
-  
-      .tab-pane.fade#to-be-scheduled{role: 'tabpanel'}
-        %p To Be Scheduled Table Here
+        .tab-pane.fade#bar-chart{role: 'tabpanel'}
+          = render partial: 'bar_chart', locals: { bar_data: @bar_data }
