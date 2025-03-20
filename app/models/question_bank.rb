@@ -2,18 +2,22 @@
 #
 # Table name: question_banks
 #
-#  id            :bigint           not null, primary key
-#  category      :integer
-#  question_text :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                  :bigint           not null, primary key
+#  category            :string
+#  question_text       :string
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  response_choices_id :bigint
+#
+# Indexes
+#
+#  index_question_banks_on_response_choices_id  (response_choices_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (response_choices_id => response_choices.id)
 #
 class QuestionBank < ApplicationRecord
-  enum category:{
-    general: 0,
-    compliance: 1,
-    safety: 2,
-  }
   belongs_to :section_question, optional: true
   has_many :response_choices
 end

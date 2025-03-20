@@ -20,6 +20,6 @@
 #
 class CustomQuestionnaire < ApplicationRecord
   belongs_to :user
-  has_many :audit_questionnaires, optional: true
+  has_many :audit_questionnaires
   has_many :questionnaire_sections
 end
