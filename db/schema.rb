@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_19_183408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -228,9 +228,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
 
   create_table "question_banks", force: :cascade do |t|
     t.string "question_text"
-    t.integer "category"
+    t.string "category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "response_choices_id"
+    t.index ["response_choices_id"], name: "index_question_banks_on_response_choices_id"
   end
 
   create_table "questionnaire_sections", force: :cascade do |t|
@@ -346,6 +348,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
   add_foreign_key "electronic_signatures", "audits"
   add_foreign_key "electronic_signatures", "users"
   add_foreign_key "login_attempts", "users"
+  add_foreign_key "question_banks", "response_choices", column: "response_choices_id"
   add_foreign_key "questionnaire_sections", "custom_questionnaires"
   add_foreign_key "reports", "audit_findings"
   add_foreign_key "reports", "audits"
