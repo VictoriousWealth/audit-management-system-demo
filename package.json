@@ -15,6 +15,8 @@
     "babel-plugin-macros": "^3.1.0",
     "bootstrap": "5.3.3",
     "bootstrap-icons": "^1.9.1",
+    "chart.js": "^4.4.8",
+    "chartkick": "^5.0.1",
     "compression-webpack-plugin": "9",
     "css-loader": "^6.7.1",
     "improved-yarn-audit": "^3.0.0",

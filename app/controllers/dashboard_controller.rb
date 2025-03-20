@@ -19,5 +19,12 @@ class DashboardController < ApplicationController
                                 .where(status: :not_started)
                                 .where("scheduled_start_date IS NULL OR scheduled_end_date IS NULL")    
                                 .includes(:user, :company, :audit_detail)
+
+    # === Chart Data ===
+    @chart_data = {
+      "Not Started" => Audit.where(status: :not_started).count,
+      "In Progress" => Audit.where(status: :in_progress).count,
+      "Completed" => Audit.where(status: :completed).count
+    }
   end  
 end

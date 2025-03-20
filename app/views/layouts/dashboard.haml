@@ -16,7 +16,7 @@
     = csp_meta_tag
 
     = stylesheet_pack_tag 'styles', media: 'all'
-    = javascript_pack_tag 'application'
+    = javascript_pack_tag "application", "data-turbo-track": "reload"
 
   %body
     %header.navbar.navbar-expand-lg.bg-white.shadow-sm.mb-3

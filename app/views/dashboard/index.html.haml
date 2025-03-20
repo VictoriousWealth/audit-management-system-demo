@@ -7,8 +7,7 @@
           %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Audits
 
       / Bottom tabs fill full width, evenly spaced
-      %ul.nav.nav-tabs.nav-fill.mb-0.table-scroll-container
-
+      %ul.nav.nav-tabs.nav-fill.mb-0
         %li.nav-item
           %a.nav-link.active{href: '#scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} Scheduled
         %li.nav-item
@@ -47,7 +46,7 @@
 
       .tab-content.flex-grow-1
         .tab-pane.fade.show.active#pie-chart{role: 'tabpanel'}
-          = render partial: 'pie_chart', locals: { pie_data: @pie_data }
+          = render partial: 'pie_chart', locals: { chart_data: @chart_data }
 
         .tab-pane.fade#bar-chart{role: 'tabpanel'}
-          = render partial: 'bar_chart', locals: { bar_data: @bar_data }
+          = render partial: 'bar_chart', locals: { chart_data: @chart_data }
