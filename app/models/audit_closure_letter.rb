@@ -25,4 +25,15 @@
 class AuditClosureLetter < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :audit
+
+  validates :content, presence: true
+  validates :audit_id, presence: true
+
+  before_create :set_creation_time
+
+  private
+
+  def set_creation_time
+    self.time_of_creation ||= Time.current
+  end
 end
