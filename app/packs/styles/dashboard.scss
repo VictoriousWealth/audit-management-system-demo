@@ -80,3 +80,6 @@ $table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
     max-height: calc(#{$container-height} - 42px); // 42px for both tab bars
   }
   
+#Audits-Status-Overview{
+    max-width: 400px !important;
+}
