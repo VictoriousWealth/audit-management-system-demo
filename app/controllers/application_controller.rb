@@ -8,10 +8,33 @@ class ApplicationController < ActionController::Base
   # may be worth enabling caching for performance.
   before_action :update_headers_to_disable_caching
 
+  # The user goes to the dashboard after logging in
+  def after_sign_in_path_for(resource)
+    case resource.role
+    when 'auditor'
+      auditor_dashboard_path
+    when 'auditee'
+      auditee_dashboard_path
+    when 'qa_manager'
+      qa_manager_dashboard_path
+    when 'senior_manager'
+      senior_manager_dashboard_path
+    else
+      root_path
+    end
+  end
+
+  # The user goes to the root path after loggin out
+  def after_sign_out_path_for(resource_or_scope)
+    root_path
+  end
+
   private
     def update_headers_to_disable_caching
       response.headers['Cache-Control'] = 'no-cache, no-cache="set-cookie", no-store, private, proxy-revalidate'
       response.headers['Pragma'] = 'no-cache'
       response.headers['Expires'] = '-1'
     end
+
+
 end

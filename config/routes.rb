@@ -1,6 +1,23 @@
 Rails.application.routes.draw do
+  get 'notifications/index'
+  get 'dashboard/index'
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  # Define routes for different dashboards
+  get 'auditee_dashboard', to: 'dashboard#auditee', as: 'auditee_dashboard'
+  get 'qa_manager_dashboard', to: 'dashboard#qa_manager', as: 'qa_manager_dashboard'
+  get 'senior_manager_dashboard', to: 'dashboard#senior_manager', as: 'senior_manager_dashboard'
+  get 'auditor_dashboard', to: 'dashboard#auditor', as: 'auditor_dashboard'
+
+
+
+
+  #Takes you to the profile page after clicking the name
+  get 'profile', to: 'users#show', as: :profile
+
+  #Get to your notifications
+  get 'notifications', to: 'notifications#index'
 
   # Defines the root path route ("/")
   root "pages#home"

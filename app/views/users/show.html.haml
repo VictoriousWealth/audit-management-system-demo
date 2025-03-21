@@ -1,0 +1,27 @@
+%div.profile-container
+  = image_pack_tag 'images/profile icon.png', height: 100
+
+  %h2 Profile
+
+  %p
+    %b Name
+  %p= "#{@user.first_name} #{@user.last_name}"
+
+  %p
+    %b Role
+  %p= @user.role.capitalize
+
+  %p
+    %b Email
+  %p= @user.email
+
+
+
+  %div#profile_button
+    = link_to edit_user_registration_path do
+      %button.bottom_button{ type: 'button' } Edit Profile
+
+
+  %div#profile_button
+    = link_to destroy_user_session_path, method: :delete do
+      %button.bottom_button{ type: 'button' } Logout
