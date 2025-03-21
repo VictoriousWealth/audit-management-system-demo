@@ -48,6 +48,8 @@ margin-bottom: 0 !important;
 
 #Audit table {
     font-size: 13.25px !important;
+    max-width: 800px !important;
+    min-width: 600px;
 }
 
 .progress {
@@ -76,10 +78,18 @@ $table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
 
 .tab-content {
     flex-grow: 1;
-    overflow: auto;
     max-height: calc(#{$container-height} - 42px); // 42px for both tab bars
   }
   
 #Audits-Status-Overview{
     max-width: 400px !important;
+}
+
+
+#Audits-Status-Overview, #Audit, #Compliance-Score-Graph-Over-Time{
+    min-width: 600px;
+    overflow: auto;
+    #Audits-Status-Overview{
+        min-width: 400px;
+    }
 }

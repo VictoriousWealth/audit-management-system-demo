@@ -92,5 +92,24 @@ class DashboardController < ApplicationController
       { name: "Not Started", data: [["Label", day_counts["Not Started"]]] }      
     ]
 
+    # Compliance Score – Grouped by Time (Assume you calculate 'score')
+    def compliance_score_data(range, group_by)
+      Audit.where(created_at: range).group_by_period(group_by, :created_at, format: "%d %b").average(:score)
+    end
+
+    # Ranges
+    today_range = Time.zone.today.all_day
+    week_range = Time.zone.now.beginning_of_week..Time.zone.now.end_of_week
+    month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
+
+    # Grouped Data
+    @compliance_score_by_day = compliance_score_data(today_range, :hour)
+    @compliance_score_by_week = compliance_score_data(week_range, :day)
+    @compliance_score_by_month = compliance_score_data(month_range, :week)
+    @compliance_score_all = Audit.group_by_month(:created_at, format: "%b %Y").average(:score)
+
+    # Your vs Org Score (Today)
+    @your_compliance_score = 67 #TODO: replace with real query for current user
+    @org_compliance_score = Audit.average(:score)&.round
   end
 end

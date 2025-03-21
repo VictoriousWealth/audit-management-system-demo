@@ -15,9 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
   function waitForCharts(callback, retries = 10, delay = 100) {
     const pieChart = Chartkick.charts["pieChart"];
     const barChart = Chartkick.charts["barChart"];
+    const complianceChart = Chartkick.charts["complianceScoreChart"];
 
-    if (pieChart && barChart) {
-      callback(pieChart, barChart);
+
+    if (pieChart && barChart && complianceChart) {
+      callback(pieChart, barChart, complianceChart);
     } else if (retries > 0) {
       setTimeout(() => waitForCharts(callback, retries - 1, delay), delay);
     } else {
@@ -26,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Move pieDataMap and barDataMap inside the callback
-  waitForCharts((pieChart, barChart) => {
+  waitForCharts((pieChart, barChart, complianceChart) => {
     const pieDataMap = {
       day: window.pieChartDataByDay,
       week: window.pieChartDataByWeek,
@@ -40,6 +42,13 @@ document.addEventListener("DOMContentLoaded", function () {
       month: window.barChartDataByMonth,
       all: window.barChartDataAll
     };
+
+    const complianceDataMap = {
+      day: window.complianceScoreByDay,
+      week: window.complianceScoreByWeek,
+      month: window.complianceScoreByMonth,
+      all: window.complianceScoreAll
+    }
 
     document.querySelectorAll("#chart-filter-tabs .nav-link").forEach(tab => {
       tab.addEventListener("click", e => {
@@ -55,6 +64,20 @@ document.addEventListener("DOMContentLoaded", function () {
         barChart.updateData(barDataMap[filter]);
       });
     });
+
+    document.querySelectorAll("#compliance-chart-filter-tabs .nav-link").forEach(tab => {
+      tab.addEventListener("click", e => {
+        e.preventDefault();
+        const filter = tab.dataset.filter;
+
+        // Swap active class
+        document.querySelectorAll("#compliance-chart-filter-tabs .nav-link").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        // Update both charts
+        complianceChart.updateData(complianceDataMap[filter]);
+      });
+    })
   });
 });
 

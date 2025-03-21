@@ -1,0 +1,9 @@
+= line_chart compliance_score_all, id: "complianceScoreChart", height: "300px", colors: ["#0399EE"], library: { plugins: { legend: { display: true, position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', color: "#000", font: { weight: 'bold', size: 14 } } } } }
+
+%p.text-center.mt-3{style: "color: #0399EE"}
+  %strong Your Compliance Score:
+  #{@your_compliance_score}%
+
+%p.text-center{style: "color: #0CDF4B"}
+  %strong Organisation-wide Average:
+  #{@org_compliance_score}%
