@@ -36,37 +36,45 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
 
     # Populating fields for all questions
     updated_questions = []
+
     questions.each_with_index do |q, i|
       updated_question = { id: i + 1, question_text: q[:question_text], category: q[:category], created_at: Time.now, updated_at: Time.now }
       updated_questions.push(updated_question)
     end
+
+    # Adding all created questions
+    QuestionBank.insert_all(updated_questions)
     
     # Creating a user
-    user = { email: "jdoe@sheffield.ac.uk", first_name: "Jane", last_name: "Doe", role: 0, created_at: Time.now, updated_at: Time.now }
+    user = { email: "jdoe@sheffield.ac.uk", first_name: "Jane", last_name: "Doe", password: "Password123", role: 0, created_at: Time.now, updated_at: Time.now }
+    User.create!(user)
     
     # Creating a custom questionnaire
-    custom_questionnaire = { name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire", created_at: Time.now, updated_at: Time.now, user: User.last }
+    custom_questionnaire = { name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire", time_of_creation: Time.now, created_at: Time.now, updated_at: Time.now, user: User.last }
+    CustomQuestionnaire.create!(custom_questionnaire)
     
-    # Finding the custom questionnaire id
+    # Finding the custom questionnaire
     cq = CustomQuestionnaire.find_by(name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire")
     cq_id = cq[:id]
   
-    # Creating questionnaire sections for the custom questionnaire
     questionnaire_sections = [
       { name: "Section 1", section_order: 1, created_at: Time.now, updated_at: Time.now, custom_questionnaire_id: cq_id },
       { name: "Section 2", section_order: 2, created_at: Time.now, updated_at: Time.now, custom_questionnaire_id: cq_id }
     ]
 
+    # Adding the questionnaire_sections
+    QuestionnaireSection.insert_all(questionnaire_sections)
+
     # Populating fields for section questions
     section_questions = []
+
     questions.each_with_index do |q, i|
       if i < 15 # Section 1 ends at id 15
-        qs = QuestionnaireSection.find_by(name: "Section 1", custom_questionnaire_id: 1)
+        qs = QuestionnaireSection.find_by(name: "Section 1", custom_questionnaire_id: cq_id)
       else
-        qs = QuestionnaireSection.find_by(name: "Section 2", custom_questionnaire_id: 1)
+        qs = QuestionnaireSection.find_by(name: "Section 2", custom_questionnaire_id: cq_id)
       end
       
-      # Finding question id based on the question text
       question = QuestionBank.find_by(question_text: q[:question_text])
       qb_id = question[:id]
       qs_id = qs[:id]
@@ -75,15 +83,6 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
       section_questions.push(section_question)
     end
 
-
-    # Adding all created questions
-    QuestionBank.insert_all(updated_questions)
-    # Adding a user
-    User.create!(user)
-    # Adding a custom questionnaire
-    CustomQuestionnaire.create!(custom_questionnaire)
-    # Adding the questionnaire_sections
-    QuestionnaireSection.insert_all(questionnaire_sections)
     # Adding all created section questions
     SectionQuestion.insert_all(section_questions)
 
