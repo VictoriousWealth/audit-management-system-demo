@@ -46,7 +46,33 @@
 
       .tab-content.flex-grow-1
         .tab-pane.fade.show.active#pie-chart{role: 'tabpanel'}
-          = render partial: 'pie_chart', locals: { chart_data: @chart_data }
+          = render partial: 'pie_chart', locals: { pie_chart_data: @pie_chart_data }
 
         .tab-pane.fade#bar-chart{role: 'tabpanel'}
-          = render partial: 'bar_chart', locals: { chart_data: @chart_data }
+          = render partial: 'bar_chart', locals: { bar_chart_data: @bar_chart_data }
+      / === Time Filter Nav Tabs: Day, Week, Month, All ===
+      %ul.nav.nav-tabs.nav-fill.mt-3#chart-filter-tabs
+        %li.nav-item
+          %a.nav-link.active{href: '#', data: { filter: 'day' }} Day
+        %li.nav-item
+          %a.nav-link{href: '#', data: { filter: 'week' }} Week
+        %li.nav-item
+          %a.nav-link{href: '#', data: { filter: 'month' }} Month
+        %li.nav-item
+          %a.nav-link{href: '#', data: { filter: 'all' }} All
+      
+      / JS Chart Data
+      :javascript
+        window.pieChartDataByDay = #{@pie_chart_data_by_day.to_json.html_safe};
+        window.pieChartDataByWeek = #{@pie_chart_data_by_week.to_json.html_safe};
+        window.pieChartDataByMonth = #{@pie_chart_data_by_month.to_json.html_safe};
+        window.pieChartDataAll = #{@pie_chart_data_all.to_json.html_safe};
+
+        window.barChartDataByDay = #{@chart_data_by_day.to_json.html_safe};
+        window.barChartDataByWeek = #{@chart_data_by_week.to_json.html_safe};
+        window.barChartDataByMonth = #{@chart_data_by_month.to_json.html_safe};
+        window.barChartDataAll = #{@chart_data_all.to_json.html_safe};
+
+
+
+
