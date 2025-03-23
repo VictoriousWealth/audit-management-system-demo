@@ -24,9 +24,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
   # The user goes to the root path after loggin out
   def after_sign_out_path_for(resource_or_scope)
     root_path
+  end
+
+  #This is so that only the QA manager can access the create user page
+  def authorise_qa_manager
+    unless current_use.roler == qa_manager
+      flash[:alert] = "You are not authorized to perform this action."
+      redirect_to root_path
+    end
   end
 
   private

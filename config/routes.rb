@@ -1,7 +1,23 @@
 Rails.application.routes.draw do
   get 'notifications/index'
   get 'dashboard/index'
+
   devise_for :users
+
+  # namespace :admin do
+  #   get 'users/new'
+  #   get 'users/create'
+  #   resources :users, only: [:new, :create]
+  # end
+
+  namespace :admin do
+    resources :users, only: [:new, :create] # Allow only new and create actions
+  end
+
+  get '/admin/users', to: redirect('/admin/users/new')
+
+
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Define routes for different dashboards

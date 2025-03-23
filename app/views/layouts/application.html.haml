@@ -45,8 +45,14 @@
           %a{ href: "#" } Team
           %a{ href: "#" } Mission
 
+        - if current_user.role == "qa_manager"
+          %a{ href: new_user_registration_path, class: "btn btn-primary" } Add Users
+          -# %a{ href: new_admin_user_path, class: "btn btn-primary" } Add New User
+          = link_to 'Add New User', new_admin_user_path, class: 'btn btn-success'
 
-        %a{ href: "#" } Services
+
+
+
         %a{ href: "#" } Clients
         %a{ href: "#" } Contact
 

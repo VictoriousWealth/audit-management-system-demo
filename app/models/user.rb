@@ -34,13 +34,15 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :trackable
   enum role:{
     auditor: 0,
     auditee: 1,
     qa_manager: 2,
     senior_manager: 3,
   }
+
 
   has_many :audit_assignments
   has_one :company
@@ -53,4 +55,5 @@ class User < ApplicationRecord
   has_many :audit_schedules
   has_many :audit_closure_letters
   has_many :reports
+
 end
