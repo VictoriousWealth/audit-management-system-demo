@@ -79,7 +79,7 @@ $table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
 .tab-content {
     flex-grow: 1;
     max-height: calc(#{$container-height} - 42px); // 42px for both tab bars
-  }
+}
   
 #Audits-Status-Overview{
     max-width: 400px !important;
@@ -87,9 +87,58 @@ $table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
 
 
 #Audits-Status-Overview, #Audit, #Compliance-Score-Graph-Over-Time{
-    min-width: 600px;
-    overflow: auto;
+    min-width: 600px !important; 
+    overflow: auto !important;
     #Audits-Status-Overview{
-        min-width: 400px;
+        min-width: 400px !important;
     }
+}
+
+#auditCalendar {
+    height: 90%;
+}
+
+.fc-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+  
+.fc-toolbar-title {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.fc-toolbar-chunk:has(.fc-toolbar-title) {
+    /* This only works in modern browsers like Safari 15+, Chrome 105+ */
+    display: flex;
+    flex-grow: 1;
+}
+
+.fc {
+    
+    .fc-col-header-cell-cushion {
+        display: inline-block;
+        padding: 2px 4px;
+        color: black;
+        text-decoration: none;
+    } 
+
+    .fc-daygrid-day-number {
+        padding: 4px;
+        position: relative;
+        z-index: 4;
+        color: black;
+        text-decoration: none;
+    }
+}
+
+.fc-event, 
+.fc-daygrid-event {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
 }

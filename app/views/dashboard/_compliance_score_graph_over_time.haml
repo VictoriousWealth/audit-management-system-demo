@@ -4,7 +4,7 @@
       %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Compliance Score Graph Over Time
 
   .tab-content.flex-grow-1
-    = render partial: 'line_chart', locals: {compliance_score_all: @compliance_score_all}
+    = render partial: 'line_chart', locals: {compliance_score_by_day: @compliance_score_by_day}
 
   / Bottom Time Filter Tabs
   %ul.nav.nav-tabs.nav-fill.mt-3#compliance-chart-filter-tabs

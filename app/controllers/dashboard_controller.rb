@@ -18,7 +18,7 @@ class DashboardController < ApplicationController
     @to_be_scheduled_audits = Audit
                                 .where(status: :not_started)
                                 .where("scheduled_start_date IS NULL OR scheduled_end_date IS NULL")    
-                                .includes(:user, :company, :audit_detail)
+                                .includes(:user, :company, :audit_detail) # I dont remember why this line is neccessary
 
     # === Overall Counts ===
     completed_count = Audit.where(status: :completed).count
@@ -111,5 +111,52 @@ class DashboardController < ApplicationController
     # Your vs Org Score (Today)
     @your_compliance_score = 67 #TODO: replace with real query for current user
     @org_compliance_score = Audit.average(:score)&.round
+
+
+    # === Calendar Event Component ===
+    
+    today = Time.zone.today
+    @calendar_events = []
+
+    # === Category 1: Scheduled to End Per Date ===
+    Audit.where.not(scheduled_end_date: nil).group("DATE(scheduled_end_date)").count.each do |date, count|
+      @calendar_events << {
+        title: "🔵#{count}",
+        date: date,
+        allDay: true,
+        textColor: "#000",
+        description: "#{count} audit(s) scheduled to end on #{date}"
+      }
+    end
+
+    # === Category 2: Overdue Audits (status ≠ completed && end date < today) ===
+    overdue_count = Audit.where.not(status: :completed)
+                         .where("DATE(scheduled_end_date) < ?", today)
+                         .count
+
+    if overdue_count > 0
+      @calendar_events << {
+        title: "🔴#{overdue_count}",
+        date: today,
+        allDay: true,
+        textColor: "#000",
+        description: "#{overdue_count} audit(s) overdue as of today"
+      }
+    end
+
+    # === Category 3: Not Started + Missing Dates ===
+    missing_dates_count = Audit.where(status: :not_started)
+                               .where("scheduled_start_date IS NULL OR scheduled_end_date IS NULL")
+                               .count
+
+    if missing_dates_count > 0
+      @calendar_events << {
+        title: "🟡#{missing_dates_count}",
+        date: today,
+        allDay: true,
+        textColor: "#000",
+        description: "#{missing_dates_count} audit(s) missing start/end dates"
+      }
+    end
   end
 end

@@ -109,3 +109,4 @@ end
 gem 'kramdown'
 gem "chartkick"
 gem "groupdate" # (Optional, but great for time-based grouping)
+gem 'fullcalendar-rails'
