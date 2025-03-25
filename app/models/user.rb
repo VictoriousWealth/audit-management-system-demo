@@ -39,8 +39,7 @@ class User < ApplicationRecord
     auditor: 0,
     auditee: 1,
     qa_manager: 2,
-    senior_manager: 3,
-    sme: 4
+    senior_manager: 3
   }
 
   belongs_to :company, optional: true 

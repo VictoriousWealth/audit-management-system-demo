@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  def index
+  def qa_manager
     @audits = Audit.includes(:user, :company, :audit_detail).all
 
     @scheduled_audits = Audit
