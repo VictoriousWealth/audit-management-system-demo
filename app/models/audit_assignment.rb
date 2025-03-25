@@ -12,7 +12,7 @@
 #  user_id       :bigint           not null
 #
 # Indexes
-#
+#§§
 #  index_audit_assignments_on_audit_id  (audit_id)
 #  index_audit_assignments_on_user_id   (user_id)
 #

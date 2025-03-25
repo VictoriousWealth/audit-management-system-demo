@@ -83,15 +83,17 @@ $table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
   
 #Audits-Status-Overview{
     max-width: 400px !important;
+    min-width: 400px !important;
 }
 
 
-#Audits-Status-Overview, #Audit, #Compliance-Score-Graph-Over-Time{
-    min-width: 600px !important; 
+#Audits-Status-Overview, #Audit{
+    min-width: 605px !important; 
     overflow: auto !important;
-    #Audits-Status-Overview{
-        min-width: 400px !important;
-    }
+}
+
+#Compliance-Score-Graph-Over-Time {
+    min-width: 600px !important; 
 }
 
 #auditCalendar {

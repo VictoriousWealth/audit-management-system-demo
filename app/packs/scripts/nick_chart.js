@@ -1,6 +1,8 @@
 import Chartkick from "chartkick"
 import Chart from "chart.js/auto"  
 import ChartDataLabels from 'chartjs-plugin-datalabels'  
+import "chartjs-adapter-moment";
+
 Chartkick.options = {
   colors: ["#42CA68", "#F39C12", "#E74C3C", "#8E44AD", "#3498DB"]
 };

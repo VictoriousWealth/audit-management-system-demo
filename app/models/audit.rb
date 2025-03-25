@@ -56,6 +56,7 @@ class Audit < ApplicationRecord
   has_many :reports
 
 
+
   def auditors
     audit_assignments.includes(:user).where(role: :auditor).map do |assignment|
       user = assignment.user
