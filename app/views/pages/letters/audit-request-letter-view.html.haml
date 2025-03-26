@@ -1,0 +1,78 @@
+%html 
+    %head
+        %meta{ :'http-equiv' => "content-type", content: "text/html; charset=utf-8" }
+    %body
+        %h1 Previw  Audit Request Letter
+
+        %div.border.border-dark.p-3.rounded-3.mt-4
+            %h2 Audit Request Letter
+            %br/
+            %p
+                Gene Therapy Innovation and Manufacturing Centre
+                %br/
+                Business Park, Europa Ave, Tinsley
+                %br/
+                Sheffield, S9 1ZA
+                %br/
+                GTMIC email
+                %br/
+                0114 222 2238
+                %br/
+                %br/
+                #{@audit_dates}
+            
+            %p 
+                Company details 
+            %br/
+            %p 
+            Dear Company A auditee,
+            %br/
+            We are writing to formally request an audit of Company A Name in accordance with our quality assurance and regulatory compliance requirements. The details of the proposed audit are as follows:
+            %br/
+
+            %p 
+                Auditor(s): audit.getauditors....
+            %br/
+            %p 
+                Audit Scope:
+                %br/
+                #{@scope}
+            %br/
+            %p Audit Date(s): audit.getdates....
+            %br/
+            %p Duration of Audit: audit.getduration....
+
+            %br/
+            %p Location of Audit: audit.getlocation....
+            %br/
+            %br/
+
+            %p 
+                Audit Criteria:
+                %br/
+                #{@audit_criteria}
+            %p 
+                The purpose of this audit is to assess:
+                %br/
+                #{@audit_objective}
+
+            %p 
+                The audit will include a review of relevant documentation, site walkthroughs, and interviews with key personnel.
+                We kindly request your cooperation in facilitating this process by providing access to necessary records, personnel, and facilities. Please confirm your availability for the proposed dates or suggest alternative dates if required.
+                Should you have any questions or require further clarification, please do not hesitate to contact us at Lead Auditor Contact. We appreciate your time and cooperation in this matter and look forward to working with you.
+            %br/
+            %p 
+                Best regards,
+                %br/
+                Lead Auditor B Name
+                %br/
+                Lead Auditor
+                %br/
+                Gene Therapy Innovation and Manufacturing Centre
+                %br/
+                Lead Auditor B Contact details
+        %div 
+            %button.btn.btn-primary.mt-3 Create Letter
+
+
+            

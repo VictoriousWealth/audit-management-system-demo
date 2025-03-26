@@ -8,6 +8,12 @@ class ApplicationController < ActionController::Base
   # may be worth enabling caching for performance.
   before_action :update_headers_to_disable_caching
 
+  # Ensure that the user is authenticated before allowing them to access the
+  # application. This will redirect the user to the login page if they are not
+  # authenticated
+  before_action :authenticate_user!
+
+
   private
     def update_headers_to_disable_caching
       response.headers['Cache-Control'] = 'no-cache, no-cache="set-cookie", no-store, private, proxy-revalidate'
