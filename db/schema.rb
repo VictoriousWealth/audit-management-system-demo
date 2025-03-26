@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_26_201010) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,11 +19,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
     t.integer "status"
     t.datetime "time_accepted"
     t.bigint "user_id", null: false
-    t.bigint "audit_assignments_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
-    t.index ["audit_assignments_id"], name: "index_audit_assignments_on_audit_assignments_id"
     t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
     t.index ["user_id"], name: "index_audit_assignments_on_user_id"
   end
@@ -83,6 +81,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
     t.bigint "custom_questionnaire_id", null: false
     t.index ["audit_id"], name: "index_audit_questionnaires_on_audit_id"
     t.index ["custom_questionnaire_id"], name: "index_audit_questionnaires_on_custom_questionnaire_id"
+  end
+
+  create_table "audit_request_letters", force: :cascade do |t|
+    t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
+    t.string "content"
+    t.datetime "time_of_creation"
+    t.datetime "time_of_verification"
+    t.datetime "time_of_distribution"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["audit_id"], name: "index_audit_request_letters_on_audit_id"
+    t.index ["user_id"], name: "index_audit_request_letters_on_user_id"
   end
 
   create_table "audit_schedules", force: :cascade do |t|
@@ -249,10 +260,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
     t.datetime "time_of_distribution"
     t.bigint "audit_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "audit_finding_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["audit_finding_id"], name: "index_reports_on_audit_finding_id"
     t.index ["audit_id"], name: "index_reports_on_audit_id"
     t.index ["user_id"], name: "index_reports_on_user_id"
   end
@@ -322,7 +331,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
   add_foreign_key "audit_assignments", "audits"
   add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"
@@ -333,6 +341,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
   add_foreign_key "audit_logs", "users"
   add_foreign_key "audit_questionnaires", "audits"
   add_foreign_key "audit_questionnaires", "custom_questionnaires"
+  add_foreign_key "audit_request_letters", "audits"
+  add_foreign_key "audit_request_letters", "users"
   add_foreign_key "audit_schedules", "audits"
   add_foreign_key "audit_schedules", "users"
   add_foreign_key "audit_standards", "audit_details"
@@ -347,7 +357,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_18_161159) do
   add_foreign_key "electronic_signatures", "users"
   add_foreign_key "login_attempts", "users"
   add_foreign_key "questionnaire_sections", "custom_questionnaires"
-  add_foreign_key "reports", "audit_findings"
   add_foreign_key "reports", "audits"
   add_foreign_key "reports", "users"
   add_foreign_key "section_questions", "question_banks"

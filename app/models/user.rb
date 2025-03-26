@@ -53,4 +53,5 @@ class User < ApplicationRecord
   has_many :audit_schedules
   has_many :audit_closure_letters
   has_many :reports
+  has_many :audit_request_letters
 end
