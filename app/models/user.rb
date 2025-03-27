@@ -40,6 +40,7 @@ class User < ApplicationRecord
     auditee: 1,
     qa_manager: 2,
     senior_manager: 3,
+    sme: 4,
   }
 
   has_many :audit_assignments
