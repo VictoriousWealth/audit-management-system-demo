@@ -40,6 +40,7 @@ class User < ApplicationRecord
     auditee: 1,
     qa_manager: 2,
     senior_manager: 3,
+    sme: 4,
   }
 
   has_many :audit_assignments
@@ -53,6 +54,7 @@ class User < ApplicationRecord
   has_many :audit_schedules
   has_many :audit_closure_letters
   has_many :reports
+  has_many :audit_request_letters
 
   def full_name
     "#{first_name} #{last_name}"

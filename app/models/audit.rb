@@ -54,4 +54,5 @@ class Audit < ApplicationRecord
   has_one :audit_closure_letter
   has_many :corrective_actions
   has_many :reports
+  has_one :audit_request_letter
 end
