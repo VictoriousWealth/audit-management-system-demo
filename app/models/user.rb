@@ -44,7 +44,7 @@ class User < ApplicationRecord
   }
 
   has_many :audit_assignments
-  has_one :company
+  belongs_to :company, optional: true 
   has_many :audits
   has_many :electronic_signatures
   has_many :login_attempts
@@ -55,4 +55,8 @@ class User < ApplicationRecord
   has_many :audit_closure_letters
   has_many :reports
   has_many :audit_request_letters
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
 end
