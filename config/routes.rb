@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   # -------- Routes for the audit request letter pages --------
 
   # Defines the route for the audit request letter creation page ('/create-audit-request-letter')
-  get 'letters/create-audit-request-letter', to: 'letters#audit_request_letter_create'
+  get 'letters/create-audit-request-letter/:id', to: 'letters#audit_request_letter_create'
 
   # Defines the route for the audit request letter view page ('/view-audit-request-letter')
   get 'letters/view-audit-request-letter', to: 'letters#audit_request_letter_view'

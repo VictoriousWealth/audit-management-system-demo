@@ -2,7 +2,12 @@
     %head
         %meta{ :'http-equiv' => "content-type", content: "text/html; charset=utf-8" }
     %body
-        %h1 Previw  Audit Request Letter
+        %h1 Create Audit Request Letter
+        %div.border.border-dark.p-3.rounded-3.pb-3
+            %h2 Select Template 
+            %form
+                %select
+                    %option{ value: "1" } Default Template
 
         %div.border.border-dark.p-3.rounded-3.mt-4
             %h2 Audit Request Letter
@@ -19,7 +24,7 @@
                 0114 222 2238
                 %br/
                 %br/
-                #{@audit_dates}
+                #{@today_date}
             
             %p 
                 Company details 
@@ -31,30 +36,43 @@
             %br/
 
             %p 
-                Auditor(s): audit.getauditors....
+                Auditor(s): 
+                - @auditor_names.each do |name|
+                    -if name == @auditor_names.last
+                        = name
+                    -else
+                        = name + ","
             %br/
             %p 
                 Audit Scope:
                 %br/
-                #{@scope}
+                = text_area_tag :audit_scope, @audit_detail.scope, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
             %br/
-            %p Audit Date(s): audit.getdates....
+            %p Audit Date(s): #{@audit.scheduled_start_date.strftime("%d/%m/%Y")} - #{@audit.scheduled_end_date.strftime("%d/%m/%Y")}
             %br/
-            %p Duration of Audit: audit.getduration....
+            - start = DateTime.parse("2025-03-01 14:00:00")
+            - finish = DateTime.parse("2025-11-12 14:00:00")
+            - duration = finish - start
+            - duration = distance_of_time_in_words(start, finish)
+            %p Duration of Audit: #{duration}
 
             %br/
-            %p Location of Audit: audit.getlocation....
+            %p 
+                Location of Audit: 
+                - company_id = @audit.company_id
+                - location = Company.find(company_id).street_name
+                = text_area_tag :audit_location, location ,class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 2
             %br/
             %br/
 
             %p 
                 Audit Criteria:
                 %br/
-                #{@audit_criteria}
+                = text_area_tag :audit_scope, @audit_detail.objectives, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
             %p 
                 The purpose of this audit is to assess:
                 %br/
-                #{@audit_objective}
+                = text_area_tag :audit_objectives, @audit_detail.purpose, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
 
             %p 
                 The audit will include a review of relevant documentation, site walkthroughs, and interviews with key personnel.
@@ -64,7 +82,7 @@
             %p 
                 Best regards,
                 %br/
-                Lead Auditor B Name
+                #{@lead_auditor.first_name} #{@lead_auditor.last_name}
                 %br/
                 Lead Auditor
                 %br/

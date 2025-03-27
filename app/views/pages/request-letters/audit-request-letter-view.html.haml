@@ -2,12 +2,7 @@
     %head
         %meta{ :'http-equiv' => "content-type", content: "text/html; charset=utf-8" }
     %body
-        %h1 Create Audit Request Letter
-        %div.border.border-dark.p-3.rounded-3.pb-3
-            %h2 Select Template 
-            %form
-                %select
-                    %option{ value: "1" } Default Template
+        %h1 Previw  Audit Request Letter
 
         %div.border.border-dark.p-3.rounded-3.mt-4
             %h2 Audit Request Letter
@@ -24,7 +19,7 @@
                 0114 222 2238
                 %br/
                 %br/
-                #{@today_date}
+                #{@audit_dates}
             
             %p 
                 Company details 
@@ -36,30 +31,35 @@
             %br/
 
             %p 
-                Auditor(s): audit.getauditors....
+                Auditor(s): 
+                -for each auditor in @audit.auditors
+                    %if auditor == @audit.auditors.last
+                        = auditor.name
+                    %else
+                    = auditor.name + ","
             %br/
             %p 
                 Audit Scope:
                 %br/
-                = text_area_tag :audit_scope, @scope, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+                #{@audit_detail.scope}
             %br/
             %p Audit Date(s): audit.getdates....
             %br/
             %p Duration of Audit: audit.getduration....
 
             %br/
-            %p Location of Audit: audit.getlocation....
+            -# %p Location of Audit: audit.getlocation....
             %br/
             %br/
 
             %p 
                 Audit Criteria:
                 %br/
-                = text_area_tag :audit_scope, @audit_criteria, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+                #{@audit_detail.criteria}
             %p 
                 The purpose of this audit is to assess:
                 %br/
-                = text_area_tag :audit_objectives, @audit_objective, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+                #{@audit_detail.objective}
 
             %p 
                 The audit will include a review of relevant documentation, site walkthroughs, and interviews with key personnel.
