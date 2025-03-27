@@ -4,4 +4,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "pages#home"
+  
+  resources :audits do
+    resources :audit_closure_letters, only: [:new, :create]
+  end
 end
