@@ -1,0 +1,50 @@
+/ Accordion container for "Support Auditor" section
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionSupportAuditor
+  / Accordion item wrapper
+  %div.accordion-item.border-0
+    / Accordion header with toggle button
+    %h2.accordion-header#headingSupportAuditor
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{
+        type: "button",
+        "data-bs-toggle" => "collapse",
+        "data-bs-target" => "#collapseSupportAuditor",
+        "aria-expanded" => "false",
+        "aria-controls" => "collapseSupportAuditor"
+      }
+        / Accordion title for the section
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Support Auditor
+        / Custom arrow icon
+        %span.custom-arrow.ms-2.fs-4
+          ▼
+
+    / Collapsible content section for assigning support auditors
+    %div.accordion-collapse.collapse#collapseSupportAuditor{
+      "aria-labelledby" => "headingSupportAuditor",
+      "data-bs-parent" => "#accordionSupportAuditor"
+    }
+      %div.accordion-body.bg-white.rounded-bottom-4
+
+        / Button to dynamically add more support auditor dropdowns
+        %button.btn.btn-primary.btn-sm#add-support-auditor{
+          type: "button",
+          title: "Add Support Auditor",
+          "aria-label" => "Add Support Auditor"
+        }
+          %span.plus 
+            ⨁
+          %span.text Add a support auditor
+
+        / Container for dynamically rendered support auditor dropdown fields
+        #support-auditor-container
+          - (@support_auditor_ids || []).each do |id|
+            .form-group.mt-4.support-auditor-field
+              / Hidden label for accessibility
+              .text-black-75.text-capitalize.fs-3.mb-2.visually-hidden
+                = label_tag "audit_assignment[support_auditor][]", "Support Auditor's Email"
+              / Dropdown select populated with @auditors (excluding SME & Lead in logic if needed)
+              = select_tag "audit_assignment[support_auditor][]",
+                  options_from_collection_for_select(@auditors, :id, :email, id),
+                  prompt: "Select a Support Auditor's email",
+                  class: "text-black-50 text-capitalize form-control fw-semibold mb-2"
+              / Remove button for each support auditor entry
+              %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-support-auditor{type: "button"} ⊖

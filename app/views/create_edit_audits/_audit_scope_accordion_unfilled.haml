@@ -1,0 +1,25 @@
+/ Main accordion wrapper with styling and unique ID for Audit Scope
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionAuditScope
+  / Accordion item without border
+  %div.accordion-item.border-0
+    / Accordion header section
+    %h2.accordion-header#headingAuditScope
+      / Button to toggle visibility of the Audit Scope section
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseAuditScope", "aria-expanded" => "false", "aria-controls" => "collapseAuditScope"}
+        / Section title
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Audit Scope
+        / Arrow symbol indicating toggle (can be styled or replaced with an icon)
+        %span.custom-arrow.ms-2.fs-4
+          ▼
+
+    / Collapsible body for the Audit Scope section
+    %div.accordion-collapse.collapse#collapseAuditScope{"aria-labelledby" => "headingAuditScope", "data-bs-parent" => "#accordionAuditScope"}
+      %div.accordion-body.bg-white.rounded-bottom-4
+        / Form group containing the audit scope text area
+        .form-group
+          / Hidden label for accessibility/screen readers
+          .text-black-75.text-capitalize.fs-3.mb-2
+            = label_tag "audit_detail[scope]", "Scope", hidden: true
+
+          / Text area for users to input the audit scope
+          = text_area_tag "audit_detail[objectives]", nil, class: "form-control bg-light border-1 rounded-0 py-3", placeholder: "Enter the audit's scope here...", rows: 4

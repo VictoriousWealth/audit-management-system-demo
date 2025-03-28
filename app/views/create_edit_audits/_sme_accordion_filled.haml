@@ -1,0 +1,45 @@
+/ Accordion container for "Subject Matter Expert (SME)" section
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionSME
+  / Accordion item wrapper
+  %div.accordion-item.border-0
+    / Accordion header with toggle button
+    %h2.accordion-header#headingSME
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{
+        type: "button",
+        "data-bs-toggle" => "collapse",
+        "data-bs-target" => "#collapseSME",
+        "aria-expanded" => "false",
+        "aria-controls" => "collapseSME"
+      }
+        / Title for the SME section
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Subject Matter Expert (SME)
+        / Custom dropdown arrow icon
+        %span.custom-arrow.ms-2.fs-4
+          ▼
+
+    / Collapsible section containing SME form inputs
+    %div.accordion-collapse.collapse#collapseSME{
+      "aria-labelledby" => "headingSME",
+      "data-bs-parent" => "#accordionSME"
+    }
+      %div.accordion-body.bg-white.rounded-bottom-4
+
+        / Button to dynamically add more SME fields
+        %button.btn.btn-primary.btn-sm#add-sme{type: "button", title: "Add SME", "aria-label" => "Add SME"}
+          %span.plus ⨁
+          %span.text.ms-2 Add a subject matter expert
+
+        / Container to hold dynamically rendered SME select fields
+        #sme-container
+          - (@sme_ids || []).each do |id|
+            .form-group.mt-4.sme-field
+              / Hidden label for accessibility
+              .text-black-75.text-capitalize.fs-3.mb-2.visually-hidden
+                = label_tag "audit_assignment[sme][]", "Subject Matter Expert's Email"
+              / Dropdown populated with @users (only SME-eligible users), preselecting matching ID
+              = select_tag "audit_assignment[sme][]",
+                  options_from_collection_for_select(@users, :id, :email, id),
+                  prompt: "Select a Subject Matter Expert",
+                  class: "text-black-50 text-capitalize form-control fw-semibold mb-2"
+              / Remove button for each SME field
+              %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-sme{type: "button", title: "Remove SME", "aria-label" => "Remove SME"} ⊖

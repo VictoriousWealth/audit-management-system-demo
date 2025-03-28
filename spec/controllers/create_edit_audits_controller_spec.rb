@@ -84,7 +84,7 @@ RSpec.describe CreateEditAuditsController, type: :controller do
     it "does not save with missing required fields" do
       post :create, params: valid_params.deep_merge(company: { id: nil })
       expect(response).to render_template(:new)
-      expect(flash.now[:alert]).to eq("Please fill in all required fields before submitting.")
+      expect(flash.now[:alert]).to eq("Please fill in the following required fields: ")
     end
 
     # Case 3: Full successful creation of audit and all associated records
@@ -153,7 +153,7 @@ RSpec.describe CreateEditAuditsController, type: :controller do
         audit_standard: { standard: [""] }
       }
       expect(response).to render_template(:edit)
-      expect(flash.now[:alert]).to match(/Invalid request changes/)
+      expect(flash.now[:alert]).to match("Please fill in the following required fields: ")
     end
   end
 end

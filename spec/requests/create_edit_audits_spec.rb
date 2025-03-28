@@ -1,29 +1,36 @@
-# spec/controllers/create_edit_audits_controller_spec.rb
 require 'rails_helper'
 
+# Test suite for the CreateEditAuditsController
 RSpec.describe CreateEditAuditsController, type: :controller do
+  # Setup test data
   let!(:company) { Company.create(name: "Test Company") }
-  let!(:lead_auditor) { 
+
+  # Creating users with different roles, printing errors if creation fails
+  let!(:lead_auditor) do
     user = User.create(email: "lead@example.com", password: "password123", role: :auditor)
     puts user.errors.full_messages if user.errors.any?
     user
-  }
-  let!(:auditee) { 
+  end
+
+  let!(:auditee) do
     user = User.create(email: "auditee@example.com", password: "password123", role: :auditee)
     puts user.errors.full_messages if user.errors.any?
     user
-  }
-  let!(:support_auditor) { 
+  end
+
+  let!(:support_auditor) do
     user = User.create(email: "support@example.com", password: "password123", role: :auditor)
     puts user.errors.full_messages if user.errors.any?
     user
-  }
-  let!(:sme) { 
+  end
+
+  let!(:sme) do
     user = User.create(email: "sme@example.com", password: "password123", role: :auditor)
     puts user.errors.full_messages if user.errors.any?
     user
-  }
+  end
 
+  # --- NEW ACTION TEST ---
   describe "GET #new" do
     it "renders the new template" do
       get :new
@@ -31,7 +38,9 @@ RSpec.describe CreateEditAuditsController, type: :controller do
     end
   end
 
+  # --- CREATE ACTION TESTS ---
   describe "POST #create" do
+    # Valid params for a complete audit creation
     let(:valid_params) do
       {
         company: { id: company.id },
@@ -54,7 +63,7 @@ RSpec.describe CreateEditAuditsController, type: :controller do
           purpose: "Purpose",
           boundaries: "Boundaries"
         },
-        audit_standard: { 
+        audit_standard: {
           standard: ["ISO 9001"]
         },
         commit: "Save Changes"
@@ -70,14 +79,14 @@ RSpec.describe CreateEditAuditsController, type: :controller do
     it "does not save with missing required fields" do
       post :create, params: valid_params.deep_merge(company: { id: nil })
       expect(response).to render_template(:new)
-      expect(flash.now[:alert]).to eq("Please fill in all required fields before submitting.")
+      expect(flash.now[:alert]).to eq("Please fill in the following required fields: ")
     end
 
     it "creates audit and associated records successfully" do
       expect {
         post :create, params: valid_params
       }.to change(Audit, :count).by(1)
-       .and change(AuditAssignment, :count).by(4)
+       .and change(AuditAssignment, :count).by(4) # lead, auditee, support, SME
        .and change(AuditStandard, :count).by(1)
       expect(response).to redirect_to(edit_create_edit_audit_path(Audit.last))
     end
@@ -87,7 +96,7 @@ RSpec.describe CreateEditAuditsController, type: :controller do
         audit_assignment: {
           auditee: auditee.id,
           lead_auditor: lead_auditor.id,
-          support_auditor: [""],
+          support_auditor: [""], # Blank values
           sme: [""]
         }
       )
@@ -99,14 +108,34 @@ RSpec.describe CreateEditAuditsController, type: :controller do
     it "handles unexpected param structures gracefully" do
       expect {
         post :create, params: valid_params.deep_merge(audit_assignment: nil)
-      }.to_not raise_error
-      expect(response).to render_template(:new)
+      }.to change(Audit, :count).by(0) # Ensure no new record is created
+
+      # Expect the response to indicate failure due to missing fields
+      expect(response).to have_http_status(:success)
+      expect(flash[:alert]).to include("Please fill in the following required fields")
     end
   end
 
+  # --- EDIT ACTION TEST ---
   describe "GET #edit" do
-    let!(:audit) { Audit.create(company_id: company.id, audit_type: "internal", scheduled_start_date: Date.today, scheduled_end_date: Date.today + 1) }
-    let!(:audit_detail) { AuditDetail.create(audit_id: audit.id, scope: "Scope", objectives: "Obj", purpose: "Purp", boundaries: "Bound") }
+    let!(:audit) do
+      Audit.create(
+        company_id: company.id,
+        audit_type: "internal",
+        scheduled_start_date: Date.today,
+        scheduled_end_date: Date.today + 1
+      )
+    end
+
+    let!(:audit_detail) do
+      AuditDetail.create(
+        audit_id: audit.id,
+        scope: "Scope",
+        objectives: "Obj",
+        purpose: "Purp",
+        boundaries: "Bound"
+      )
+    end
 
     it "renders the edit page with populated data" do
       get :edit, params: { id: audit.id }
@@ -116,9 +145,26 @@ RSpec.describe CreateEditAuditsController, type: :controller do
     end
   end
 
+  # --- UPDATE ACTION TESTS ---
   describe "PATCH #update" do
-    let!(:audit) { Audit.create(company_id: company.id, audit_type: "internal", scheduled_start_date: Date.today, scheduled_end_date: Date.today + 1) }
-    let!(:audit_detail) { AuditDetail.create(audit_id: audit.id, scope: "Scope", objectives: "Obj", purpose: "Purp", boundaries: "Bound") }
+    let!(:audit) do
+      Audit.create(
+        company_id: company.id,
+        audit_type: "internal",
+        scheduled_start_date: Date.today,
+        scheduled_end_date: Date.today + 1
+      )
+    end
+
+    let!(:audit_detail) do
+      AuditDetail.create(
+        audit_id: audit.id,
+        scope: "Scope",
+        objectives: "Obj",
+        purpose: "Purp",
+        boundaries: "Bound"
+      )
+    end
 
     it "redirects if 'Close Audit' is clicked" do
       patch :update, params: { id: audit.id, commit: "Close Audit" }
@@ -135,14 +181,19 @@ RSpec.describe CreateEditAuditsController, type: :controller do
         audit_standard: { standard: [""] }
       }
       expect(response).to render_template(:edit)
-      expect(flash.now[:alert]).to match(/Invalid request changes/)
+      expect(flash.now[:alert]).to match("Please fill in the following required fields: ")
     end
 
     it "successfully updates audit with valid data" do
       patch :update, params: {
         id: audit.id,
         company: { id: company.id },
-        audit_assignment: { auditee: auditee.id, lead_auditor: lead_auditor.id, support_auditor: [support_auditor.id], sme: [sme.id] },
+        audit_assignment: {
+          auditee: auditee.id,
+          lead_auditor: lead_auditor.id,
+          support_auditor: [support_auditor.id],
+          sme: [sme.id]
+        },
         audit: {
           audit_type: "external",
           scheduled_start_date: Date.today.to_s,

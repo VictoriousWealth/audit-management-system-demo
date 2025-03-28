@@ -1,0 +1,35 @@
+/ Accordion container for "Lead Auditor" section
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionLeadAuditor
+  / Accordion item wrapper
+  %div.accordion-item.border-0
+    / Accordion header with collapsible toggle
+    %h2.accordion-header#headingLeadAuditor
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{
+        type: "button",
+        "data-bs-toggle" => "collapse",
+        "data-bs-target" => "#collapseLeadAuditor",
+        "aria-expanded" => "false",
+        "aria-controls" => "collapseLeadAuditor"
+      }
+        / Accordion section title
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Lead Auditor
+        / Arrow icon for collapse toggle
+        %span.custom-arrow.ms-2.fs-4 
+          ▼
+
+    / Collapsible content area for the form input
+    %div.accordion-collapse.collapse#collapseLeadAuditor{
+      "aria-labelledby" => "headingLeadAuditor",
+      "data-bs-parent" => "#accordionLeadAuditor"
+    }
+      %div.accordion-body.bg-white.rounded-bottom-4
+        / Form group for Lead Auditor dropdown
+        .form-group
+          / Label for Lead Auditor
+          .text-black-75.text-capitalize.fs-3.mb-2
+            = label_tag "audit_assignment[lead_auditor]", "Lead Auditor"
+          / Select dropdown populated with @auditors (only auditor-eligible users)
+          = select_tag "audit_assignment[lead_auditor]",
+              options_from_collection_for_select(@auditors, :id, :email, @lead_auditor_id),
+              prompt: "Select the Lead Auditor's Email",
+              class: "text-black-50 text-capitalize form-control fw-semibold mb-4"

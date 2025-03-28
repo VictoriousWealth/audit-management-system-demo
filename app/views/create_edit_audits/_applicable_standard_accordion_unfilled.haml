@@ -1,0 +1,41 @@
+/ Main accordion wrapper with styling (margin top, border, rounded corners, overflow hidden)
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionStandards
+  / Accordion item without border
+  %div.accordion-item.border-0
+    / Accordion header section with unique ID
+    %h2.accordion-header#headingStandards
+      / Button to toggle the collapse (expanded by default = false)
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseStandards", "aria-expanded" => "false", "aria-controls" => "collapseStandards"}
+        / Title inside the button – styled text
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Applicable Standards
+        / Custom arrow symbol (could be replaced with an icon)
+        %span.custom-arrow.ms-2.fs-4
+          ▼
+
+    / Collapsible body of the accordion, tied to the header above
+    %div.accordion-collapse.collapse#collapseStandards{"aria-labelledby" => "headingStandards", "data-bs-parent" => "#accordionStandards"}
+      / Content of the accordion section
+      %div.accordion-body.bg-white.rounded-bottom-4
+        / "Add Standard" button – allows users to add a new standard field dynamically
+        %button.btn.btn-primary.btn-sm#add-standard{type: "button", title: "Add Standard", "aria-label" => "Add Standard"}
+          %span.plus ⨁
+          %span.text.ms-2 Add a standard
+
+        / Container for dynamic standard input fields
+        #standard-container
+          / First standard input field – structured as a form group
+          .form-group.mt-4.standard-field
+            / Hidden label for accessibility (screen readers)
+            .text-black-75.text-capitalize.fs-3.mb-2.visually-hidden
+              = label_tag "audit_standard[standard][]", "Applicable Standard"
+
+            / Input field with datalist auto-suggestions
+            = text_field_tag "audit_standard[standard][]", nil, list: "standard-options", class: "text-black-50 text-capitalize form-control fw-semibold mb-2", placeholder: "Type and select an applicable standard"
+
+            / Button to remove this standard input field
+            %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-standard{type: "button", title: "Remove Standard", "aria-label" => "Remove Standard"} ⊖
+
+        / Datalist for auto-complete suggestions
+        %datalist#standard-options
+          - @standards.each do |standard|
+            %option{ value: standard.standard }
