@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   #This is so that only the QA manager can access the create user page
   def authorise_qa_manager
     unless current_use.roler == qa_manager
-      flash[:alert] = "You are not authorized to perform this action."
+      flash[:alert] = "You are not authorised to perform this action."
       redirect_to root_path
     end
   end

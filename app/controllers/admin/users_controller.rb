@@ -6,14 +6,14 @@ class Admin::UsersController < ApplicationController
     @user = User.new
   end
 
-  def create
-    @user = User.new(user_params)
-    if @user.save
-      redirect_to admin_users_path, notice: 'User created successfully.'
-    else
-      render :new
-    end
-  end
+  # def create
+  #   @user = User.new(user_params)
+  #   if @user.save
+  #     redirect_to admin_users_path, notice: 'User created successfully.'
+  #   else
+  #     render :new
+  #   end
+  # end
 
   def create
     # Gets the company name and finds it id (creates one if not there)
@@ -27,6 +27,11 @@ class Admin::UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+
+      #@user.send_reset_password_instructions
+      # Send the welcome email
+      UserMailer.welcome_email(@user).deliver_now
+
       redirect_to admin_users_path, notice: 'User created successfully.'
     else
       render :new

@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 # db/seeds.rb
-
+#Auditor
 User.where(email: 'bob@sheffield.ac.uk').first_or_create(
   first_name: 'Bob',
   last_name: 'Dylan',
@@ -15,6 +15,7 @@ User.where(email: 'bob@sheffield.ac.uk').first_or_create(
   password_confirmation: 'Password1234'
 )
 
+#Auditee
 User.where(email: 'alex@sheffield.ac.uk').first_or_create(
   first_name: 'Alex',
   last_name: 'Turner',
@@ -23,6 +24,7 @@ User.where(email: 'alex@sheffield.ac.uk').first_or_create(
   password_confirmation: 'Password1234'
 )
 
+#QA
 User.where(email: 'nina@sheffield.ac.uk').first_or_create(
   first_name: 'Nina',
   last_name: 'Simone',
@@ -31,6 +33,7 @@ User.where(email: 'nina@sheffield.ac.uk').first_or_create(
   password_confirmation: 'Password1234'
 )
 
+#Senior Manager
 User.where(email: 'jane@sheffield.ac.uk').first_or_create(
   first_name: 'Jane',
   last_name: 'Doe',

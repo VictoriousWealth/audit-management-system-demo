@@ -1,3 +1,11 @@
+
+- if @user.errors.any?
+  .alert.alert-danger
+    %ul
+      - @user.errors.full_messages.each do |message|
+        %li= message
+   
+
 .login-container
   = image_pack_tag "images/GTIMC Logo.png", alt: "Logo", class: "logo2"
   %h2 Create a user
@@ -24,7 +32,7 @@
       = f.label :company, "Company"
       = f.text_field :company, placeholder: "Enter company name"
     .form-group
-      = f.submit "Create User", class: "btn btn-primary"
+      = f.submit "Create User", class: "btn btn-primary green-btn"
 
 :javascript
   document.addEventListener("DOMContentLoaded", function() {

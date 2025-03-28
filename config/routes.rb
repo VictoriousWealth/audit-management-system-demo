@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+
   # namespace :admin do
   #   get 'users/new'
   #   get 'users/create'
@@ -20,7 +21,7 @@ Rails.application.routes.draw do
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Define routes for different dashboards
+  # Routes for different dashboards
   get 'auditee_dashboard', to: 'dashboard#auditee', as: 'auditee_dashboard'
   get 'qa_manager_dashboard', to: 'dashboard#qa_manager', as: 'qa_manager_dashboard'
   get 'senior_manager_dashboard', to: 'dashboard#senior_manager', as: 'senior_manager_dashboard'
@@ -36,5 +37,14 @@ Rails.application.routes.draw do
   get 'notifications', to: 'notifications#index'
 
   # Defines the root path route ("/")
-  root "pages#home"
+
+   # For logged in users
+   authenticated :user do
+    root to: 'dashboard#index', as: :authenticated_root
+  end
+
+  # For non logged in users
+  unauthenticated do
+    root to: 'pages#home'
+  end
 end

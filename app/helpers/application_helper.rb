@@ -1,6 +1,8 @@
 module ApplicationHelper
   #Basically helps you find the correct dashborad for each user
   def dashboard_path_for(user)
+    helpers = Rails.application.routes.url_helpers
+
     case user.role
     when 'auditee'
       auditee_dashboard_path
