@@ -23,6 +23,17 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class AuditRequestLetter < ApplicationRecord
-  belongs_to :Audit
-  belongs_to :user
+  belongs_to :audit
+  belongs_to :user, optional: true
+
+  validates :content, presence: true
+  validates :audit_id, presence: true
+
+  before_create :set_creation_time
+
+  private
+
+  def set_creation_time
+    self.time_of_creation ||= Time.current
+  end
 end

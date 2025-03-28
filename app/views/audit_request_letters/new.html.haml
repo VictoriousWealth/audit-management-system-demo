@@ -1,0 +1,102 @@
+- content_for :title, 'Create Audit Request Letter'
+
+.row.justify-content-center
+  .col-sm-10.col-lg-8
+    .card.card-light
+      = simple_form_for @audit_request_letter, url: audit_audit_request_letters_path(@audit), method: :post do |f|
+        .card-header
+          %h2 Create Audit Request Letter
+        .card-body
+          .form-group
+            %label Select Template
+            = select_tag :template, options_for_select(["Default Template"]), class: "form-control"
+            %a.mt-2{ href: "#" } Create new template
+            %hr
+
+            %h3 Audit Request Letter
+
+            %p.mt-3
+              Gene Therapy Innovation and Manufacturing Centre
+              %br 
+              Business Park, Europa Ave
+              %br Tinsley
+              Sheffield, S9 1ZA
+              %br/
+              %br
+              %em gtimc@sheffield.ac.uk
+              %br 0114 222 2238
+
+            %p.mt-4= Date.today.strftime("%d/%m/%Y")
+
+            %p.mt-4
+              =@company.name
+              %br=@company.street_name
+              =@company.postcode
+
+            %p.mt-4
+              %strong Subject: Official Audit Report - #{@audit.id.to_s.rjust(6, "0")}
+
+            %p.mt-4
+            Dear #{@company.name},
+            %br/
+            We are writing to formally request an audit of #{@company.name} in accordance with our quality assurance and regulatory compliance requirements. The details of the proposed audit are as follows:
+            %br/
+
+            %p.mt-4
+              Assigned Auditor(s): 
+              - @assigned_auditors.each do |auditor|
+                -if auditor == @assigned_auditors.last
+                  = auditor.first_name + " " + auditor.last_name
+                -else
+                  = auditor.first_name + " " + auditor.last_name + ", "
+
+            %p.mt-4
+              Audit Scope:
+              %br/
+              = text_area_tag :audit_scope, @audit_detail.scope, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+            %br/
+            %p.mt-4 Audit Date(s): #{@audit.scheduled_start_date.strftime("%d/%m/%Y")} - #{@audit.scheduled_end_date.strftime("%d/%m/%Y")}
+            - start = DateTime.parse("2025-03-01 14:00:00")
+            - finish = DateTime.parse("2025-11-12 14:00:00")
+            - duration = finish - start
+            - duration = distance_of_time_in_words(start, finish)
+
+            %p.mt-4
+              Duration of Audit: 
+              %strong #{duration}
+            %br/
+
+            %p.mt-4
+              Location of Audit: 
+              - company_id = @audit.company_id
+              - location = Company.find(company_id).street_name
+              = text_area_tag :audit_location, location ,class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 2
+
+
+            %p.mt-4
+              Audit Criteria:
+              %br/
+              = text_area_tag :audit_scope, @audit_detail.objectives, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+            
+            %p.mt-4
+              The purpose of this audit is to assess:
+              %br/
+              = text_area_tag :audit_objectives, @audit_detail.purpose, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+
+            %p.mt-4
+              The audit will include a review of relevant documentation, site walkthroughs, and interviews with key personnel.
+              We kindly request your cooperation in facilitating this process by providing access to necessary records, personnel, and facilities. Please confirm your availability for the proposed dates or suggest alternative dates if required.
+              Should you have any questions or require further clarification, please do not hesitate to contact us at Lead Auditor Contact. We appreciate your time and cooperation in this matter and look forward to working with you.
+            %br/
+            %p.mt-3
+              Best regards,
+              %br
+              %em= @lead_auditor&.full_name || "Place Holder"
+              %br Lead Auditor
+              Gene Therapy Innovation and Manufacturing Centre
+              %br= @lead_auditor&.email || "gtimc@sheffield.ac.uk"
+
+            .form-group.mt-4.d-flex.justify-content-between
+              = link_to "Cancel", audit_path(@audit), class: "btn btn-danger"
+              = f.submit "Save Changes", class: "btn btn-warning"
+              = link_to "Preview", "#", class: "btn btn-success"    

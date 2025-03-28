@@ -20,14 +20,15 @@
               %br Business Park, Europa Ave, Tinsley
               %br Sheffield, S9 1ZA
               %br
-              %em GTIMC email
+              %em gtimc@sheffield.ac.uk
               %br 0114 222 2238
 
             %p.mt-3= Date.today.strftime("%d/%m/%Y")
 
-            %p
-              = @company.name
-              %br= @company.address
+            %p.mt-4
+              =@company.name
+              %br=@company.street_name
+              =@company.postcode
 
             %p
               %strong Subject: Official Audit Report - #{@audit.id.to_s.rjust(6, "0")}
