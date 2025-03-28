@@ -233,18 +233,22 @@ class CreateEditAuditsController < ApplicationController
     @standards = AuditStandard.all
     @audit_details = AuditDetail.all
 
+    assignment = params[:audit_assignment] || {}
+    audit = params[:audit] || {}
+    audit_detail = params[:audit_detail] || {}
     required_fields = [
       params.dig(:company, :id),
-      params.dig(:audit_assignment, :auditee),
-      params.dig(:audit_assignment, :lead_auditor),
-      params.dig(:audit, :scheduled_start_date),
-      params.dig(:audit, :scheduled_end_date),
-      params.dig(:audit, :audit_type),
-      params.dig(:audit_detail, :scope),
-      params.dig(:audit_detail, :objectives),
-      params.dig(:audit_detail, :purpose),
-      params.dig(:audit_detail, :boundaries)
+      assignment[:auditee],
+      assignment[:lead_auditor],
+      audit[:scheduled_start_date],
+      audit[:scheduled_end_date],
+      audit[:audit_type],
+      audit_detail[:scope],
+      audit_detail[:objectives],
+      audit_detail[:purpose],
+      audit_detail[:boundaries]
     ]
+    
     unless required_fields.all?(&:present?)
       flash.now[:alert] = "Invalid request changes of audit details. Please complete all required fields."
       
