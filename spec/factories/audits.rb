@@ -5,6 +5,7 @@
 #  id                   :bigint           not null, primary key
 #  actual_end_date      :datetime
 #  actual_start_date    :datetime
+#  audit_type           :string
 #  final_outcome        :integer
 #  scheduled_end_date   :datetime
 #  scheduled_start_date :datetime

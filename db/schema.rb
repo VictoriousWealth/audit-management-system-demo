@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_19_183408) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,11 +19,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_19_183408) do
     t.integer "status"
     t.datetime "time_accepted"
     t.bigint "user_id", null: false
-    t.bigint "audit_assignments_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
-    t.index ["audit_assignments_id"], name: "index_audit_assignments_on_audit_assignments_id"
     t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
     t.index ["user_id"], name: "index_audit_assignments_on_user_id"
   end
@@ -123,6 +121,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_19_183408) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "company_id", null: false
+    t.string "audit_type"
     t.index ["company_id"], name: "index_audits_on_company_id"
     t.index ["user_id"], name: "index_audits_on_user_id"
   end
@@ -324,7 +323,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_19_183408) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
   add_foreign_key "audit_assignments", "audits"
   add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"

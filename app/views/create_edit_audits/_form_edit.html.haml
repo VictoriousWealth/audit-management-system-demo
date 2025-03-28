@@ -1,0 +1,184 @@
+= form_with url: create_edit_audit_path(@audit), method: :patch, local: true do
+  .container.border.border-black.border-1.p-4.rounded-5
+    .form-group
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "company[id]", "Vendor/Supplier's Name"
+      = select_tag "company[id]", options_from_collection_for_select(@companies, :id, :name, @company_id), prompt: "Select the Company's Name", class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
+
+    .form-group
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit_assignment[auditee]", "Auditee"
+      = select_tag "audit_assignment[auditee]", options_from_collection_for_select(@auditees, :id, :email, @auditee_id), prompt: "Select an Auditee's Email", class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
+
+    .form-group.mb-4
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit[audit_type]", "Type of Audit"
+      = select_tag "audit[audit_type]", options_for_select(@audit_types, @audit_type), prompt: "Select Audit Type", class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
+
+    / === LEAD AUDITOR ACCORDION ===
+    %div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionLeadAuditor
+      %div.accordion-item.border-0
+        %h2.accordion-header#headingLeadAuditor
+          %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseLeadAuditor", "aria-expanded" => "false", "aria-controls" => "collapseLeadAuditor"}
+            .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Lead Auditor
+            %span.custom-arrow.ms-2.fs-4 
+              ▼
+        %div.accordion-collapse.collapse#collapseLeadAuditor{"aria-labelledby" => "headingLeadAuditor", "data-bs-parent" => "#accordionLeadAuditor"}
+          %div.accordion-body.bg-white.rounded-bottom-4
+            .form-group
+              .text-black-75.text-capitalize.fs-3.mb-2
+                = label_tag "audit_assignment[lead_auditor]", "Lead Auditor"
+              = select_tag "audit_assignment[lead_auditor]", options_from_collection_for_select(@auditors, :id, :email, @lead_auditor_id), prompt: "Select the Lead Auditor's Email", class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
+    
+
+    / === SUPPORT AUDITOR ACCORDION ===
+    %div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionSupportAuditor
+      %div.accordion-item.border-0
+        %h2.accordion-header#headingSupportAuditor
+          %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseSupportAuditor", "aria-expanded" => "false", "aria-controls" => "collapseSupportAuditor"}
+            .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Support Auditor
+            %span.custom-arrow.ms-2.fs-4
+              ▼
+        %div.accordion-collapse.collapse#collapseSupportAuditor{"aria-labelledby" => "headingSupportAuditor", "data-bs-parent" => "#accordionSupportAuditor"}
+          %div.accordion-body.bg-white.rounded-bottom-4
+            %button.btn.btn-primary.btn-sm#add-support-auditor{type: "button", title: "Add Support Auditor", "aria-label" => "Add Support Auditor"}
+              %span.plus 
+                ⨁
+              %span.text Add a support auditor
+            #support-auditor-container
+              - (@support_auditor_ids || []).each do |id|
+                .form-group.mt-4.support-auditor-field
+                  .text-black-75.text-capitalize.fs-3.mb-2.visually-hidden
+                    = label_tag "audit_assignment[support_auditor][]", "Support Auditor's Email"
+                  = select_tag "audit_assignment[support_auditor][]", options_from_collection_for_select(@auditors, :id, :email, id), prompt: "Select a Support Auditor's email", class: "text-black-50 text-capitalize form-control fw-semibold mb-2"
+                  %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-support-auditor{type: "button"} ⊖
+
+
+    / === SUBJECT MATTER EXPERT ACCORDION ===
+    %div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionSME
+      %div.accordion-item.border-0
+        %h2.accordion-header#headingSME
+          %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseSME", "aria-expanded" => "false", "aria-controls" => "collapseSME"}
+            .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Subject Matter Expert (SME)
+            %span.custom-arrow.ms-2.fs-4
+              ▼
+        %div.accordion-collapse.collapse#collapseSME{"aria-labelledby" => "headingSME", "data-bs-parent" => "#accordionSME"}
+          %div.accordion-body.bg-white.rounded-bottom-4
+            %button.btn.btn-primary.btn-sm#add-sme{type: "button", title: "Add SME", "aria-label" => "Add SME"}
+              %span.plus ⨁
+              %span.text.ms-2 Add a subject matter expert
+            #sme-container
+              - (@sme_ids || []).each do |id|
+                .form-group.mt-4.sme-field
+                  .text-black-75.text-capitalize.fs-3.mb-2.visually-hidden
+                    = label_tag "audit_assignment[sme][]", "Subject Matter Expert's Email"
+                  = select_tag "audit_assignment[sme][]", options_from_collection_for_select(@users, :id, :email, id), prompt: "Select a Subject Matter Expert", class: "text-black-50 text-capitalize form-control fw-semibold mb-2"
+                  %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-sme{type: "button", title: "Remove SME", "aria-label" => "Remove SME"} ⊖
+
+
+    / === APPLICABLE STANDARD DYNAMIC SECTION ===
+    %div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionStandards
+      %div.accordion-item.border-0
+        %h2.accordion-header#headingStandards
+          %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseStandards", "aria-expanded" => "false", "aria-controls" => "collapseStandards"}
+            .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Applicable Standards
+            %span.custom-arrow.ms-2.fs-4
+              ▼
+        %div.accordion-collapse.collapse#collapseStandards{"aria-labelledby" => "headingStandards", "data-bs-parent" => "#accordionStandards"}
+          %div.accordion-body.bg-white.rounded-bottom-4
+            %button.btn.btn-primary.btn-sm#add-standard{type: "button", title: "Add Standard", "aria-label" => "Add Standard"}
+              %span.plus ⨁
+              %span.text.ms-2 Add a standard
+            #standard-container
+              - (@applicable_standards || []).each do |std|
+                .form-group.mt-4.standard-field
+                  .text-black-75.text-capitalize.fs-3.mb-2.visually-hidden
+                    = label_tag "audit_standard[standard][]", "Applicable Standard"
+                  = text_field_tag "audit_standard[standard][]", std, list: "standard-options", class: "text-black-50 text-capitalize form-control fw-semibold mb-2", placeholder: "Type and select an applicable standard"
+                  %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-standard{type: "button", title: "Remove Standard", "aria-label" => "Remove Standard"} ⊖
+            %datalist#standard-options
+              - @standards.each do |standard|
+                %option{ value: standard.standard }
+
+    / === SCHEDULED DATES ACCORDION ===
+    %div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionScheduledDates
+      %div.accordion-item.border-0
+        %h2.accordion-header#headingScheduledDates
+          %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseScheduledDates", "aria-expanded" => "false", "aria-controls" => "collapseScheduledDates"}
+            .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Scheduled Audit Dates
+            %span.custom-arrow.ms-2.fs-4
+              ▼
+        %div.accordion-collapse.collapse#collapseScheduledDates{"aria-labelledby" => "headingScheduledDates", "data-bs-parent" => "#accordionScheduledDates"}
+          %div.accordion-body.bg-white.rounded-bottom-4
+            .form-group.d-flex.align-items-baseline
+              .text-black-75.text-capitalize.mb-2.me-2{ style: "min-width: max-content;" }
+                = label_tag "audit[scheduled_start_date]", "Start Date"
+              = datetime_field_tag "audit[scheduled_start_date]", @scheduled_start.is_a?(String) ? @scheduled_start : @scheduled_start&.strftime('%Y-%m-%dT%H:%M'), class: "form-control mb-4"
+
+            .form-group.d-flex.align-items-baseline
+              .text-black-75.text-capitalize.mb-2.me-2{ style: "min-width: max-content;" }
+                = label_tag "audit[scheduled_end_date]", "End Date"
+              = datetime_field_tag "audit[scheduled_end_date]", @scheduled_end.is_a?(String) ? @scheduled_end : @scheduled_end&.strftime('%Y-%m-%dT%H:%M'), class: "form-control"
+
+    / === ACTUAL DATES ACCORDION ===
+    %div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionActualDates
+      %div.accordion-item.border-0
+        %h2.accordion-header#headingActualDates
+          %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseActualDates", "aria-expanded" => "false", "aria-controls" => "collapseActualDates"}
+            .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Actual Audit Dates
+            %span.custom-arrow.ms-2.fs-4
+              ▼
+        %div.accordion-collapse.collapse#collapseActualDates{"aria-labelledby" => "headingActualDates", "data-bs-parent" => "#accordionActualDates"}
+          %div.accordion-body.bg-white.rounded-bottom-4
+            .form-group.d-flex.align-items-baseline
+              .text-black-75.text-capitalize.mb-2.me-2{ style: "min-width: max-content;" }
+                = label_tag "audit[actual_start_date]", "Start Date:"
+              = datetime_field_tag "audit[actual_start_date]", @actual_start.is_a?(String) ? @actual_start : @actual_start&.strftime('%Y-%m-%dT%H:%M'), class: "form-control mb-4"
+
+            .form-group.d-flex.align-items-baseline
+              .text-black-75.text-capitalize.mb-2.me-2{ style: "min-width: max-content;" }
+                = label_tag "audit[actual_end_date]", "End Date:"
+              = datetime_field_tag "audit[actual_end_date]", @actual_end.is_a?(String) ? @actual_end : @actual_end&.strftime('%Y-%m-%dT%H:%M'), class: "form-control"
+
+    / === AUDIT SCOPE ACCORDION ===
+    %div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionAuditScope
+      %div.accordion-item.border-0
+        %h2.accordion-header#headingAuditScope
+          %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseAuditScope", "aria-expanded" => "false", "aria-controls" => "collapseAuditScope"}
+            .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Audit Scope
+            %span.custom-arrow.ms-2.fs-4
+              ▼
+        %div.accordion-collapse.collapse#collapseAuditScope{"aria-labelledby" => "headingAuditScope", "data-bs-parent" => "#accordionAuditScope"}
+          %div.accordion-body.bg-white.rounded-bottom-4
+            .form-group
+              .text-black-75.text-capitalize.fs-3.mb-2
+                = label_tag "audit_detail[scope]", "Scope", hidden: true
+              = select_tag "audit_detail[scope]", options_for_select(@audit_details.map(&:scope), @scope), prompt: "Select a Predefined Scope", class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
+
+
+    .form-group.mt-4
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit_detail[objectives]", "Audit Objectives"
+      = text_area_tag "audit_detail[objectives]", @objectives, class: "form-control bg-light border-1 rounded-0 py-3", placeholder: "Enter the audit objectives here...", rows: 4
+
+    .form-group.mt-2
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit_detail[purpose]", "Purpose of the Audit"
+      = text_area_tag "audit_detail[purpose]", @purpose, class: "form-control bg-light border-1 rounded-0 py-3", placeholder: "Enter the purpose of the audit here...", rows: 4
+
+    .form-group.mt-2.mb-4
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit_detail[boundaries]", "Boundaries of the Audit"
+      = text_area_tag "audit_detail[boundaries]", @boundaries, class: "form-control bg-light border-1 rounded-0 py-3", placeholder: "Enter the boundaries of the audit here...", rows: 4
+
+
+  .d-flex.align-items-center.justify-content-center.mt-3.mb-3
+    = submit_tag "Save Changes", name: "commit", value: "Save Changes", class: "btn btn-warning me-3"
+    = submit_tag "Close Audit", name: "commit", value: "Close Audit", class: "btn btn-danger"
+  
+  
+  
+  %script#auditor-data{type: "application/json"}
+    = raw @auditors.to_json(only: [:id, :email])
+  %script#user-data{type: "application/json"}
+    = raw @users.to_json(only: [:id, :email])
