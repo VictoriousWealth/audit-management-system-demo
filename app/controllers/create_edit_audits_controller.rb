@@ -16,7 +16,7 @@ class CreateEditAuditsController < ApplicationController
   def create
     # If "Close Audit" was clicked, do not save anything
     if params[:commit] == "Close Audit"
-      redirect_to audits_path, notice: "Audit creation cancelled. No data was saved."
+      redirect_to create_edit_audits_path, notice: "Audit creation cancelled. No data was saved."
       return
     end
 
@@ -30,17 +30,20 @@ class CreateEditAuditsController < ApplicationController
     @standards = AuditStandard.all
     @audit_details = AuditDetail.all
 
+    assignment = params[:audit_assignment] || {}
+    audit = params[:audit] || {}
+    audit_detail = params[:audit_detail] || {}
     required_fields = [
       params.dig(:company, :id),
-      params.dig(:audit_assignment, :auditee),
-      params.dig(:audit_assignment, :lead_auditor),
-      params.dig(:audit, :scheduled_start_date),
-      params.dig(:audit, :scheduled_end_date),
-      params.dig(:audit, :audit_type),
-      params.dig(:audit_detail, :scope),
-      params.dig(:audit_detail, :objectives),
-      params.dig(:audit_detail, :purpose),
-      params.dig(:audit_detail, :boundaries)
+      assignment[:auditee],
+      assignment[:lead_auditor],
+      audit[:scheduled_start_date],
+      audit[:scheduled_end_date],
+      audit[:audit_type],
+      audit_detail[:scope],
+      audit_detail[:objectives],
+      audit_detail[:purpose],
+      audit_detail[:boundaries]
     ]
 
     unless required_fields.all?(&:present?)
@@ -52,7 +55,6 @@ class CreateEditAuditsController < ApplicationController
     # Proceed with saving logic below...
     # Find the company
     company_id = params.dig(:company, :id)
-    @company = Company.find_by(id: company_id)
   
     # Create the Audit
     @audit = Audit.new(
@@ -63,47 +65,95 @@ class CreateEditAuditsController < ApplicationController
       actual_start_date: params.dig(:audit, :actual_start_date),
       actual_end_date: params.dig(:audit, :actual_end_date)
     )
-  
+    puts @audit.errors.full_messages
+
     if @audit.save
       # Create AuditDetail
-      audit_detail = @audit.build_audit_detail(
-        scope: params.dig(:audit_detail, :scope),
+      audit_detail = AuditDetail.new(
+        boundaries: params.dig(:audit_detail, :boundaries),
         objectives: params.dig(:audit_detail, :objectives),
         purpose: params.dig(:audit_detail, :purpose),
-        boundaries: params.dig(:audit_detail, :boundaries)
+        scope: params.dig(:audit_detail, :scope),
+        audit_id: @audit.id
       )
-      audit_detail.save
+
+      # Check if save is successful or failed
+      puts "Before creating detail: #{AuditDetail.count}"
+      if audit_detail.save
+        # Proceed if save is successful
+        puts "AuditDetail created successfully!"
+      else
+        # Print out errors if save fails
+        puts "Failed to create AuditDetail: #{audit_detail.errors.full_messages.join(', ')}"
+        render :new and return # Early return if AuditDetail fails to save
+      end
+      puts "After creating detail: #{AuditDetail.count}"
+
   
       # Create AuditStandards
+      puts "Before creating standards: #{AuditStandard.count}"
       standards = params[:audit_standard][:standard] rescue []
       standards.each do |std|
-        audit_detail.audit_standards.create(standard: std)
+        AuditStandard.create(standard: std, audit_detail_id: audit_detail.id)
+        puts "Created AuditStandard: #{std}"
+        # Check if i`t's saved successfully
+        audit_detail.audit_standards.reload
+        puts "AuditStandard count after creation: #{audit_detail.audit_standards.count}"
       end
+      puts "After creating standards: #{AuditStandard.count}"
+
+
   
       # Create AuditAssignments
+      puts "Before creating lead auditor assignment: #{AuditAssignment.count}"
       if (lead_id = params.dig(:audit_assignment, :lead_auditor)).present?
         @audit.audit_assignments.create(user_id: lead_id, role: :lead_auditor, status: :assigned)
+        puts "Lead auditor assignment successfully created"
+      else 
+        puts "Lead auditor assignment failed to create"
       end
-  
+      puts "After creating lead auditor assignment: #{AuditAssignment.count}"
+
+      # For Support Auditor Assignment
+      puts "Before creating support auditor assignments: #{AuditAssignment.count}"
       if params[:audit_assignment][:support_auditor].present?
         params[:audit_assignment][:support_auditor].reject(&:blank?).each do |id|
-          @audit.audit_assignments.create(user_id: id, role: :auditor, status: :assigned)
+          assignment = @audit.audit_assignments.create(user_id: id, role: :auditor, status: :assigned)
+          puts "Support auditor assignment #{assignment.id} successfully created"
         end
-      end      
-  
+      else
+        puts "Support auditor assignments failed to create"
+      end
+      puts "After creating support auditor assignments: #{AuditAssignment.count}"
+
+      # For SME Assignment
+      puts "Before creating sme assignments: #{AuditAssignment.count}"
       if params[:audit_assignment][:sme].present?
         params[:audit_assignment][:sme].reject(&:blank?).each do |id|
-          @audit.audit_assignments.create(user_id: id, role: :sme, status: :assigned)
+          assignment = @audit.audit_assignments.create(user_id: id, role: :sme, status: :assigned)
+          puts "SME assignment #{assignment.id} successfully created"
         end
-      end      
-  
+      else
+        puts "SME assignments failed to create"
+      end
+      puts "After creating sme assignments: #{AuditAssignment.count}"
+
+
+      
+      puts "Before creating auditee assignment: #{AuditAssignment.count}"
       if (auditee_id = params.dig(:audit_assignment, :auditee)).present?
         @audit.audit_assignments.create(user_id: auditee_id, role: :auditee, status: :assigned)
+        puts "Auditee assignment created successuflly."
+      else
+        puts "Auditee assignment failed to create."
       end
-  
+      puts "After creating auditee assignment: #{AuditAssignment.count}"
+
+      puts "Audit created sucessfully"
       redirect_to edit_create_edit_audit_path(@audit), notice: 'Audit created successfully.'
     else
-      render :new
+      puts "Failed to create Audit: #{@audit.errors.full_messages.join(', ')}"
+      render :new and return
     end
   end
 
@@ -146,7 +196,7 @@ class CreateEditAuditsController < ApplicationController
 
   def update
     if params[:commit] == "Close Audit"
-      redirect_to audits_path, notice: "No changes were saved. Audit not modified."
+      redirect_to create_edit_audits_path, notice: "No changes were saved. Audit not modified."
       return
     end
 
@@ -245,19 +295,44 @@ class CreateEditAuditsController < ApplicationController
 
     if @audit.save
       # === Update AuditDetail ===
-      audit_detail = @audit.audit_detail || @audit.build_audit_detail
-      audit_detail.update(
-        scope: params.dig(:audit_detail, :scope),
-        objectives: params.dig(:audit_detail, :objectives),
-        purpose: params.dig(:audit_detail, :purpose),
-        boundaries: params.dig(:audit_detail, :boundaries)
-      )
+      # Find the AuditDetail associated with the current Audit
+      audit_detail = AuditDetail.find_by(audit_id: @audit.id)
+
+      if audit_detail.present?
+        scope = params.dig(:audit_detail, :scope)
+        objectives = params.dig(:audit_detail, :objectives)
+        purpose = params.dig(:audit_detail, :purpose)
+        boundaries = params.dig(:audit_detail, :boundaries)
+
+        if scope.present? && objectives.present? && purpose.present? && boundaries.present?
+          if audit_detail.update(
+                scope: scope,
+                objectives: objectives,
+                purpose: purpose,
+                boundaries: boundaries
+              )
+            puts "AuditDetail updated successfully!"
+          else
+            puts "Failed to update AuditDetail: #{audit_detail.errors.full_messages.join(', ')}"
+          end
+        else
+          puts "Missing required parameters for AuditDetail update."
+        end
+      else
+        puts "AuditDetail not found for Audit ID: #{@audit.id}"
+      end
+
+
 
       # === Update AuditStandards ===
       audit_detail.audit_standards.destroy_all
       standards = params[:audit_standard][:standard] rescue []
       standards.each do |std|
-        audit_detail.audit_standards.create(standard: std)
+        AuditStandard.create(standard: std, audit_detail_id: audit_detail.id)
+        puts "Created AuditStandard: #{std}"  # Log the created standard
+        # Check if i`t's saved successfully
+        audit_detail.audit_standards.reload
+        puts "AuditStandard count after creation: #{audit_detail.audit_standards.count}"
       end
 
       # === Update AuditAssignments ===
@@ -268,18 +343,25 @@ class CreateEditAuditsController < ApplicationController
 
       if params[:audit_assignment][:support_auditor].present?
         params[:audit_assignment][:support_auditor].reject(&:blank?).each do |id|
-          @audit.audit_assignments.create(user_id: id, role: :auditor, status: :assigned)
+          AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :auditor, status: :assigned)
         end
+        puts "Support auditor assignments created successfully."
+      else 
+        puts "Failed to create support_auditor assignments."
       end      
 
       if params[:audit_assignment][:sme].present?
         params[:audit_assignment][:sme].reject(&:blank?).each do |id|
-          @audit.audit_assignments.create(user_id: id, role: :sme, status: :assigned)
+          AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :sme, status: :assigned)
         end
+        puts "Sme assignments created successfully."
+      else 
+        puts "Failed to create sme assignments."
       end      
 
-      redirect_to edit_create_edit_audit_path(@audit), notice: "Audit updated successfully."
+      redirect_to edit_create_edit_audit_path(@audit.reload), notice: "Audit updated successfully."
     else
+      puts "Failed to create audit."
       flash.now[:alert] = "Something went wrong while updating."
       render :edit
     end
