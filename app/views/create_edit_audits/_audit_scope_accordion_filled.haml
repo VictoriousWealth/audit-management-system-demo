@@ -29,7 +29,7 @@
           .text-black-75.text-capitalize.fs-3.mb-2
             = label_tag "audit_detail[scope]", "Scope", hidden: true
           / TextArea field for writing a scope
-          = text_area_tag "audit_detail[objectives]", @scope,
+          = text_area_tag "audit_detail[scope]", @scope,
             class: "form-control bg-light border-1 rounded-0 py-3",
             placeholder: "Enter the audit's scope here...",
             rows: 4

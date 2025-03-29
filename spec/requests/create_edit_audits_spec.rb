@@ -30,6 +30,13 @@ RSpec.describe CreateEditAuditsController, type: :controller do
     user
   end
 
+  # Print the total user count to confirm setup and signs in a test user
+  before do
+    puts "Users created: #{User.count}"
+    # @user = User.create(email: "tester@tester.com", password: "test_password", role: :qa_manager)
+    sign_in lead_auditor
+  end
+
   # --- NEW ACTION TEST ---
   describe "GET #new" do
     it "renders the new template" do
@@ -69,6 +76,8 @@ RSpec.describe CreateEditAuditsController, type: :controller do
         commit: "Save Changes"
       }
     end
+
+
 
     it "redirects if 'Close Audit' is clicked" do
       post :create, params: valid_params.merge(commit: "Close Audit")

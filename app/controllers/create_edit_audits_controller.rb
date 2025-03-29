@@ -10,7 +10,7 @@ class CreateEditAuditsController < ApplicationController
     # Handle "Close Audit" action - redirect without saving anything
     if params[:commit] == "Close Audit"
       redirect_to create_edit_audits_path, notice: "Audit creation cancelled. No data was saved."
-      return
+      return 
     end
 
     prepare_options # Load form data for re-rendering if needed
@@ -151,7 +151,7 @@ class CreateEditAuditsController < ApplicationController
     @sme_ids = @audit.audit_assignments.where(role: "sme").pluck(:user_id)
     @applicable_standards = @audit.audit_detail&.audit_standards&.pluck(:standard) || []
 
-    prepare_options
+    prepare_options()
   end
 
   # PATCH/PUT /create_edit_audits/:id

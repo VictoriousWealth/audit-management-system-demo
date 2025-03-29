@@ -30,9 +30,11 @@ RSpec.describe CreateEditAuditsController, type: :controller do
     user
   }
 
-  # Print the total user count to confirm setup
+  # Print the total user count to confirm setup and signs in a test user
   before do
     puts "Users created: #{User.count}"
+    # @user = User.create(email: "tester@tester.com", password: "test_password", role: :qa_manager)
+    sign_in lead_auditor
   end
 
   # Test for GET #new action
