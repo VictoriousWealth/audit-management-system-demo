@@ -20,7 +20,7 @@ RSpec.feature "User Profile", type: :feature do
     expect(page).to have_content(user.role)
   end
 
-  scenario "Profile page should have company if the user is an auditee" do
+  scenario "Profile page should have company details if the user is an auditee" do
     #Login
     login_as(user, scope: :user)
     visit profile_path
@@ -31,6 +31,8 @@ RSpec.feature "User Profile", type: :feature do
     expect(page).to have_content(user.email)
     expect(page).to have_content(user.role)
     expect(page).to have_content("Company")
+    expect(page).to have_content("Address")
+
   end
 
   scenario "Profile page shouldnt have company if the user isnt an auditee" do
@@ -46,6 +48,8 @@ RSpec.feature "User Profile", type: :feature do
 
     #Company is there it just shouldnt be visible
     expect(page).to_not have_selector("b", text: "Company")
+    expect(page).to_not have_selector("b", text: "Address")
+
   end
 
 

@@ -94,6 +94,8 @@ RSpec.feature "Making a user", type: :feature do
 
   end
 
+  #Write test for company address
+
 
   scenario "User tries to create an account with an existing email" do
 

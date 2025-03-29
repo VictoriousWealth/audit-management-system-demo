@@ -11,15 +11,20 @@
     %b Role
   %p= @user.role.humanize.capitalize
 
+  %p
+    %b Email
+  %p= @user.email
+
   -# Show their company if they ar an auditee
   - if current_user.role == "auditee"
     %p
       %b Company
     %p= Company.find_by(id: @user.company_id)&.name || 'No company assigned'
 
-  %p
-    %b Email
-  %p= @user.email
+    %p
+      %b Address 
+    %p= Company.find_by(id: @user.company_id)&.address || 'No company address entered'
+
 
 
 

@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
   # Ensure that the user is authenticated before allowing them to access the
   # application. This will redirect the user to the login page if they are not
   # authenticated
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
 
 
   private
