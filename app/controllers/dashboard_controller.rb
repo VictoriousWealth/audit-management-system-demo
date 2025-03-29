@@ -23,6 +23,7 @@ class DashboardController < ApplicationController
   def auditee
   end
 
+  # this method can be removed
   def qa_manager
   end
 

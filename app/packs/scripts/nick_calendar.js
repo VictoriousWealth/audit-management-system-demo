@@ -21,21 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
         header.className = "custom-calendar-header mb-2";
 
         header.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center mb-2 p-2"
+          <div class="d-flex justify-content-between align-items-center p-2"
                style="background: #c0c0c030; border: solid 1px;">
-            <button class="fc-prev-button btn btn-outline-secondary px-3"
+            <button class="fc-prev-button btn btn-outline-secondary px-3 mt-0"
                     style="border: none; color: #42CA68;">◀</button>
 
             <h2 class="fc-toolbar-title m-0 flex-grow-1 text-center"
-                    style="font-weight: 100;">${calendar.view.title}
+                    style="font-weight: 100; min-inline-size: max-content;">${calendar.view.title}
             </h2>
 
-            <button class="fc-next-button btn btn-outline-secondary px-3"
+            <button class="fc-next-button btn btn-outline-secondary px-3 mt-0"
                     style="border: none; color: #42CA68;">▶</button>
           </div>
 
           <div class="d-flex justify-content-center">
-            <button class="fc-today-button btn btn-primary"
+            <button class="fc-today-button btn btn-primary mt-0"
                     style="background: #c0c0c030;border: black solid;color: black;">Today</button>
           </div>
         `;
