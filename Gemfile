@@ -108,6 +108,6 @@ end
 
 gem 'kramdown'
 gem "chartkick"
-gem "groupdate" # (Optional, but great for time-based grouping)
+gem "groupdate"
 gem 'fullcalendar-rails'
 gem 'faker' # for fake data
