@@ -1,0 +1,43 @@
+/ Accordion wrapper for the "Scheduled Audit Dates" section with styling and unique ID
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionScheduledDates
+  / Individual accordion item (border removed for seamless UI)
+  %div.accordion-item.border-0
+    / Accordion header with unique ID
+    %h2.accordion-header#headingScheduledDates
+      / Button to toggle visibility of the scheduled dates section
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{
+        type: "button",
+        "data-bs-toggle" => "collapse",
+        "data-bs-target" => "#collapseScheduledDates",
+        "aria-expanded" => "false",
+        "aria-controls" => "collapseScheduledDates"
+      }
+        / Title for the section
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Scheduled Audit Dates
+        / Visual toggle icon
+        %span.custom-arrow.ms-2.fs-4
+          ▼
+
+    / Collapsible content section tied to the header
+    %div.accordion-collapse.collapse#collapseScheduledDates{
+      "aria-labelledby" => "headingScheduledDates",
+      "data-bs-parent" => "#accordionScheduledDates"
+    }
+      / Accordion body with white background and rounded bottom edges
+      %div.accordion-body.bg-white.rounded-bottom-4
+
+        / Form group for selecting start date
+        .form-group.d-flex.align-items-baseline
+          / Label for start date with consistent spacing
+          .text-black-75.text-capitalize.mb-2.me-2{ style: "min-width: max-content;" }
+            = label_tag "audit[scheduled_start_date]", "Start Date"
+          / Input field for start date/time
+          = datetime_field_tag "audit[scheduled_start_date]", nil, class: "form-control mb-4", required: true
+
+        / Form group for selecting end date
+        .form-group.d-flex.align-items-baseline
+          / Label for end date with same style
+          .text-black-75.text-capitalize.mb-2.me-2{ style: "min-width: max-content;" }
+            = label_tag "audit[scheduled_end_date]", "End Date"
+          / Input field for end date/time
+          = datetime_field_tag "audit[scheduled_end_date]", nil, class: "form-control", required: true

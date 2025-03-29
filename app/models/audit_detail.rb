@@ -21,5 +21,6 @@
 #
 class AuditDetail < ApplicationRecord
   belongs_to :audit
-  has_many :audit_standards
+  has_many :audit_standards, dependent: :destroy
+  accepts_nested_attributes_for :audit_standards, allow_destroy: true
 end

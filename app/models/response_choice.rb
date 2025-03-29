@@ -15,5 +15,5 @@ class ResponseChoice < ApplicationRecord
     non_applicable: 3,
   }
   belongs_to :question_bank
-  has_one :selected_response, optional: true
+  has_one :selected_response, required: false
 end

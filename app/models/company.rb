@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 class Company < ApplicationRecord
-  has_many :users                
+  has_many :users
   has_many :audits
   has_many :contacts
 end

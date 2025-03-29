@@ -31,6 +31,18 @@
             = link_to '/', class: 'active nav-link' do
               %i.bi-house-fill
               Home
+      - if user_signed_in?
+        .nav-item
+          = link_to destroy_user_session_path, method: :delete, class: 'nav-link' do
+            Log Out
+        .navbar-text= current_user.email
+      - else 
+        .nav-item
+          = link_to new_user_session_path, class: 'nav-link' do
+            Log In
+        .nav-item
+          = link_to new_user_registration_path, class: 'nav-link' do
+            Sign Up
 
     - if flash.present?
       .container-fluid.flash-messages

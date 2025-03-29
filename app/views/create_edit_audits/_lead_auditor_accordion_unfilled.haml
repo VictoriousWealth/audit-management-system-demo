@@ -1,0 +1,29 @@
+/ Accordion wrapper for the "Lead Auditor" section with styling and unique ID
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionLeadAuditor
+  / Individual accordion item without border
+  %div.accordion-item.border-0
+    / Accordion header
+    %h2.accordion-header#headingLeadAuditor
+      / Button that toggles the visibility of the "Lead Auditor" form section
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseLeadAuditor", "aria-expanded" => "false", "aria-controls" => "collapseLeadAuditor"}
+        / Header title styled
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Lead Auditor
+        / Visual arrow icon for collapsing/expanding (can be animated or styled)
+        %span.custom-arrow.ms-2.fs-4 
+          ▼
+
+    / Collapsible content container for the "Lead Auditor" form
+    %div.accordion-collapse.collapse#collapseLeadAuditor{"aria-labelledby" => "headingLeadAuditor", "data-bs-parent" => "#accordionLeadAuditor"}
+      %div.accordion-body.bg-white.rounded-bottom-4
+        / Form group to select a lead auditor
+        .form-group
+          / Label for the select dropdown
+          .text-black-75.text-capitalize.fs-3.mb-2
+            = label_tag "audit_assignment[lead_auditor]", "Lead Auditor"
+          
+          / Dropdown menu populated with auditors' emails from @auditors
+          = select_tag "audit_assignment[lead_auditor]", 
+              options_from_collection_for_select(@auditors, :id, :email), 
+              prompt: "Select the Lead Auditor's Email", 
+              required: true,
+              class: "text-black-50 text-capitalize form-control fw-semibold mb-4"

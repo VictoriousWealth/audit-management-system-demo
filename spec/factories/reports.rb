@@ -9,19 +9,16 @@
 #  time_of_verification :datetime
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  audit_finding_id     :bigint           not null
 #  audit_id             :bigint           not null
 #  user_id              :bigint           not null
 #
 # Indexes
 #
-#  index_reports_on_audit_finding_id  (audit_finding_id)
-#  index_reports_on_audit_id          (audit_id)
-#  index_reports_on_user_id           (user_id)
+#  index_reports_on_audit_id  (audit_id)
+#  index_reports_on_user_id   (user_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (audit_finding_id => audit_findings.id)
 #  fk_rails_...  (audit_id => audits.id)
 #  fk_rails_...  (user_id => users.id)
 #
