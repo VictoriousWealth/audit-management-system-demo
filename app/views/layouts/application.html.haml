@@ -19,29 +19,68 @@
     = javascript_pack_tag 'application'
 
   %body
-    %header.navbar.navbar-expand-lg.bg-light.mb-3
-      .container-fluid
-        = link_to '#', class: 'navbar-brand' do
-          = image_pack_tag 'images/logo.png', height: 40
-        %button.navbar-toggler{ type: :button, data: { bs_toggle: :collapse, bs_target: '#navbar-content' }, aria: { controls: 'navbar-content', expanded: 'false', label: 'Toggle navigation' } }
-          %span.navbar-toggler-icon
-        #navbar-content.navbar-collapse.collapse
-          %nav.navbar-nav
-            = link_to '/', class: 'active nav-link' do
-              %i.bi-house-fill
-              Home
-      - if user_signed_in?
-        .nav-item
-          = link_to destroy_user_session_path, method: :delete, class: 'nav-link' do
-            Log Out
-        .navbar-text= current_user.email
-      - else 
-        .nav-item
-          = link_to new_user_session_path, class: 'nav-link' do
-            Log In
-        .nav-item
-          = link_to new_user_registration_path, class: 'nav-link' do
-            Sign Up
+    - if user_signed_in?
+      %nav.navbar
+        .container
+          %a.navbar-brand{ href: dashboard_path_for(current_user) }
+            = image_pack_tag 'images/GTIMC Logo.png', height: 40
+
+          %div.navbar-icons
+            %div.user-name
+              = link_to "#{current_user.first_name} #{current_user.last_name}", profile_path, class: 'user-name-link'
+              %span.user-role= current_user.role.humanize.capitalize
+            %a{ href: notifications_path }
+              %i.bi.bi-bell
+            %span{ onclick: "openNav()" } 
+              = image_pack_tag 'images/MenuLines.png', height: 40
+
+
+      -# The drop down menu for the navighation of the stie
+      #mySidenav.sidenav
+        %a.closebtn{ href: "javascript:void(0)", onclick: "closeNav()" } &times;
+
+        %a.dropdown-btn{ href: "#" } Letters & Reports
+        %div.dropdown-container
+          %a{ href: "#" } Audit Request Letter
+          %a{ href: "#" } Audit Closure Letter 
+          %a{ href: "#" } Audit Report
+
+        %a.dropdown-btn{ href: "#" } Questionnaires
+        %div.dropdown-container
+          %a{ href: "#" } Create Questionnaire
+          %a{ href: "#" } Preview Questionnaire
+          %a{ href: "#" } Send Email
+          %a{ href: "#" } Questionnaire Response
+
+
+        %a.dropdown-btn{ href: "#" } Audits
+        %div.dropdown-container
+          %a{ href: "#" } Create/Edit Audit
+          %a{ href: "#" } View Audit
+          %a{ href: "#" } Assigned Audit
+          %a{ href: "#" } Audit Progress
+          %a{ href: "#" } Audit History
+          %a{ href: "#" } Send Updates
+          %a{ href: "#" } Upload Supporting Documents
+
+        %a.dropdown-btn{ href: "#" } Records
+        %div.dropdown-container
+          %a{ href: "#" } Communication Logs
+          %a{ href: "#" } Company Records
+          %a{ href: "#" } Audit Logs
+          %a{ href: "#" } Document Logs
+          %a{ href: "#" } Documents
+
+        - if current_user.role == "qa_manager"
+          = link_to 'Add New User', new_admin_user_path
+
+
+
+    - else 
+      %nav.navbar
+        .container
+          %a.navbar-brand{ href: "#" }
+            = image_pack_tag 'images/GTIMC Logo.png', height: 40
 
     - if flash.present?
       .container-fluid.flash-messages
@@ -53,7 +92,9 @@
       .container-fluid
         = yield
 
-    %footer
-      .container-fluid
-        .d-flex.p-3
-          Footer text
+    .footer
+      %p &copy; GTIMC 2025
+
+
+
+    
