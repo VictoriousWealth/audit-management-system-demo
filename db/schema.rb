@@ -83,6 +83,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
     t.index ["custom_questionnaire_id"], name: "index_audit_questionnaires_on_custom_questionnaire_id"
   end
 
+  create_table "audit_request_letters", force: :cascade do |t|
+    t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
+    t.string "content"
+    t.datetime "time_of_creation"
+    t.datetime "time_of_verification"
+    t.datetime "time_of_distribution"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["audit_id"], name: "index_audit_request_letters_on_audit_id"
+    t.index ["user_id"], name: "index_audit_request_letters_on_user_id"
+  end
+
   create_table "audit_schedules", force: :cascade do |t|
     t.string "task"
     t.datetime "expected_start"
@@ -250,10 +263,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
     t.datetime "time_of_distribution"
     t.bigint "audit_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "audit_finding_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["audit_finding_id"], name: "index_reports_on_audit_finding_id"
     t.index ["audit_id"], name: "index_reports_on_audit_id"
     t.index ["user_id"], name: "index_reports_on_user_id"
   end
@@ -333,6 +344,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
   add_foreign_key "audit_logs", "users"
   add_foreign_key "audit_questionnaires", "audits"
   add_foreign_key "audit_questionnaires", "custom_questionnaires"
+  add_foreign_key "audit_request_letters", "audits"
+  add_foreign_key "audit_request_letters", "users"
   add_foreign_key "audit_schedules", "audits"
   add_foreign_key "audit_schedules", "users"
   add_foreign_key "audit_standards", "audit_details"
@@ -348,7 +361,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
   add_foreign_key "login_attempts", "users"
   add_foreign_key "question_banks", "response_choices", column: "response_choices_id"
   add_foreign_key "questionnaire_sections", "custom_questionnaires"
-  add_foreign_key "reports", "audit_findings"
   add_foreign_key "reports", "audits"
   add_foreign_key "reports", "users"
   add_foreign_key "section_questions", "question_banks"
