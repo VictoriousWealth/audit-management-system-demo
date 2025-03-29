@@ -11,7 +11,7 @@
     %tbody
       - @to_be_scheduled_audits.each do |audit|
         %tr
-          %td= link_to audit.id.to_s.rjust(4, '0'), '#'
+          %td= link_to audit.id.to_s.rjust(4, '0'), "/create_edit_audits/#{audit.id}/edit"
           %td= audit.user ? "#{audit.user.first_name} #{audit.user.last_name}" : "N/A"
           %td= audit.company&.name || "N/A"
           %td

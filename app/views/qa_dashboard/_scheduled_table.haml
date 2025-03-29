@@ -13,7 +13,7 @@
         %tr
           %td 
             = link_to '#' do 
-              %i= audit.id.to_s.rjust(4, '0')
+              %i= audit.id.to_s.rjust(4, '0') 
           %td= audit.user ? "#{audit.user.first_name} #{audit.user.last_name}" : "N/A"
           %td= audit.company&.name || "N/A"
           %td

@@ -1,4 +1,4 @@
-class DashboardController < ApplicationController
+class QaDashboardController < ApplicationController
   def qa_manager
     @audits = Audit.includes(:user, :company, :audit_detail).all
 
@@ -103,11 +103,66 @@ class DashboardController < ApplicationController
     month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
 
     # Grouped Data
-    @compliance_score_by_day = compliance_score_data(today_range, :hour)
-    @compliance_score_by_week = compliance_score_data(week_range, :day)
-    @compliance_score_by_month = compliance_score_data(month_range, :week)
-    @compliance_score_all = Audit.group_by_month(:created_at, format: "%b %Y").average(:score)
+    # Daily Data (grouped by hour)
+    @compliance_score_by_day = [
+      { 
+        name: "Your Compliance", 
+        data: Audit.where(user: current_user, actual_end_date: today_range).group_by_period(:hour, :created_at, format: "%H:%M").average(:score)
+      },
+      { 
+        name: "Org Compliance", 
+        data: Audit.where(actual_end_date: today_range).group_by_period(:hour, :created_at, format: "%H:%M").average(:score)
+      }
+    ]
+    
+    # Weekly Data (grouped by day)
+    @compliance_score_by_week = [
+      { 
+        name: "Your Compliance", 
+        data: Audit.where(user: User.last, actual_end_date: week_range)
+                  .group_by_period(:day, :actual_end_date, format: "%d %b")
+                  .average(:score)
+      },
+      { 
+        name: "Org Compliance", 
+        data: Audit.where(actual_end_date: week_range)
+                  .group_by_period(:day, :actual_end_date, format: "%d %b")
+                  .average(:score)
+      }
+    ]
 
+    # Monthly Data (grouped by month)
+    @compliance_score_by_month = [
+      { 
+        name: "Your Compliance", 
+        data: Audit.where(user: User.last, actual_end_date: month_range)
+                   .group_by_period(:month, :actual_end_date, format: "%b %Y")
+                   .average(:score)
+      },
+      { 
+        name: "Org Compliance", 
+        data: Audit.where(actual_end_date: month_range)
+                   .group_by_period(:month, :actual_end_date, format: "%b %Y")
+                   .average(:score)
+      }
+    ]
+    
+    # @compliance_score_all = Audit.group_by_month(:created_at, format: "%b %Y").average(:score)
+    @compliance_score_all = [
+      { 
+        name: "Your Compliance", 
+        data: Audit.where(user: User.last)
+                   .group_by_period(:hour, :created_at, format: "%H:%M")
+                   .average(:score)
+      },
+      { 
+        name: "Org Compliance", 
+        data: Audit.where(created_at: Audit.minimum(:created_at)..Time.zone.now)
+                   .group_by_period(:hour, :created_at, format: "%H:%M")
+                   .average(:score)
+      }
+    ]
+    
     # Your vs Org Score (Today)
     @your_compliance_score = 67 #TODO: replace with real query for current user
     @org_compliance_score = Audit.average(:score)&.round
