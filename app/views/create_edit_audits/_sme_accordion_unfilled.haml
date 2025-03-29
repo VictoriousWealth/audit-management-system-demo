@@ -45,6 +45,7 @@
             / Dropdown select populated from @users collection
             = select_tag "audit_assignment[sme][]",
                 options_from_collection_for_select(@users, :id, :email),
+                required: true,
                 prompt: "Select a Subject Matter Expert",
                 class: "text-black-50 text-capitalize form-control fw-semibold mb-2"
 

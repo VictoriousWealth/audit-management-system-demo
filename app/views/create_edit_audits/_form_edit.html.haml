@@ -11,6 +11,7 @@
       = select_tag "company[id]",
           options_from_collection_for_select(@companies, :id, :name, @company_id),
           prompt: "Select the Company's Name",
+          required: true,
           class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
 
     / === AUDITEE SELECTION ===
@@ -20,6 +21,7 @@
       = select_tag "audit_assignment[auditee]",
           options_from_collection_for_select(@auditees, :id, :email, @auditee_id),
           prompt: "Select an Auditee's Email",
+          required: true,
           class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
 
     / === AUDIT TYPE SELECTION ===
@@ -29,6 +31,7 @@
       = select_tag "audit[audit_type]",
           options_for_select(@audit_types, @audit_type),
           prompt: "Select Audit Type",
+          required: true,
           class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
 
     / === ACCORDION SECTIONS (Reusability through partials) ===
@@ -45,6 +48,7 @@
       .text-black-75.text-capitalize.fs-3.mb-2
         = label_tag "audit_detail[objectives]", "Audit Objectives"
       = text_area_tag "audit_detail[objectives]", @objectives,
+          required: true,
           class: "form-control bg-light border-1 rounded-0 py-3",
           placeholder: "Enter the audit objectives here...",
           rows: 4
@@ -54,6 +58,7 @@
       .text-black-75.text-capitalize.fs-3.mb-2
         = label_tag "audit_detail[purpose]", "Purpose of the Audit"
       = text_area_tag "audit_detail[purpose]", @purpose,
+          required: true,
           class: "form-control bg-light border-1 rounded-0 py-3",
           placeholder: "Enter the purpose of the audit here...",
           rows: 4
@@ -63,6 +68,7 @@
       .text-black-75.text-capitalize.fs-3.mb-2
         = label_tag "audit_detail[boundaries]", "Boundaries of the Audit"
       = text_area_tag "audit_detail[boundaries]", @boundaries,
+          required: true,
           class: "form-control bg-light border-1 rounded-0 py-3",
           placeholder: "Enter the boundaries of the audit here...",
           rows: 4

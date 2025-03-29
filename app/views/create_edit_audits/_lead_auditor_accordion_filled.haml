@@ -32,4 +32,5 @@
           = select_tag "audit_assignment[lead_auditor]",
               options_from_collection_for_select(@auditors, :id, :email, @lead_auditor_id),
               prompt: "Select the Lead Auditor's Email",
+              required: true,
               class: "text-black-50 text-capitalize form-control fw-semibold mb-4"

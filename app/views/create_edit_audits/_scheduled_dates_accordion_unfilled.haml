@@ -32,7 +32,7 @@
           .text-black-75.text-capitalize.mb-2.me-2{ style: "min-width: max-content;" }
             = label_tag "audit[scheduled_start_date]", "Start Date"
           / Input field for start date/time
-          = datetime_field_tag "audit[scheduled_start_date]", nil, class: "form-control mb-4"
+          = datetime_field_tag "audit[scheduled_start_date]", nil, class: "form-control mb-4", required: true
 
         / Form group for selecting end date
         .form-group.d-flex.align-items-baseline
@@ -40,4 +40,4 @@
           .text-black-75.text-capitalize.mb-2.me-2{ style: "min-width: max-content;" }
             = label_tag "audit[scheduled_end_date]", "End Date"
           / Input field for end date/time
-          = datetime_field_tag "audit[scheduled_end_date]", nil, class: "form-control"
+          = datetime_field_tag "audit[scheduled_end_date]", nil, class: "form-control", required: true

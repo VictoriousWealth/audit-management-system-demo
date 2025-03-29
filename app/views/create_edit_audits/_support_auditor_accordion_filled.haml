@@ -45,6 +45,7 @@
               = select_tag "audit_assignment[support_auditor][]",
                   options_from_collection_for_select(@auditors, :id, :email, id),
                   prompt: "Select a Support Auditor's email",
+                  required: true,
                   class: "text-black-50 text-capitalize form-control fw-semibold mb-2"
               / Remove button for each support auditor entry
               %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-support-auditor{type: "button"} ⊖

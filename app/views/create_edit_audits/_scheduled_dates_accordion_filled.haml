@@ -32,6 +32,7 @@
           / Datetime input for scheduled start
           = datetime_field_tag "audit[scheduled_start_date]",
               @scheduled_start.is_a?(String) ? @scheduled_start : @scheduled_start&.strftime('%Y-%m-%dT%H:%M'),
+              required: true,
               class: "form-control mb-4"
 
         / Form group for scheduled end date
@@ -42,4 +43,5 @@
           / Datetime input for scheduled end
           = datetime_field_tag "audit[scheduled_end_date]",
               @scheduled_end.is_a?(String) ? @scheduled_end : @scheduled_end&.strftime('%Y-%m-%dT%H:%M'),
+              required: true,
               class: "form-control"
