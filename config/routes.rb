@@ -38,8 +38,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
 
-   # For logged in users
-   authenticated :user do
+  # For logged in users
+  authenticated :user do
     root to: 'dashboard#index', as: :authenticated_root
   end
 
@@ -51,6 +51,7 @@ Rails.application.routes.draw do
   resources :audits do
     resources :audit_closure_letters, only: [:new, :create]
   end
+  resources :create_edit_audits, only: [:new, :create, :edit, :update]
 
   # Defines the route for the audit request letter creation page ('/create-audit-request-letter')
   get 'letters/create-audit-request-letter', to: 'letters#audit_request_letter_create'
