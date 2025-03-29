@@ -1,0 +1,169 @@
+- content_for :title, 'Create Audit Closure Letter'
+
+.row.justify-content-center
+  .col-sm-10.col-lg-8
+    .card.card-light
+      = simple_form_for @audit_closure_letter, url: audit_audit_closure_letters_path(@audit), method: :post do |f|
+        .card-header
+          %h2 Create Audit Closure Letter
+        .card-body
+          .form-group
+            %label Select Template
+            = select_tag :template, options_for_select(["Default Template"]), class: "form-control"
+            %a.mt-2{ href: "#" } Create new template
+            %hr
+
+            %h3 Audit Closure Letter
+
+            %p.mt-3
+              Gene Therapy Innovation and Manufacturing Centre
+              %br Business Park, Europa Ave, Tinsley
+              %br Sheffield, S9 1ZA
+              %br
+              %em GTIMC email
+              %br 0114 222 2238
+
+            %p.mt-3= Date.today.strftime("%d/%m/%Y")
+
+            %p
+              = @company.name
+              %br= @company.address
+
+            %p
+              %strong Subject: Official Audit Report - #{@audit.id.to_s.rjust(6, "0")}
+
+            %p.mt-3
+              Dear
+              %em= @company.name
+              ,
+              %br
+              Please find below the official audit report for the audit conducted at
+              #{@company.name} on #{@audit.actual_end_date&.strftime("%d/%m/%Y")}.
+              The purpose of this audit was to assess compliance with applicable standards,
+              regulatory requirements, and internal quality management procedures.
+
+            %h4.mt-4 1. Audit Details
+            %ul
+              %li Audit Reference Number: #{@audit.id.to_s.rjust(6, "0")}
+              %li Date of Audit: #{@audit.actual_start_date&.strftime("%d/%m/%Y")}
+              %li Location: #{@company.name} Site
+              %li Audit Type: Internal
+              %li
+                %strong Scope of Audit:
+                %p.form-control-static= @audit.audit_detail&.scope || "No scope defined."
+
+            %h4.mt-4 2. Auditee Details
+            %ul
+              %li Company/Department: #{@auditee&.company&.name || "N/A"}
+              %li Auditee Name(s): #{@auditee&.full_name || "N/A"}
+              %li Position/Role: #{@auditee&.role&.humanize || "N/A"}
+              %li Contact Information: #{@auditee&.email || "N/A"}
+
+            %h4.mt-4 3. Auditor Details
+            %ul
+              %li Lead Auditor Name: #{@lead_auditor&.full_name || "N/A"}
+              %li
+                %strong Additional Auditors:
+                %span
+                  - if @assigned_auditors.any?
+                    = @assigned_auditors.map(&:full_name).join(", ")
+                  - else
+                    N/A
+              %li
+                %strong Audit Team Contact Information:
+                %ul
+                  - @assigned_auditors.each do |auditor|
+                    %li= auditor.email
+
+            %h4.mt-4 4. Summary of Audit Findings
+            %ul
+              %li Number of Findings: #{@findings.count}
+              %li
+                %strong Finding Categories:
+                %ul
+                  - @findings.map(&:category).uniq.each do |cat|
+                    %li= cat.titleize
+              %li
+                %strong Non-Conformances Identified:
+                %ul
+                  - @findings.select { |f| f.risk_level != "low" }.each do |finding|
+                    %li= finding.description
+              %li
+                %strong Overall Compliance Status:
+                -# ?
+
+            %h4.mt-4 5. Detailed Findings
+            %table.table.table-striped
+              %thead
+                %tr
+                  %th 
+                  %th Category
+                  %th Description
+                  %th Risk Level
+                  %th Responsible Party
+                  %th Due Date
+              %tbody
+                - @findings.each_with_index do |finding, index|
+                  %tr
+                    %td= index + 1
+                    %td= finding.category.titleize
+                    %td= finding.description
+                    %td= finding.risk_level.titleize
+                    %td= finding.report&.user&.full_name || "N/A"
+                    %td= finding.due_date&.strftime("%d/%m/%Y") || "N/A"
+              
+            %h4.mt-4 6. Audit Score and Evaluation
+            %ul
+              %li Overall Audit Score: #{@audit.score}
+              -# compliance percentage as a placeholder for now
+              %li Compliance Percentage: #{@audit.score.to_i}% 
+              %li Audit Performance Level: #{@audit.final_outcome.titleize}
+
+            %h4.mt-4 7. Recommendations & Corrective Actions
+            %ul
+              %li
+                %strong Corrective Actions & Recommendations:
+                - if @corrective_actions.any?
+                  %ul
+                    - @corrective_actions.each do |action|
+                      %li= "#{action.action_description} (Due: #{action.due_date&.strftime('%d/%m/%Y')})"
+                - else
+                  %p.text-muted None recorded.
+            
+            %h4.mt-4 8. Conclusion & Auditor Sign-Off
+            %ul
+              %li
+                %strong Summary Statement:
+                Placeholder
+              %li 
+                %strong Lead Auditor Signature: 
+                = current_user&.full_name|| "________________"
+              %li 
+                %strong Date: 
+                = Date.today.strftime("%d/%m/%Y")
+              %li 
+                %strong Auditee Acknowledgment: ______________________
+
+            %h4.mt-4 9. Distribution List
+            %ul
+              %li Recipients of the Report: placeholder
+              %li System Notification Sent To: placeholder
+
+            %p.mt-4
+              Should you require further clarification regarding this audit, please do not hesitate to contact us. 
+              We appreciate your cooperation throughout this process and look forward to working together on the necessary improvements.
+
+            %p.mt-3
+              Best regards,
+              %br
+              %em= @lead_auditor&.full_name || "Place Holder"
+              %br Lead Auditor
+              %br Gene Therapy Innovation and Manufacturing Centre
+              %br
+              Contact details
+              %br= @lead_auditor&.email || "placeholder@gtimc.com"
+
+            .form-group.mt-4.d-flex.justify-content-between
+              = link_to "Cancel", audit_path(@audit), class: "btn btn-danger"
+              = f.submit "Save Changes", class: "btn btn-warning"
+              = link_to "Preview", "#", class: "btn btn-success"        

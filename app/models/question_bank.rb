@@ -18,11 +18,6 @@
 #  fk_rails_...  (response_choices_id => response_choices.id)
 #
 class QuestionBank < ApplicationRecord
-  enum category:{
-    general: 0,
-    compliance: 1,
-    safety: 2,
-  }
   belongs_to :section_question, optional: true
   has_many :response_choices
 end
