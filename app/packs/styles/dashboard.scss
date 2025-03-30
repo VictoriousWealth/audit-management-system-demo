@@ -1,0 +1,146 @@
+$active-tab-bg: #42CA68; 
+$active-tab-color: white; 
+$non-active-tab-bg: #F8F5F5; 
+$non-active-tab-color: #000000; 
+$container-height: 529px;
+
+
+*{
+    font-family: Helvetica, Arial, sans-serif;
+}
+.nav-tabs .nav-link.active {
+    background-color: $active-tab-bg; 
+    color: $active-tab-color; 
+    border-color: black;
+    font-weight: 700;
+}
+
+.nav-tabs .nav-link {
+    background-color: $non-active-tab-bg; 
+    color: $non-active-tab-color; 
+    border-color: black;
+    text-align: center;
+    font-weight: 500;
+}
+
+.custom-tab-container {
+    width: 100%;
+    height: $container-height;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+  
+.nav-tabs {
+margin-bottom: 0 !important;
+}
+
+.table-bordered-black {
+    border: 1px solid black;
+  
+    th,
+    td {
+        border: 1px solid black !important;
+    }
+}
+
+#Audit table {
+    font-size: 13.25px !important;
+    max-width: 800px !important;
+    min-width: 600px;
+}
+
+.progress {
+    background-color: $active-tab-color;
+    height: 15px;
+    padding: 0;
+    border: black solid 1px;
+}
+
+.progress-bar {
+    background-color: $active-tab-bg;
+}
+
+$table-scroll-buffer: 31px; // space taken by the tabs at top
+$table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
+
+.table-scroll-container {
+  max-height: #{$table-scroll-height};
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+
+  table {
+    margin-bottom: 0;
+  }
+}
+
+.tab-content {
+    flex-grow: 1;
+    max-height: calc(#{$container-height} - 42px); // 42px for both tab bars
+}
+  
+#Audits-Status-Overview{
+    max-width: 400px !important;
+    min-width: 400px !important;
+}
+
+
+#Audits-Status-Overview, #Audit{
+    min-width: 605px !important; 
+    overflow: auto !important;
+}
+
+#Compliance-Score-Graph-Over-Time {
+    min-width: 600px !important; 
+}
+
+#auditCalendar {
+    height: 90%;
+}
+
+.fc-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+  
+.fc-toolbar-title {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.fc-toolbar-chunk:has(.fc-toolbar-title) {
+    /* This only works in modern browsers like Safari 15+, Chrome 105+ */
+    display: flex;
+    flex-grow: 1;
+}
+
+.fc {
+    
+    .fc-col-header-cell-cushion {
+        display: inline-block;
+        padding: 2px 4px;
+        color: black;
+        text-decoration: none;
+    } 
+
+    .fc-daygrid-day-number {
+        padding: 4px;
+        position: relative;
+        z-index: 4;
+        color: black;
+        text-decoration: none;
+    }
+}
+
+.fc-event, 
+.fc-daygrid-event {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}

@@ -1,0 +1,57 @@
+/ Accordion wrapper for "Subject Matter Expert (SME)" section with styling and unique ID
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionSME
+  / Accordion item without border for a cleaner UI
+  %div.accordion-item.border-0
+    / Accordion header with unique ID for linking the collapsible content
+    %h2.accordion-header#headingSME
+      / Toggle button for expanding/collapsing the SME section
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{
+        type: "button",
+        "data-bs-toggle" => "collapse",
+        "data-bs-target" => "#collapseSME",
+        "aria-expanded" => "false",
+        "aria-controls" => "collapseSME"
+      }
+        / Section title
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Subject Matter Expert (SME)
+        / Arrow icon indicating toggle (can be animated or styled)
+        %span.custom-arrow.ms-2.fs-4
+          ▼
+
+    / Collapsible section content
+    %div.accordion-collapse.collapse#collapseSME{
+      "aria-labelledby" => "headingSME",
+      "data-bs-parent" => "#accordionSME"
+    }
+      / Accordion body with white background and rounded bottom corners
+      %div.accordion-body.bg-white.rounded-bottom-4
+        / Button to dynamically add more SME fields
+        %button.btn.btn-primary.btn-sm#add-sme{
+          type: "button",
+          title: "Add SME",
+          "aria-label" => "Add SME"
+        }
+          %span.plus ⨁
+          %span.text.ms-2 Add a subject matter expert
+
+        / Container that will hold all SME selection fields
+        #sme-container
+          / Initial SME selection form group
+          .form-group.mt-4.sme-field
+            / Hidden label for accessibility purposes
+            .text-black-75.text-capitalize.fs-3.mb-2.visually-hidden
+              = label_tag "audit_assignment[sme][]", "Subject Matter Expert's Email"
+
+            / Dropdown select populated from @users collection
+            = select_tag "audit_assignment[sme][]",
+                options_from_collection_for_select(@users, :id, :email),
+                required: true,
+                prompt: "Select a Subject Matter Expert",
+                class: "text-black-50 text-capitalize form-control fw-semibold mb-2"
+
+            / Button to remove this specific SME field
+            %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-sme{
+              type: "button",
+              title: "Remove SME",
+              "aria-label" => "Remove SME"
+            } ⊖

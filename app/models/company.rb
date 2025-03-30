@@ -13,3 +13,4 @@ class Company < ApplicationRecord
   has_many :audits
   has_many :contacts
 end
+

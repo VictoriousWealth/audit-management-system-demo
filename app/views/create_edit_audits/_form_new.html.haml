@@ -1,0 +1,94 @@
+/ POST form to create a new audit record
+= form_with url: create_edit_audits_path, method: :post, local: true do
+
+  / === MAIN FORM CONTAINER ===
+  .container.border.border-black.border-1.p-4.rounded-5
+
+    / === COMPANY SELECTION ===
+    .form-group
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "company[id]", "Vendor/Supplier's Name"
+      = select_tag "company[id]",
+          options_from_collection_for_select(@companies, :id, :name),
+          prompt: "Select the Company's Name",
+          required: true,
+          class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
+
+    / === AUDITEE SELECTION ===
+    .form-group
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit_assignment[auditee]", "Auditee"
+      = select_tag "audit_assignment[auditee]",
+          options_from_collection_for_select(@auditees, :id, :email),
+          prompt: "Select an Auditee's Email",
+          required: true,
+          class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
+
+    / === AUDIT TYPE SELECTION ===
+    .form-group.mb-4
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit[audit_type]", "Type of Audit"
+      = select_tag "audit[audit_type]",
+          options_for_select(@audit_types),
+          prompt: "Select Audit Type",
+          required: true,
+          class: "text-black-50 text-capitalize form-control fw-semibold mb-4"
+
+    / === ACCORDION PARTIALS (EMPTY/UNFILLED VERSIONS) ===
+    = render partial: 'lead_auditor_accordion_unfilled'
+    = render partial: 'support_auditor_accordion_unfilled'
+    = render partial: 'sme_accordion_unfilled'
+    = render partial: 'applicable_standard_accordion_unfilled'
+    = render partial: 'scheduled_dates_accordion_unfilled'
+    = render partial: 'audit_scope_accordion_unfilled'
+
+    / === OBJECTIVES TEXTAREA ===
+    .form-group.mt-4
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit_detail[objectives]", "Audit Objectives"
+      = text_area_tag "audit_detail[objectives]", nil,
+          required: true,
+          class: "form-control bg-light border-1 rounded-0 py-3",
+          placeholder: "Enter the audit objectives here...",
+          rows: 4
+
+    / === PURPOSE TEXTAREA ===
+    .form-group.mt-2
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit_detail[purpose]", "Purpose of the Audit"
+      = text_area_tag "audit_detail[purpose]", nil,
+          required: true,
+          class: "form-control bg-light border-1 rounded-0 py-3",
+          placeholder: "Enter the purpose of the audit here...",
+          rows: 4
+
+    / === BOUNDARIES TEXTAREA ===
+    .form-group.mt-2.mb-4
+      .text-black-75.text-capitalize.fs-3.mb-2
+        = label_tag "audit_detail[boundaries]", "Boundaries of the Audit"
+      = text_area_tag "audit_detail[boundaries]", nil,
+          required: true,
+          class: "form-control bg-light border-1 rounded-0 py-3",
+          placeholder: "Enter the boundaries of the audit here...",
+          rows: 4
+
+  / === FORM ACTION BUTTONS ===
+  .d-flex.align-items-center.justify-content-center.mt-3.mb-3
+    / Submit button to create the audit
+    = submit_tag "Submit",
+        name: "Submit",
+        value: "Submit",
+        class: "btn btn-success me-3"
+
+    / Optional Close Audit button (handled via `params[:commit]`)
+    = submit_tag "Close Audit",
+        name: "commit",
+        value: "Close Audit ",
+        class: "btn btn-danger"
+
+  / === JSON DATA INJECTED INTO DOM FOR DYNAMIC JS BEHAVIOR ===
+  %script#auditor-data{type: "application/json"}
+    = raw @auditors.to_json(only: [:id, :email])
+
+  %script#user-data{type: "application/json"}
+    = raw @users.to_json(only: [:id, :email])

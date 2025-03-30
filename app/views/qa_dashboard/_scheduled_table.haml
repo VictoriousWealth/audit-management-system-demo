@@ -1,0 +1,22 @@
+.table-scroll-container
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+    %thead
+      %tr
+        %th Audit ID
+        %th Auditee
+        %th Vendor
+        %th Auditor(s)
+        %th Scheduled Start Date
+        %th Scheduled End Date
+    %tbody
+      - @scheduled_audits.each do |audit|
+        %tr
+          %td 
+            = link_to '#' do 
+              %i= audit.id.to_s.rjust(4, '0') 
+          %td= audit.user ? "#{audit.user.first_name} #{audit.user.last_name}" : "N/A"
+          %td= audit.company&.name || "N/A"
+          %td
+            = markdown(audit.formatted_auditors).html_safe
+          %td= audit.scheduled_start_date&.strftime('%d/%m/%Y') || "N/A"
+          %td= audit.scheduled_end_date&.strftime('%d/%m/%Y') || "N/A"

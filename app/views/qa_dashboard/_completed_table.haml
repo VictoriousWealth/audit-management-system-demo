@@ -1,0 +1,39 @@
+.table-scroll-container
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+    %thead
+      %tr 
+        %th Audit ID
+        %th Auditee
+        %th Vendor
+        %th Auditor(s)
+        %th Start Date
+        %th End Date
+        %th Risk Level
+    %tbody
+      - @completed_audits.each do |audit|
+        %tr
+          %td 
+            = link_to '#' do 
+              %i= audit.id.to_s.rjust(4, '0') 
+          %td= audit.user ? "#{audit.user.first_name} #{audit.user.last_name}" : "N/A"
+          %td= audit.company&.name || "N/A"
+          %td
+            = markdown(audit.formatted_auditors).html_safe
+          %td= audit.actual_start_date&.strftime('%d/%m/%Y') || "N/A"
+          %td= audit.actual_end_date&.strftime('%d/%m/%Y') || "N/A"
+          -# Determine risk level class and tooltip to be replaced with proper risk
+          - if audit.score && audit.score <= 40
+            - risk_class = 'text-bg-danger'
+            - risk_title = 'This audit has high risk'
+            - risk_label = 'High Risk'
+          - elsif audit.score && audit.score <= 70
+            - risk_class = 'text-bg-warning'
+            - risk_title = 'This audit has medium risk'
+            - risk_label = 'Medium Risk'
+          - else
+            - risk_class = 'text-bg-success'
+            - risk_title = 'This audit has low risk'
+            - risk_label = 'Low Risk'
+           
+          %td{class: risk_class, data: { bs_toggle: 'tooltip' }, title: risk_title}
+            = risk_label

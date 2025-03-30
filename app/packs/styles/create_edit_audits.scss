@@ -1,0 +1,43 @@
+// Hide the default Bootstrap accordion arrow
+.accordion-button::after {
+  display: none; // Hide Bootstrap’s default arrow
+}
+
+// Style for the custom arrow icon used in the accordion
+.custom-arrow {
+  transition: transform 0.3s ease; // Smooth rotation animation
+  font-size: 1.2rem; // Slightly larger icon size
+  color: #328166; // Custom greenish color
+}
+
+// When the accordion is expanded, rotate the custom arrow to point up
+.accordion-button:not(.collapsed) .custom-arrow {
+  transform: rotate(180deg); // Rotate ▼ to point up (▲)
+}
+
+// Layout setup for dynamic form field rows (support auditor, SME, standard)
+.support-auditor-field,
+.sme-field,
+.standard-field {
+  display: flex; // Arrange child elements horizontally
+}
+
+// Style for the "Add" buttons for support auditors, SMEs, and standards
+#add-support-auditor,
+#add-sme,
+#add-standard {
+  display: flex;
+  align-items: center; // Vertically center the icon and text
+  justify-content: space-around; // Space out elements evenly
+
+  .plus {
+    font-size: larger; // Bigger "+" icon
+    font-weight: bolder; // Make it bold
+    margin: 0;
+    margin-right: 0.5em; // Space between "+" and the label
+  }
+
+  .text {
+    font-size: medium; // Set font size for label text
+  }
+}

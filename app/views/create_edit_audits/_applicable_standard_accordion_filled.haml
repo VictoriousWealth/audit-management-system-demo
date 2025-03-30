@@ -1,0 +1,39 @@
+/ Accordion container for "Applicable Standards" section
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionStandards
+  / Accordion item (Bootstrap component)
+  %div.accordion-item.border-0
+    / Accordion header section
+    %h2.accordion-header#headingStandards
+      / Toggle button to expand/collapse this section
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{type: "button", "data-bs-toggle" => "collapse", "data-bs-target" => "#collapseStandards", "aria-expanded" => "false", "aria-controls" => "collapseStandards"}
+        / Title of the accordion
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Applicable Standards
+        / Custom arrow to indicate collapse toggle
+        %span.custom-arrow.ms-2.fs-4
+          ▼
+
+    / Collapsible content panel for the standards section
+    %div.accordion-collapse.collapse#collapseStandards{"aria-labelledby" => "headingStandards", "data-bs-parent" => "#accordionStandards"}
+      %div.accordion-body.bg-white.rounded-bottom-4
+
+        / "Add Standard" button that will likely trigger a JS function to add new input fields
+        %button.btn.btn-primary.btn-sm#add-standard{type: "button", title: "Add Standard", "aria-label" => "Add Standard"}
+          %span.plus ⨁
+          %span.text.ms-2 Add a standard
+
+        / Container for existing or dynamically added standard fields
+        #standard-container
+          - (@applicable_standards || []).each do |std|
+            .form-group.mt-4.standard-field
+              / Label for accessibility, visually hidden
+              .text-black-75.text-capitalize.fs-3.mb-2.visually-hidden
+                = label_tag "audit_standard[standard][]", "Applicable Standard"
+              / Text field for each standard (with pre-filled value from `@applicable_standards`)
+              = text_field_tag "audit_standard[standard][]", std, list: "standard-options", class: "text-black-50 text-capitalize form-control fw-semibold mb-2", placeholder: "Type and select an applicable standard", required: true
+              / Remove button for this standard field
+              %button.btn.btn-danger.btn-sm.mb-2.ms-3.remove-standard{type: "button", title: "Remove Standard", "aria-label" => "Remove Standard"} ⊖
+
+        / Datalist for autocomplete suggestions (standards pulled from @standards)
+        %datalist#standard-options
+          - @standards.each do |standard|
+            %option{ value: standard.standard }
