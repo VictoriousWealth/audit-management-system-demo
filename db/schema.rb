@@ -19,11 +19,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
     t.integer "status"
     t.datetime "time_accepted"
     t.bigint "user_id", null: false
-    t.bigint "audit_assignments_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
-    t.index ["audit_assignments_id"], name: "index_audit_assignments_on_audit_assignments_id"
     t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
     t.index ["user_id"], name: "index_audit_assignments_on_user_id"
   end
@@ -339,7 +337,20 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
+  create_table "vendor_rpns", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.datetime "time_of_creation", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "material_criticality", null: false
+    t.integer "supplier_compliance_history", null: false
+    t.integer "regulatory_approvals", null: false
+    t.integer "supply_chain_complexity", null: false
+    t.integer "previous_supplier_performance", null: false
+    t.integer "contamination_adulteration_risk", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_vendor_rpns_on_company_id"
+  end
+
   add_foreign_key "audit_assignments", "audits"
   add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"
@@ -374,4 +385,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
   add_foreign_key "selected_responses", "response_choices"
   add_foreign_key "supporting_documents", "audits"
   add_foreign_key "users", "companies"
+  add_foreign_key "vendor_rpns", "companies"
 end

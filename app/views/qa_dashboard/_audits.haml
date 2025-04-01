@@ -1,17 +1,15 @@
-.container.custom-tab-container.p-0.border.border-dark
+.container.custom-tab-container.p-0.border.border-dark{style: "display: inline-table;"}
   %ul.nav.nav-tabs.mb-0
     %li.nav-item.w-100
       %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Audits
 
   %ul.nav.nav-tabs.nav-fill.mb-0
     %li.nav-item
-      %a.nav-link.active{href: '#scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} Scheduled
+      %a.nav-link.active{href: '#scheduled', data: { bs_toggle: 'tab' }, role: 'tab', tooltip: "Audits Due To start Today"} Scheduled
     %li.nav-item
       %a.nav-link{href: '#in-progress', data: { bs_toggle: 'tab' }, role: 'tab'} In Progress
     %li.nav-item
       %a.nav-link{href: '#completed', data: { bs_toggle: 'tab' }, role: 'tab'} Completed
-    %li.nav-item
-      %a.nav-link{href: '#to-be-scheduled', data: { bs_toggle: 'tab' }, role: 'tab'} To Be Scheduled/Assigned
 
   .tab-content.flex-grow-1
     .tab-pane.fade.show.active#scheduled{role: 'tabpanel'}
@@ -22,6 +20,3 @@
 
     .tab-pane.fade#completed{role: 'tabpanel'}
       = render partial: 'completed_table'
-
-    .tab-pane.fade#to-be-scheduled{role: 'tabpanel'}
-      = render partial: 'to_be_scheduled_table'

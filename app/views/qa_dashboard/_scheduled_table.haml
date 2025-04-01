@@ -2,21 +2,28 @@
   %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
     %thead
       %tr
-        %th Audit ID
-        %th Auditee
-        %th Vendor
-        %th Auditor(s)
-        %th Scheduled Start Date
-        %th Scheduled End Date
+        %th.p-3 Audit Id
+        %th.p-3 Audit Type
+        %th.p-3 Vendor
+        %th.p-3 Auditee
+        %th.p-3 Lead Auditor
+        %th.p-3 Support Auditor(s)
+        %th.p-3 SME(s)
+        %th.p-3 Scheduled Start Date
+        %th.p-3 Scheduled End Date
+        %th.p-3 RPN
     %tbody
       - @scheduled_audits.each do |audit|
         %tr
-          %td 
-            = link_to '#' do 
-              %i= audit.id.to_s.rjust(4, '0') 
-          %td= audit.user ? "#{audit.user.first_name} #{audit.user.last_name}" : "N/A"
-          %td= audit.company&.name || "N/A"
-          %td
-            = markdown(audit.formatted_auditors).html_safe
-          %td= audit.scheduled_start_date&.strftime('%d/%m/%Y') || "N/A"
-          %td= audit.scheduled_end_date&.strftime('%d/%m/%Y') || "N/A"
+          %td.p-3 
+            = link_to "/create_edit_audits/#{audit[:id]}/edit" do 
+              %i= audit[:id].to_s.rjust(4, '0')
+          %td.p-3= audit[:audit_type]
+          %td.p-3= audit[:company_name]
+          %td.p-3= audit[:auditee]
+          %td.p-3= audit[:lead_auditor]
+          %td.p-3= audit[:support_auditors]
+          %td.p-3= audit[:smes]
+          %td.p-3= audit[:scheduled_start_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-3= audit[:scheduled_end_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-3= audit[:rpn]
