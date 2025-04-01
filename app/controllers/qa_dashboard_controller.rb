@@ -120,3 +120,4 @@ class QaDashboardController < ApplicationController
     end
   end
 end
+
