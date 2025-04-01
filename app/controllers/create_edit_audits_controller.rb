@@ -51,6 +51,8 @@ class CreateEditAuditsController < ApplicationController
       scheduled_end_date: audit[:scheduled_end_date],
       actual_start_date: nil,
       actual_end_date: nil,
+      status: :not_started,
+      time_of_creation: Time.now(),
     )
 
     unless @audit.save

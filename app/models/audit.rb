@@ -76,6 +76,13 @@ class Audit < ApplicationRecord
     end.join(', ')
   end
 
+  def smes
+    audit_assignments.includes(:user).where(role: :sme).map do |assignment|
+      user = assignment.user
+      user ? "#{user.first_name} #{user.last_name}" : "N/A"
+    end.join(', ')
+  end
+
   def formatted_auditors
     assignments = audit_assignments.includes(:user)
   

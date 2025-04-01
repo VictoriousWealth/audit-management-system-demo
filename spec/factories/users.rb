@@ -7,7 +7,7 @@
 #  current_sign_in_ip     :string
 #  email                  :string
 #  encrypted_password     :string           default(""), not null
-#  failed_attempts        :integer          default(0), not null
+#  failed_attempts        :integer
 #  first_name             :string
 #  last_name              :string
 #  last_sign_in_at        :datetime
