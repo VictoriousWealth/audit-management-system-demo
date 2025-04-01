@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_27_124550) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -134,6 +134,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124550) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "company_id", null: false
+    t.string "audit_type"
     t.index ["company_id"], name: "index_audits_on_company_id"
     t.index ["user_id"], name: "index_audits_on_user_id"
   end
@@ -330,9 +331,26 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124550) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.integer "failed_attempts"
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "vendor_rpns", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.datetime "time_of_creation", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "material_criticality", null: false
+    t.integer "supplier_compliance_history", null: false
+    t.integer "regulatory_approvals", null: false
+    t.integer "supply_chain_complexity", null: false
+    t.integer "previous_supplier_performance", null: false
+    t.integer "contamination_adulteration_risk", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_vendor_rpns_on_company_id"
   end
 
   add_foreign_key "audit_assignments", "audits"
@@ -369,4 +387,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124550) do
   add_foreign_key "selected_responses", "response_choices"
   add_foreign_key "supporting_documents", "audits"
   add_foreign_key "users", "companies"
+  add_foreign_key "vendor_rpns", "companies"
 end

@@ -7,15 +7,18 @@
 #  current_sign_in_ip     :string
 #  email                  :string
 #  encrypted_password     :string           default(""), not null
+#  failed_attempts        :integer
 #  first_name             :string
 #  last_name              :string
 #  last_sign_in_at        :datetime
 #  last_sign_in_ip        :string
+#  locked_at              :datetime
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
 #  role                   :integer
 #  sign_in_count          :integer          default(0), not null
+#  unlock_token           :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  company_id             :bigint
@@ -34,7 +37,8 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :trackable, :timeoutable, :lockable #lockable isnt working for some reason
   enum role:{
     auditor: 0,
     auditee: 1,
@@ -43,8 +47,9 @@ class User < ApplicationRecord
     sme: 4,
   }
 
+
   has_many :audit_assignments
-  belongs_to :company, optional: true 
+  belongs_to :company, optional: true
   has_many :audits
   has_many :electronic_signatures
   has_many :login_attempts
@@ -54,6 +59,7 @@ class User < ApplicationRecord
   has_many :audit_schedules
   has_many :audit_closure_letters
   has_many :reports
+
   has_many :audit_request_letters
 
   def full_name

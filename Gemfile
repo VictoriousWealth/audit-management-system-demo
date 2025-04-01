@@ -95,7 +95,6 @@ end
 
 group :development, :test do
   gem 'rspec-rails'
-  gem 'factory_bot_rails'
 end
 
 group :test do
@@ -104,4 +103,13 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'simplecov'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'rails-controller-testing'
 end
+
+gem 'kramdown'
+gem "chartkick"
+gem "groupdate"
+gem 'fullcalendar-rails'
+gem 'faker' # for fake data

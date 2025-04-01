@@ -34,6 +34,6 @@ class AuditAssignment < ApplicationRecord
     accepted: 1,
     declined: 2,
   }
-  belongs_to :user, optional: true
+  belongs_to :user
   belongs_to :audit
 end

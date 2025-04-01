@@ -7,15 +7,18 @@
 #  current_sign_in_ip     :string
 #  email                  :string
 #  encrypted_password     :string           default(""), not null
+#  failed_attempts        :integer
 #  first_name             :string
 #  last_name              :string
 #  last_sign_in_at        :datetime
 #  last_sign_in_ip        :string
+#  locked_at              :datetime
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
 #  role                   :integer
 #  sign_in_count          :integer          default(0), not null
+#  unlock_token           :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  company_id             :bigint
@@ -33,5 +36,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "is invalid without an email" do
+    user = User.new(email: nil)
+    expect(user).to_not be_valid
+  end
 end

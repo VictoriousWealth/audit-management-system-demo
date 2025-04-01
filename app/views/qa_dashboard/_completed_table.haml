@@ -1,0 +1,44 @@
+.table-scroll-container
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+    %thead
+      %tr 
+        %th.p-3 Audit Id
+        %th.p-3 Audit Type
+        %th.p-3 Vendor
+        %th.p-3 Auditee
+        %th.p-3 Lead Auditor
+        %th.p-3 Score 
+        %th.p-3 Final Outcome 
+        %th.p-3 Scheduled Start Date
+        %th.p-3 Scheduled End Date
+        %th.p-3 Actual Start Date
+        %th.p-3 Actual End Date
+        %th.p-3 RPN
+        %th.p-3 Risk Level
+    %tbody
+      - @completed_audits.each do |audit|
+        %tr
+          %td.p-3
+            = link_to "/create_edit_audits/#{audit[:id]}/edit"  do 
+              %i= audit[:id].to_s.rjust(4, '0')
+          %td.p-3= audit[:audit_type]
+          %td.p-3= audit[:company_name]
+          %td.p-3= audit[:auditee]
+          %td.p-3= audit[:lead_auditor]
+          %td.p-3= sprintf('%.2f%', audit[:score]) # Format score as percentage with two decimal places
+          %td.p-3= audit[:final_outcome]
+          %td.p-3= audit[:scheduled_start_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-3= audit[:scheduled_end_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-3= audit[:actual_start_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-3= audit[:actual_end_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-3= audit[:rpn]
+          
+          - if audit[:risk_level] == "High Risk"
+            - risk_class = 'text-bg-danger'
+          - elsif audit[:risk_level] == "Medium Risk"
+            - risk_class = 'text-bg-warning'
+          - else
+            - risk_class = 'text-bg-success'
+          -# u can change title to show the number and type of deficiencies (tooltip)
+          %td.p-3{class: risk_class, data: { bs_toggle: 'tooltip' }, title: audit[:risk_level]} 
+            = audit[:risk_level]

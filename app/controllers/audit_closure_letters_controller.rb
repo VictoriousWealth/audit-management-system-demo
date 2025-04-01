@@ -1,5 +1,6 @@
 class AuditClosureLettersController < ApplicationController
   before_action :set_audit, only: [:new, :create, :edit, :update]
+  before_action :authenticate_user!
 
   def new
     @audit_closure_letter =  AuditClosureLetter.new(audit: @audit, user: current_user)
@@ -13,7 +14,7 @@ class AuditClosureLettersController < ApplicationController
 
     @findings = AuditFinding.joins(:report).where(reports: {audit_id: @audit.id}).includes(report: :user)
 
-    @corrective_actions = @audit.corrective_actions
+    @corrective_actions = @audit.corrective_actions # CAPAs yeahhhhh!!!!
   end
 
   def create

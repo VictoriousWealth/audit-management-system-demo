@@ -3,7 +3,7 @@
 .row.justify-content-center
   .col-sm-10.col-lg-8
     .card.card-light
-      = simple_form_for @audit_closure_letter, url: audit_audit_closure_letters_path(@audit), method: :post do |f|
+      = simple_form_for @audit_closure_letter, url: audit_audit_closure_letters_path(@audit), method: :post, data: {remote: true} do |f| 
         .card-header
           %h2 Create Audit Closure Letter
         .card-body
