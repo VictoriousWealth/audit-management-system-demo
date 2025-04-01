@@ -1,5 +1,6 @@
 class AuditClosureLettersController < ApplicationController
   before_action :set_audit, only: [:new, :create, :edit, :update]
+  before_action :authenticate_user!
 
   def new
     @audit_closure_letter =  AuditClosureLetter.new(audit: @audit, user: current_user)
