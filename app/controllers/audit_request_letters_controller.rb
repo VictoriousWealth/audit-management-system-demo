@@ -31,8 +31,15 @@ class AuditRequestLettersController < ApplicationController
       render :new
     end
   end
-  def audit_request_letter_view
-      render 'pages/letters/audit-request-letter-view'
+
+  # GET /audit/audit_id/view-audit-request-letter
+  def show
+    @audit_request_letter = AuditRequestLetter.find_by(audit: @audit)
+    if @audit_request_letter.present?
+      render :view
+    else
+      redirect_to audit_path(@audit), alert: "Audit Request Letter not found."
+    end
   end
 
   private
