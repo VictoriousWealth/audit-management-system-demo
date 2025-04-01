@@ -43,7 +43,8 @@ class QaDashboardController < ApplicationController
       # completed refers to audits completed today -- use time of closure
 
     @pie_chart_data_by_day = {
-      completed: Audit.where(status: :completed).where('? < time_of_creation AND time_of_creation < ?', ).count,
+      # completed: Audit.where(status: :completed).where('? < time_of_creation AND time_of_creation < ?', ).count,
+      completed: Audit.where(status: :completed).where('time_of_creation < ?', Time.now()).count,
       in_progress: Audit.where(status: :in_progress).count,
       overdue: Audit.where('scheduled_end_date <= ?', Time.now).count, 
       not_started: Audit.where(status: :not_started).count,
