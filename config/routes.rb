@@ -7,6 +7,6 @@ Rails.application.routes.draw do
   
   resources :audits do
     resources :audit_closure_letters, only: [:new, :create]
-    resources :audit_request_letters, only: [:new, :create]
+    resources :audit_request_letters, only: [:new, :create, :show]
   end
 end

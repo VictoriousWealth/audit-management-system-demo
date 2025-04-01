@@ -1,6 +1,6 @@
 class AuditRequestLettersController < ApplicationController
-  before_action :set_audit, only: [:new, :create, :edit, :update]
-  before_action :set_audit_detail, only: [:new, :view]
+  before_action :set_audit
+  before_action :set_audit_detail
 
   # GET /audit/audit_id/create-audit-request-letter
   def new
@@ -38,7 +38,7 @@ class AuditRequestLettersController < ApplicationController
     if @audit_request_letter.present?
       render :view
     else
-      redirect_to audit_path(@audit), alert: "Audit Request Letter not found."
+      redirect_to new_audit_audit_request_letter_path(@audit), alert: "Audit Request Letter not found."
     end
   end
 
