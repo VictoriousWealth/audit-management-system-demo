@@ -26,21 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Move pieDataMap and barDataMap inside the callback
-  waitForCharts((pieChart, barChart, complianceChart) => {
-    const pieDataMap = {
-      day: window.pieChartDataByDay,
-      week: window.pieChartDataByWeek,
-      month: window.pieChartDataByMonth,
-      all: window.pieChartDataAll
-    };
-
-    const barDataMap = {
-      day: window.barChartDataByDay,
-      week: window.barChartDataByWeek,
-      month: window.barChartDataByMonth,
-      all: window.barChartDataAll
-    };
+  waitForCharts((complianceChart) => {
 
     const complianceDataMap = {
       day: window.complianceScoreByDay,
@@ -48,21 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
       month: window.complianceScoreByMonth,
       all: window.complianceScoreAll
     }
-
-    document.querySelectorAll("#chart-filter-tabs .nav-link").forEach(tab => {
-      tab.addEventListener("click", e => {
-        e.preventDefault();
-        const filter = tab.dataset.filter;
-
-        // Swap active class
-        document.querySelectorAll("#chart-filter-tabs .nav-link").forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-
-        // Update both charts
-        pieChart.updateData(pieDataMap[filter]);
-        barChart.updateData(barDataMap[filter]);
-      });
-    });
 
     document.querySelectorAll("#compliance-chart-filter-tabs .nav-link").forEach(tab => {
       tab.addEventListener("click", e => {

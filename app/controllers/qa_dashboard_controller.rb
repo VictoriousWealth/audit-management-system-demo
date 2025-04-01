@@ -11,45 +11,22 @@ class QaDashboardController < ApplicationController
   private
 
   def bar_chart_data
-    @bar_chart_data_all = @pie_chart_data_all
+    @bar_chart_data = @pie_chart_data
   end
+  
   def pie_chart_data
-    @pie_chart_data_all = {
-      completed_not_overdue: Audit.where(status: :completed)
-                                  .where('actual_end_date <= scheduled_end_date')
-                                  .count,
-      in_progress_not_overdue: Audit.where(status: :in_progress)
+    @pie_chart_data = {
+      "Completed": Audit.where(status: :completed).count, # Any
+      "In Progress (on time)": Audit.where(status: :in_progress)
                                     .where('actual_end_date <= scheduled_end_date')
-                                    .count,
-      completed_and_overdue: Audit.where(status: :completed)
-                                  .where('actual_end_date > scheduled_end_date')
-                                  .count,
-      in_progress_and_overdue: Audit.where(status: :in_progress)
+                                    .count, # to be replaced with scheduled_audits task
+      "In Progress (late)": Audit.where(status: :in_progress)
                                     .where('actual_end_date > scheduled_end_date')
-                                    .count,
-      not_started_and_overdue: Audit.where(status: :not_started)
-                                    .where('? > scheduled_end_date', Time.now())
-                                    .count,
-      not_started_and_not_overdue: Audit.where(status: :not_started)
-                                        .where('? < scheduled_end_date', Time.now())
-                                        .count,
-      pending_review: Audit.where(status: :pending_review).count,
+                                    .count, # to be replaced with scheduled_audits task
+      "Not Started": Audit.where(status: :not_started)
+                        .count,
     }
 
-    # Here is the thought process:
-      # completed refers to audits completed today -- use time of closure
-      # in_progress refers to audits which dont have an actual end date some of these may overlap with overdue audits
-      # completed refers to audits completed today -- use time of closure
-      # completed refers to audits completed today -- use time of closure
-
-    @pie_chart_data_by_day = {
-      # completed: Audit.where(status: :completed).where('? < time_of_creation AND time_of_creation < ?', ).count,
-      completed: Audit.where(status: :completed).where('time_of_creation < ?', Time.now()).count,
-      in_progress: Audit.where(status: :in_progress).count,
-      overdue: Audit.where('scheduled_end_date <= ?', Time.now).count, 
-      not_started: Audit.where(status: :not_started).count,
-      pending_review: Audit.where(status: :pending_review).count,
-    }
   end
 
   def scheduled_audits
