@@ -141,9 +141,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_27_124754) do
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
-    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "street_name"
+    t.string "city"
+    t.string "postcode"
   end
 
   create_table "contacts", force: :cascade do |t|
