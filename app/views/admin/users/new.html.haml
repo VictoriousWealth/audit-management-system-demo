@@ -24,8 +24,14 @@
       = f.label :company, "Company"
       = f.text_field :company, placeholder: "Enter company name", id: "company_name"
     .form-group#address_field{ style: "display: none;" }
-      = f.label :address, "Company Address"
-      = f.text_field :address, placeholder: "Enter company address"
+      = f.label :address_street, "Street Name"
+      = f.text_field :address_street, placeholder: "Enter street name ..."
+      = f.label :address_city, "City Name"
+      = f.text_field :address_city, placeholder: "Enter city name ..."
+      = f.label :address_postcode, "Postcode"
+      = f.text_field :address_postcode, placeholder: "Enter postcode ..."
+
+
     .form-group
       = f.submit "Create User", class: "btn btn-primary green-btn"
 
@@ -36,25 +42,46 @@
     var addressField = document.getElementById("address_field");
     var companyNameInput = document.getElementById("company_name");
 
-    // A list of companies that exist
     var existingCompanies = #{raw @companies.to_json};
 
-    // Show the company field if an auditee
+    function isNewCompany(name) {
+      const input = name.trim().toLowerCase();
+      return !existingCompanies.some(c => typeof c === "string" && c.toLowerCase() === input);
+    }
+
+    // Show/hide company field based on role
     roleSelect.addEventListener("change", function() {
       if (this.value === "auditee") {
         companyField.style.display = "block";
+        if (isNewCompany(companyNameInput.value)) {
+          addressField.style.display = "block";
+        }
       } else {
         companyField.style.display = "none";
         addressField.style.display = "none";
       }
     });
 
-    // Show address address field if the comapny is new
+    // Show address fields only if company doesn't exist
     companyNameInput.addEventListener("input", function() {
-      if (!existingCompanies.includes(this.value.trim())) {
+      if (isNewCompany(this.value)) {
         addressField.style.display = "block";
       } else {
         addressField.style.display = "none";
+      }
+    });
+
+    // Prevent submission if address fields are incomplete
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function(e) {
+      if (roleSelect.value === "auditee" && isNewCompany(companyNameInput.value)) {
+        const street = document.querySelector("[name='user[address_street]']").value.trim();
+        const city = document.querySelector("[name='user[address_city]']").value.trim();
+        const postcode = document.querySelector("[name='user[address_postcode]']").value.trim();
+        if (!street || !city || !postcode) {
+          alert("Please complete the address fields for a new company.");
+          e.preventDefault();
+        }
       }
     });
   });

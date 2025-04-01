@@ -6,6 +6,9 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 # db/seeds.rb
+
+
+
 #Auditor
 User.where(email: 'bob@sheffield.ac.uk').first_or_create(
   first_name: 'Bob',
@@ -51,3 +54,6 @@ User.where(email: 'LYBE2004@hotmail.com').first_or_create(
 )
 
 puts "Users created or found successfully!"
+
+
+
