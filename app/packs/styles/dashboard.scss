@@ -33,6 +33,7 @@ $container-height: 529px;
     .custom-tab-container {
         width: 100%;
         height: $container-height;
+        max-height: $container-height;
         background-color: #fff;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -46,7 +47,7 @@ $container-height: 529px;
         th,
         td {
             border: 1px solid black !important;
-            display: ruby-text;
+            // display: ruby-text;
         }
     }
 
@@ -147,5 +148,9 @@ $container-height: 529px;
     border: none !important;
     box-shadow: none !important;
     color: inherit !important;
+    }
+
+    th.p-3, td.p-3 {
+        text-wrap-mode: nowrap;
     }
 }

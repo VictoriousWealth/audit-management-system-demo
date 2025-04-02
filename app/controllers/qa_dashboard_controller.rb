@@ -11,22 +11,29 @@ class QaDashboardController < ApplicationController
   private
 
   def bar_chart_data
-    @bar_chart_data = @pie_chart_data
+    @bar_chart_data =@bar_chart_data = [
+      { name: "Completed", data: [["Audits", Audit.where(status: :completed).count]] },
+      { name: "In Progress (on time)", data: [["Audits", Audit.where(status: :in_progress).where('actual_start_date <= scheduled_start_date').count]] },
+      { name: "In Progress (late)", data: [["Audits", Audit.where(status: :in_progress).where('actual_start_date > scheduled_start_date').count]] },
+      { name: "Not Started", data: [["Audits", Audit.where(status: :not_started).count]] }
+    ]
+    
   end
   
   def pie_chart_data
     @pie_chart_data = {
       "Completed": Audit.where(status: :completed).count, # Any
       "In Progress (on time)": Audit.where(status: :in_progress)
-                                    .where('actual_end_date <= scheduled_end_date')
+                                    .where('actual_start_date <= scheduled_start_date')
+                                    # .where('actual_end_date <= scheduled_end_date')
                                     .count, # to be replaced with scheduled_audits task
       "In Progress (late)": Audit.where(status: :in_progress)
-                                    .where('actual_end_date > scheduled_end_date')
+                                    .where('actual_start_date > scheduled_start_date')
+                                    # .where('actual_end_date > scheduled_end_date')
                                     .count, # to be replaced with scheduled_audits task
       "Not Started": Audit.where(status: :not_started)
                         .count,
     }
-
   end
 
   def scheduled_audits
@@ -99,7 +106,7 @@ class QaDashboardController < ApplicationController
 
   def risk_level(audit)
     categories = AuditFinding.categories.keys # ["major", "minor", "critical"]
-    category_counts = AuditFinding.where(report_id: Report.where(audit_id: audit.id).pluck(:id))
+    category_counts = AuditFinding.where(report_id: Report.where(audit_id: audit.id).pluck(:id)) # there are multiple reports per one audit, idk why :(
                                   .group(:category)
                                   .count
 
@@ -107,17 +114,17 @@ class QaDashboardController < ApplicationController
       hash[category] = category_counts[category] || 0
     end
 
-    if category_counts[:critical] >= 1
+    if category_counts["critical"] >= 1
       "High Risk"
-    elsif category_counts[:major] >= 5
+    elsif category_counts["major"] >= 5
       "High Risk"
-    elsif category_counts[:minor] >= 5
+    elsif category_counts["minor"] >= 5
       "Medium Risk"
-    elsif category_counts[:major] >= 1
+    elsif category_counts["major"] >= 1
       "Medium Risk"
     else
       "Low Risk"
-    end
+    end    
   end
 end
 

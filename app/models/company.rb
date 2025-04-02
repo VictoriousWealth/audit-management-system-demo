@@ -14,5 +14,6 @@ class Company < ApplicationRecord
   has_many :users
   has_many :audits
   has_many :contacts
+  has_many :vendor_rpns, dependent: :destroy
 end
 

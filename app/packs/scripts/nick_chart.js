@@ -12,13 +12,11 @@ Chartkick.use(Chart)
 
 document.addEventListener("DOMContentLoaded", function () {
   function waitForCharts(callback, retries = 10, delay = 100) {
-    const pieChart = Chartkick.charts["pieChart"];
-    const barChart = Chartkick.charts["barChart"];
     const complianceChart = Chartkick.charts["complianceScoreChart"];
 
 
-    if (pieChart && barChart && complianceChart) {
-      callback(pieChart, barChart, complianceChart);
+    if (complianceChart) {
+      callback(complianceChart);
     } else if (retries > 0) {
       setTimeout(() => waitForCharts(callback, retries - 1, delay), delay);
     } else {
@@ -44,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll("#compliance-chart-filter-tabs .nav-link").forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
 
-        // Update both charts
         complianceChart.updateData(complianceDataMap[filter]);
       });
     })

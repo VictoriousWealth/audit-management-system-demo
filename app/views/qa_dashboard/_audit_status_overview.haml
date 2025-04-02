@@ -15,16 +15,3 @@
 
     .tab-pane.fade#bar-chart{role: 'tabpanel'}
       = render partial: 'bar_chart', locals: { bar_chart_data: @bar_chart_data }
-
-
-  / Inject JS Chart Data
-  -# :javascript
-  -#   window.pieChartDataByDay = #{@pie_chart_data_by_day.to_json.html_safe};
-  -#   window.pieChartDataByWeek = #{@pie_chart_data_by_week.to_json.html_safe};
-  -#   window.pieChartDataByMonth = #{@pie_chart_data_by_month.to_json.html_safe};
-  -#   window.pieChartDataAll = #{@pie_chart_data_all.to_json.html_safe};
-
-  -#   window.barChartDataByDay = #{@bar_chart_data_by_day.to_json.html_safe};
-  -#   window.barChartDataByWeek = #{@bar_chart_data_by_week.to_json.html_safe};
-  -#   window.barChartDataByMonth = #{@bar_chart_data_by_month.to_json.html_safe};
-  -#   window.barChartDataAll = #{@bar_chart_data_all.to_json.html_safe};
