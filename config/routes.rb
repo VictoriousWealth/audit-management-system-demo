@@ -47,7 +47,8 @@ Rails.application.routes.draw do
   unauthenticated do
     root to: 'pages#home'
   end
-
+  
+  resources :create_edit_audits, only: [:new, :create, :edit, :update]
   resources :audits do
     resources :audit_closure_letters, only: [:new, :create]
     resources :audit_request_letters, only: [:new, :create, :show]
