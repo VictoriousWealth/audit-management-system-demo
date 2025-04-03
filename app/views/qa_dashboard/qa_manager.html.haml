@@ -1,13 +1,17 @@
-#qa-dashboard.container.d-flex.flex-row{style: "overflow: auto; border: black solid 1px; padding: 0px; padding-bottom: 2vh; padding-top: 2vh;"}
-  .container{id: 'Audit', style: "border: black solid 1px !important; padding: 0px; display: inline-grid; min-width: 1005px !important; max-height: 529px; height: 529px;"}
-    = render partial: 'audits'
-  
-  .container{id: 'Audits-Status-Overview', style: "min-width: 400px; overflow: auto;"}
-    = render partial: 'audit_status_overview'
-  
-  .container{id: 'Compliance-Score-Graph-Over-Time', style: "min-width: 600px; overflow: auto;"}
-    = render partial: 'compliance_score_graph_over_time'
-  
-  .container{id: 'Audit-calendar', style: "min-width: 600px; overflow: auto;"}
-    = render partial: 'audit_calendar'
-
+#qa-dashboard
+  .container.d-flex.flex-row{style: "overflow: auto; padding: 0px; padding-bottom: 2vh; padding-top: 2vh; margin: 0; min-width: -webkit-fill-available;"}
+    .container{id: 'Audit', style: "border: black solid 1px !important; padding: 0px; display: inline-grid; min-width: 1005px !important; max-height: 529px; height: 529px;"}
+      = render partial: 'audits'
+    
+    .container{id: 'Audits-Status-Overview', style: "min-width: 400px; overflow: auto;"}
+      = render partial: 'audit_status_overview'
+    
+    .container{id: 'Compliance-Score-Graph-Over-Time', style: "border-radius: 1.3em; overflow: auto;"}
+      = render partial: 'compliance_score_graph_over_time'
+    
+    .container{id: 'Audit-calendar', style: "min-width: 600px; overflow: auto;"}
+      = render partial: 'audit_calendar'
+  .container.d-flex.flex-row{style: "overflow: auto; padding: 0px; padding-bottom: 2vh; padding-top: 2vh; margin: 0; min-width: -webkit-fill-available;"}
+    .container{id: 'recurring-compliance-issues', style: "border: black solid 1px !important; padding: 0px; display: inline-grid; min-width: 1005px !important; max-height: 529px; height: 529px;"}
+      = render partial: 'recurring_compliance_issues'
+    

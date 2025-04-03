@@ -47,7 +47,6 @@ $container-height: 529px;
         th,
         td {
             border: 1px solid black !important;
-            // display: ruby-text;
         }
     }
 
@@ -99,6 +98,20 @@ $container-height: 529px;
 
     #Compliance-Score-Graph-Over-Time {
         min-width: 600px !important; 
+        border: black 1px solid;
+        padding: 0;
+        border-radius: 1.5em;
+        *{
+            border: none;
+        }
+        .bottom-black-border {
+            border-bottom: black solid 2px !important;
+        }
+        .special-black-border {
+            border: black solid 1px !important;
+            border-top-left-radius: 0.5em;
+            border-top-right-radius: 0.5em;
+        }
     }
 
     #auditCalendar {

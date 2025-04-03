@@ -9,9 +9,63 @@ class QaDashboardController < ApplicationController
     pie_chart_data()
     bar_chart_data()
     compliance_score_graph_over_time()
+
+    calendar_events()
+    audit_fidnings()
   end
 
   private
+  def audit_fidnings
+    @audit_fidnings = {}
+  end
+
+  def calendar_events
+    # === Calendar Event Component ===
+    
+    today = Time.zone.today
+    @calendar_events = []
+
+    # === Category 1: Scheduled to End Per Date ===
+    Audit.where.not(scheduled_end_date: nil).group("DATE(scheduled_end_date)").count.each do |date, count|
+      @calendar_events << {
+        title: "🔵#{count}",
+        date: date,
+        allDay: true,
+        textColor: "#000",
+        description: "#{count} audit(s) scheduled to end on #{date}"
+      }
+    end
+
+    # === Category 2: Overdue Audits (status ≠ completed && end date < today) === to change to in progress late
+    overdue_count = Audit.where.not(status: :completed).where.not(scheduled_end_date: nil)
+                         .where("DATE(scheduled_end_date) < ?", today)
+                         .count
+
+    if overdue_count > 0
+      @calendar_events << {
+        title: "🔴#{overdue_count}",
+        date: today,
+        allDay: true,
+        textColor: "#000",
+        description: "#{overdue_count} audit(s) overdue as of today"
+      }
+    end
+
+    # === Category 3: In progress === to change to in progress on time
+    missing_dates_count = Audit.where(status: :in_progress)
+                               .count
+
+    if missing_dates_count > 0
+      @calendar_events << {
+        title: "🟡#{missing_dates_count}",
+        date: today,
+        allDay: true,
+        textColor: "#000",
+        description: "#{missing_dates_count} audit(s) in progress"
+      }
+    end
+  end
+
   def compliance_score_graph_over_time
     compliance_score_graph_over_time_all()
     compliance_score_graph_over_time_day()

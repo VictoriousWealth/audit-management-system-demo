@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         header.innerHTML = `
           <div class="d-flex justify-content-between align-items-center p-2 mb-2"
-               style="background: #c0c0c030; border: solid 1px;">
+               style="background: #c0c0c030; border-top: solid 1px; border-bottom: solid 1px;">
             <button class="fc-prev-button btn btn-outline-secondary px-3 mt-0"
                     style="border: none; color: #42CA68;">◀</button>
 

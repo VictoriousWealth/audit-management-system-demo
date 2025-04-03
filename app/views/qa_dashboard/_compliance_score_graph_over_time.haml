@@ -1,5 +1,5 @@
-.container.custom-tab-container.p-0.border.border-dark
-  %ul.nav.nav-tabs.mb-0
+.container.custom-tab-container.p-0
+  %ul.nav.nav-tabs.mb-0.bottom-black-border
     %li.nav-item.w-100
       %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Compliance Score Graph Over Time
 
@@ -8,13 +8,13 @@
 
   / Bottom Time Filter Tabs
   %ul.nav.nav-tabs.nav-fill.mt-3#compliance-chart-filter-tabs
-    %li.nav-item
+    %li.nav-item.special-black-border
       %a.nav-link.active{href: '#', data: { filter: 'day' }} Day
-    %li.nav-item
+    %li.nav-item.special-black-border
       %a.nav-link{href: '#', data: { filter: 'week' }} Week
-    %li.nav-item
+    %li.nav-item.special-black-border
       %a.nav-link{href: '#', data: { filter: 'month' }} Month
-    %li.nav-item
+    %li.nav-item.special-black-border
       %a.nav-link{href: '#', data: { filter: 'all' }} All
 
 
