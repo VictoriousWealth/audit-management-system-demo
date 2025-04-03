@@ -1,4 +1,6 @@
 class QaDashboardController < ApplicationController
+  before_action :authenticate_user!
+
   def qa_manager
     scheduled_audits()
     in_progress_audits()
@@ -6,9 +8,134 @@ class QaDashboardController < ApplicationController
 
     pie_chart_data()
     bar_chart_data()
+    compliance_score_graph_over_time()
   end
 
   private
+  def compliance_score_graph_over_time
+    compliance_score_graph_over_time_all()
+    compliance_score_graph_over_time_day()
+    compliance_score_graph_over_time_week()
+    compliance_score_graph_over_time_month()
+  end
+
+  def compliance_score_graph_over_time_day
+    @compliance_score_by_day = [
+      {
+        name: "Internal",
+        color: "#42CA68",
+        data: Audit.where(audit_type: "internal")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "External",
+        color: "#F39C12",
+        data: Audit.where(audit_type: "external")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "All Audits",
+        color: "#3498DB",
+        data: Audit.where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      }
+    ]
+  end
+
+  def compliance_score_graph_over_time_week
+    # @compliance_score_by_week = {}
+    # @compliance_score_by_week_labels = {}
+    @compliance_score_by_week = [
+      {
+        name: "Internal",
+        color: "#42CA68",
+        data: Audit.where(audit_type: "internal")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "External",
+        color: "#F39C12",
+        data: Audit.where(audit_type: "external")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "All Audits",
+        color: "#3498DB",
+        data: Audit.where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      }
+    ]
+  end
+
+  def compliance_score_graph_over_time_month
+    # @compliance_score_by_month = {}
+    # @compliance_score_by_month_labels = {}
+    @compliance_score_by_month = [
+      {
+        name: "Internal",
+        color: "#42CA68",
+        data: Audit.where(audit_type: "internal")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "External",
+        color: "#F39C12",
+        data: Audit.where(audit_type: "external")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "All Audits",
+        color: "#3498DB",
+        data: Audit.where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      }
+    ]
+  end
+
+  def compliance_score_graph_over_time_all
+    @compliance_score_all = [
+      {
+        name: "Internal",
+        color: "#42CA68",
+        data: Audit.where(audit_type: "internal").where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      
+      },
+      {
+        name: "External",
+        color: "#F39C12",
+        data: Audit.where(audit_type: "external").where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "All Audits",
+        color: "#3498DB",
+        data: Audit.where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      }
+    ]
+  end
 
   def bar_chart_data
     @bar_chart_data =@bar_chart_data = [
