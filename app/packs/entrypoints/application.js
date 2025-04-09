@@ -6,6 +6,7 @@ import '../scripts/nick_chart'
 import '../scripts/nick_calendar'
 
 import "../scripts/nav_bar";
+import "../scripts/create_audit_closure_letter";
 //import "../scripts/show_comapany_field"
 
 Rails.start();
