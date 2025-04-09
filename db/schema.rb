@@ -19,11 +19,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.integer "status"
     t.datetime "time_accepted"
     t.bigint "user_id", null: false
-    t.bigint "audit_assignments_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
-    t.index ["audit_assignments_id"], name: "index_audit_assignments_on_audit_assignments_id"
     t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
     t.index ["user_id"], name: "index_audit_assignments_on_user_id"
   end
@@ -355,7 +353,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.index ["company_id"], name: "index_vendor_rpns_on_company_id"
   end
 
-  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
   add_foreign_key "audit_assignments", "audits"
   add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"
