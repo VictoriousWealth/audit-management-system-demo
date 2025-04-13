@@ -4,8 +4,17 @@ import './styles'
 import '../scripts/audit_form';
 import '../scripts/nick_chart'
 import '../scripts/nick_calendar'
-
 import "../scripts/nav_bar";
+import '../scripts/create_questionnaire';
+import "../scripts/modals_controller";
+import "@hotwired/turbo-rails";
+import { Application } from "@hotwired/stimulus"
+import ModalsController from "../scripts/modals_controller"
+
+const application = Application.start()
+application.register("modals", ModalsController)
+
+
 //import "../scripts/show_comapany_field"
 
 Rails.start();

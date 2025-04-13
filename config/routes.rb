@@ -29,7 +29,6 @@ Rails.application.routes.draw do
 
 
 
-
   #Takes you to the profile page after clicking the name
   get 'profile', to: 'users#show', as: :profile
 
@@ -51,6 +50,7 @@ Rails.application.routes.draw do
   resources :audits do
     resources :audit_closure_letters, only: [:new, :create]
   end
+
   resources :create_edit_audits, only: [:new, :create, :edit, :update]
 
   # Defines the route for the audit request letter creation page ('/create-audit-request-letter')
@@ -61,4 +61,15 @@ Rails.application.routes.draw do
 
   # Defines the route for the audit request letter review page ('/review-audit-request-letter')
   get 'letters/review-audit-request-letter', to: 'pages#audit_request_letter_review'
+
+  # Routes for Custom Questionnaire page 
+  get 'questionnaire/new', to: 'questionnaires#new', as: 'new_questionnaire'
+  post 'questionnaire', to: 'questionnaires#create', as: 'questionnaire'
+  post '/update_questionnaire_layout', to: 'questionnaires#update_questionnaire_layout'
+  get 'questionnaire/_edit_question/:id', to: 'questionnaires#edit_question', as: 'edit_question' 
+  get 'questionnaire/_edit_section/:id', to: 'questionnaires#edit_section', as: 'edit_section'
+  post 'questionnaire/save_questionnaire', to: 'questionnaires#save_questionnaire', as: 'save_questionnaire'
+  post 'questionnaire/_add_question', to: 'questionnaires#add_question', as: 'add_question'
+  post 'questionnaire/_edit_new_question', to: 'questionnaires#edit_new_question', as: 'edit_new_question'
+  # post 'questionnaire/_edit_new_question/:id', to: 'questionnaires#edit_new_question', as: 'edit_new_question'
 end
