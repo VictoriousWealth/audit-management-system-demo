@@ -4,9 +4,9 @@
 .row.justify-content-center
   .col-sm-10.col-lg-8
     .card.card-light
-      = simple_form_for @audit_request_letter, url: audit_audit_request_letters_path(@audit), method: :post do |f|
+      = simple_form_for @audit_request_letter, url: verify_audit_audit_request_letters_path(@audit, @audit_request_letter), method: :post do |f|
         .card-header
-          %h2 View Audit Request Letter
+          %h2 Verify Audit Request Letter
         .card-body
           .form-group
 
@@ -95,6 +95,6 @@
               %br= @lead_auditor.email || "gtimc@sheffield.ac.uk"
 
             .form-group.mt-4.d-flex.justify-content-between
-              = link_to "Go Back to audit",audit_path(@audit), class: "btn btn-danger"
-
+              = link_to "Cancel", audit_path(@audit), class: "btn btn-danger"
+              = f.submit "Verify", class: "btn btn-success", id: "verifyBtn"
  

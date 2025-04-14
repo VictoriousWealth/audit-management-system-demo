@@ -51,7 +51,10 @@ Rails.application.routes.draw do
   resources :create_edit_audits, only: [:new, :create, :edit, :update]
   resources :audits do
     resources :audit_closure_letters, except: [:index]
-    resources :audit_request_letters, only: [:new, :create, :show]
+    resource :audit_request_letters, only: [:new, :create, :show, :destroy] do
+      get 'preview', on: :member
+      post 'verify', on: :member
+    end
   end
 
   resources :audit_closure_letters, only: [:index]
