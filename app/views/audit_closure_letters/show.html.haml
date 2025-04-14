@@ -8,11 +8,6 @@
           %h2 Create Audit Closure Letter
         .card-body
           .form-group
-            %label Select Template (Currently not functional)
-            = select_tag :template, options_for_select(["Default Template"]), class: "form-control"
-            %a.mt-2{ href: "#" } Create new template
-            %hr
-
             %h3 Audit Closure Letter
 
             %p.mt-3
@@ -132,20 +127,26 @@
             %ul
               %li
                 %strong Summary Statement:
-                = text_area_tag 'audit_closure_letter[summary_statement]', nil, class: "form-control", rows: 2
-              %li
-                %strong Overall Compliance Status:
-                = text_area_tag 'audit_closure_letter[overall_compliance]', nil, class: "form-control", rows: 2
+                %p= @content.dig("notes", "summary_statement") || "N/A"
+              %li 
+                %strong Overall Compliance Status: 
+                %p= @content.dig("notes", "overall_compliance") || "N/A"
               %li 
                 %strong Lead Auditor Signature: 
-                = check_box_tag 'audit_closure_letter[auditor_acknowledged]', '1', false, id: 'auditor_acknowledged'
+                - if @content.dig("notes", "auditor_acknowledged")
+                  Acknowledged
+                - else 
+                  Not Acknowledged 
               %li 
                 %strong Date: 
                 = Date.today.strftime("%d/%m/%Y")
-              %li
-                %strong Auditee Acknowledgement:
-                = check_box_tag 'audit_closure_letter[auditee_acknowledged]', '1', false, id: 'auditee_acknowledged'
-                
+              %li 
+                %strong Auditee Acknowledgment
+                - if @content.dig("notes", "auditee_acknowledged")
+                  Acknowledged
+                - else 
+                  Not Acknowledged 
+
             %h4.mt-4 9. Distribution List
             %ul
               %li Recipients of the Report: placeholder
@@ -166,5 +167,5 @@
               %br= @lead_auditor&.email || "placeholder@gtimc.com"
 
             .form-group.mt-4.d-flex.justify-content-between
-              = link_to "Cancel", audit_closure_letters_path, class: "btn btn-danger"
-              = f.submit "Generate Letter", class: "btn btn-success"      
+              = link_to "Go Back", audit_closure_letters_path, class: "btn btn-danger"
+    
