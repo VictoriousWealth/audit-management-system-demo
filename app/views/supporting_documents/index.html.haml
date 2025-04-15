@@ -1,0 +1,27 @@
+%main.supporting_documents
+
+    %h1 Supporting Documnets
+        
+    %div.table_container
+        %div.button_container
+            = link_to "Add Document", new_supporting_document_path, class: "link_bn"
+
+        %h2 Documents
+        %table
+            %thead
+                %tr
+                    %th Time (DD-MM-YYYY, HH:MM:SS)
+                    %th Document Name
+                    %th Actions
+            %tbody
+                - @supporting_documents.each do |document|
+                    %tr
+                    %td=document.uploaded_at.strftime("%d-%m-%Y, %H:%M:%S")
+                    %td= document.name
+                    %td
+                        = link_to "View", supporting_document_path(document.id), class: "link_bn"
+                -# This is just for an empty table row
+                %tr
+                %td 
+                %td 
+                %td 

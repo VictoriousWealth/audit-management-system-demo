@@ -28,6 +28,9 @@ Rails.application.routes.draw do
   get 'auditor_dashboard', to: 'dashboard#auditor', as: 'auditor_dashboard'
 
 
+  resources :supporting_documents
+
+  resources :supporting_documents, only: [:new, :create, :index, :show]
 
 
   #Takes you to the profile page after clicking the name

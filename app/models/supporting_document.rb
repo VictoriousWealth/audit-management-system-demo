@@ -20,5 +20,19 @@
 #  fk_rails_...  (audit_id => audits.id)
 #
 class SupportingDocument < ApplicationRecord
+
   belongs_to :audit, optional: true
+  has_one_attached :file
+
+  # Should set the uploaded time when one is made
+  before_create :set_uploaded_at
+
+  private
+
+  def set_uploaded_at
+    self.uploaded_at = Time.current
+  end
+
+
+
 end

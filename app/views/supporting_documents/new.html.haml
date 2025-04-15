@@ -1,0 +1,105 @@
+%main.upload-supporting-documents
+  %h1 Upload Supporting Documents for Audit
+
+  %div.rectangle-3
+    %button.view-button View Audit
+
+    %h2 General Information
+    %table.general-information-table
+      %thead
+        %tr
+          %th Auditee Id
+          %th Auditee
+          %th Start Date (DD-MM-YYYY)
+          %th End Date (DD-MM-YYYY)
+          %th Status
+      %tbody
+        %tr
+          %td Data 1
+          %td Data 2
+          %td Data 3
+          %td Data 4
+          %td Data 5
+
+    %div.documents-part
+      %h2 Upload Documents
+
+    = form_with(model: @supporting_document, local: true, html: { id: "upload-the-document" }) do |form|
+      %div.input-documents
+        = form.file_field :file, id: "document-upload", required: true, accept: "application/pdf,image/jpeg,image/png"
+        -# = form.file_field :pdf, id: "document-upload", required: true
+
+
+
+  
+      %div.attachments-part
+        %p Add attachment
+        %div.rectangle-attachments
+          %p Document Title
+          = form.text_field :name, id: 'document-title', placeholder: 'Enter document title...', required: true
+          
+          %p Attachment
+          - if @supporting_document && @supporting_document.file.attached?
+            %div.file-preview
+              %p
+                %strong Uploaded Document: #{@supporting_document.file.filename.to_s}
+                %a.remove-preview href="#" class="remove-preview">X</a>
+            
+          %p Additional Notes
+          = form.text_area :content, id: 'additional-notes', placeholder: 'Enter additional notes...'
+          
+          %button.add-button#submit-button Add
+
+  :javascript
+    document.addEventListener("DOMContentLoaded", () => {
+      const addButton = document.getElementById("submit-button");
+      const form = document.getElementById("upload-the-document");
+      const fileInput = document.getElementById("document-upload");
+      const attachmentSection = document.querySelector(".rectangle-attachments");
+
+      // Event listener to display selected document details
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const fileName = file.name;
+          const fileSize = (file.size / 1024).toFixed(2); // File size in KB
+
+          // Create a preview section for the uploaded file
+          const preview = document.createElement("div");
+          preview.classList.add("file-preview");
+          preview.innerHTML = `
+            <p>${fileName} (${fileSize} KB)
+              <a href="#" class="remove-preview">X</a>
+            </p>
+            <p><a href="${URL.createObjectURL(file)}" target="_blank">View File</a></p>
+          `;
+
+          // Insert the preview directly after the "Attachment" paragraph
+          const attachmentParagraph = attachmentSection.querySelector("p:nth-of-type(2)");
+          attachmentSection.insertBefore(preview, attachmentParagraph.nextSibling);
+          
+          // Add event listener to the remove button
+          const removeButton = preview.querySelector(".remove-preview");
+          removeButton.addEventListener("click", (e) => {
+            e.preventDefault(); // Prevent link action
+            preview.remove();   // Remove the preview
+            fileInput.value = ''; // Clear the file input
+          });
+        }
+      });
+
+      // Submit the form when the submit button is clicked
+      addButton.addEventListener("click", (e) => {
+        e.preventDefault(); // stop default button behavior
+        
+        // Check if the form is valid before submitting
+        if (form.checkValidity()) {
+          form.submit();      // submit the form manually if valid
+        } else {
+          // Optional: Display a message if form is invalid
+          alert("Please fill in the required fields.");
+        }
+      });
+    });
+
+  
