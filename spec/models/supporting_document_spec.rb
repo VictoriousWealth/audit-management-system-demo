@@ -19,8 +19,20 @@
 #
 #  fk_rails_...  (audit_id => audits.id)
 #
+
 require 'rails_helper'
 
 RSpec.describe SupportingDocument, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  describe "file attachment" do
+    it "can have a file attached" do
+      document = SupportingDocument.new
+      document.file.attach(
+        io: File.open(Rails.root.join("spec/fixtures/files/sample.pdf")),
+        filename: "sample.pdf",
+        content_type: "application/pdf"
+      )
+      expect(document.file).to be_attached
+    end
+  end
 end

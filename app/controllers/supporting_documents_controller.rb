@@ -1,5 +1,6 @@
 class SupportingDocumentsController < ApplicationController
 
+  before_action :authenticate_user!
   before_action :set_supporting_document, only: [:show]
 
 

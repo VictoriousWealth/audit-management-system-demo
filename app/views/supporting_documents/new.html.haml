@@ -15,11 +15,11 @@
           %th Status
       %tbody
         %tr
-          %td Data 1
-          %td Data 2
-          %td Data 3
-          %td Data 4
-          %td Data 5
+          %td 
+          %td 
+          %td 
+          %td 
+          %td 
 
     %div.documents-part
       %h2 Upload Documents
@@ -27,7 +27,6 @@
     = form_with(model: @supporting_document, local: true, html: { id: "upload-the-document" }) do |form|
       %div.input-documents
         = form.file_field :file, id: "document-upload", required: true, accept: "application/pdf,image/jpeg,image/png"
-        -# = form.file_field :pdf, id: "document-upload", required: true
 
 
 
@@ -50,56 +49,56 @@
           
           %button.add-button#submit-button Add
 
-  :javascript
-    document.addEventListener("DOMContentLoaded", () => {
-      const addButton = document.getElementById("submit-button");
-      const form = document.getElementById("upload-the-document");
-      const fileInput = document.getElementById("document-upload");
-      const attachmentSection = document.querySelector(".rectangle-attachments");
+  -# :javascript
+  -#   document.addEventListener("DOMContentLoaded", () => {
+  -#     const addButton = document.getElementById("submit-button");
+  -#     const form = document.getElementById("upload-the-document");
+  -#     const fileInput = document.getElementById("document-upload");
+  -#     const attachmentSection = document.querySelector(".rectangle-attachments");
 
-      // Event listener to display selected document details
-      fileInput.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const fileName = file.name;
-          const fileSize = (file.size / 1024).toFixed(2); // File size in KB
+  -#     // This is a listener for displaying the file's details
+  -#     fileInput.addEventListener("change", (e) => {
+  -#       const file = e.target.files[0];
+  -#       if (file) {
+  -#         const fileName = file.name;
+  -#         //Turning the size into kilobytes, we can change it for bigger files
+  -#         const fileSize = (file.size / 1024).toFixed(2); 
 
-          // Create a preview section for the uploaded file
-          const preview = document.createElement("div");
-          preview.classList.add("file-preview");
-          preview.innerHTML = `
-            <p>${fileName} (${fileSize} KB)
-              <a href="#" class="remove-preview">X</a>
-            </p>
-            <p><a href="${URL.createObjectURL(file)}" target="_blank">View File</a></p>
-          `;
+  -#         // Allow the user to preview the file
+  -#         const preview = document.createElement("div");
+  -#         preview.classList.add("file-preview");
+  -#         preview.innerHTML = `
+  -#           <p>${fileName} (${fileSize} KB)
+  -#             <a href="#" class="remove-preview">X</a>
+  -#           </p>
+  -#           <p><a href="${URL.createObjectURL(file)}" target="_blank">View File</a></p>
+  -#         `;
 
-          // Insert the preview directly after the "Attachment" paragraph
-          const attachmentParagraph = attachmentSection.querySelector("p:nth-of-type(2)");
-          attachmentSection.insertBefore(preview, attachmentParagraph.nextSibling);
+  -#         // Put the file under attachments
+  -#         const attachmentParagraph = attachmentSection.querySelector("p:nth-of-type(2)");
+  -#         attachmentSection.insertBefore(preview, attachmentParagraph.nextSibling);
           
-          // Add event listener to the remove button
-          const removeButton = preview.querySelector(".remove-preview");
-          removeButton.addEventListener("click", (e) => {
-            e.preventDefault(); // Prevent link action
-            preview.remove();   // Remove the preview
-            fileInput.value = ''; // Clear the file input
-          });
-        }
-      });
+  -#         // Add listener to the remove button too
+  -#         const removeButton = preview.querySelector(".remove-preview");
+  -#         removeButton.addEventListener("click", (e) => {
+  -#           e.preventDefault(); 
+  -#           preview.remove();   
+  -#           fileInput.value = ''; 
+  -#         });
+  -#       }
+  -#     });
 
-      // Submit the form when the submit button is clicked
-      addButton.addEventListener("click", (e) => {
-        e.preventDefault(); // stop default button behavior
+  -#     // Only submit the form after adding 
+  -#     addButton.addEventListener("click", (e) => {
+  -#       e.preventDefault(); 
         
-        // Check if the form is valid before submitting
-        if (form.checkValidity()) {
-          form.submit();      // submit the form manually if valid
-        } else {
-          // Optional: Display a message if form is invalid
-          alert("Please fill in the required fields.");
-        }
-      });
-    });
+  -#       // Check the details before submitting
+  -#       if (form.checkValidity()) {
+  -#         form.submit();     
+  -#       } else {
+  -#         alert("Please fill in the required fields.");
+  -#       }
+  -#     });
+  -#   });
 
   

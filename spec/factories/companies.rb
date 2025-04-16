@@ -10,6 +10,7 @@
 #
 FactoryBot.define do
   factory :company do
+    id {1}
     name { "MyString" }
     address { "MyString" }
   end

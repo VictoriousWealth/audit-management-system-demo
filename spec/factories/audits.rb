@@ -41,5 +41,6 @@ FactoryBot.define do
     time_of_creation { "2025-03-12 14:20:57" }
     time_of_verification { "2025-03-12 14:20:57" }
     time_of_closure { "2025-03-12 14:20:57" }
+    company_id {1}
   end
 end
