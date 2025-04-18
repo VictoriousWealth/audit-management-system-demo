@@ -10,14 +10,15 @@
 require 'faker'
 
 # Clear existing data (only in development/testing!)
-Company.destroy_all
-User.destroy_all
-Audit.destroy_all
-AuditDetail.destroy_all
-AuditAssignment.destroy_all
 AuditStandard.destroy_all
-
-
+AuditAssignment.destroy_all
+AuditDetail.destroy_all
+AuditFinding.destroy_all
+Report.destroy_all
+Audit.destroy_all
+VendorRpn.destroy_all
+User.destroy_all       
+Company.destroy_all
 
 
 
@@ -105,7 +106,7 @@ eligible_assigners = auditors + smes
 
 # === 3. Create Not Started Audits ===
 
-300.times do
+30.times do
   local_assigners = eligible_assigners.dup
   auditee = auditees.sample
   company = auditee.company
@@ -194,7 +195,7 @@ end
 
 # === 4. Create In-Progress Audits ===
 # Late ones --- TO BE CHANGED as it is only a mock of a mockery 
-105.times do
+11.times do
   local_assigners = eligible_assigners.dup
   auditee = auditees.sample
   company = auditee.company
@@ -248,7 +249,7 @@ end
 end
 
 # On time ones --- TO BE CHANGED as it is only a mock of a mockery 
-170.times do
+17.times do
   local_assigners = eligible_assigners.dup
   auditee = auditees.sample
   company = auditee.company
@@ -320,7 +321,7 @@ end
 
 # === 5. Create Completed Audits ===
 
-200.times do
+20.times do
   local_assigners = eligible_assigners.dup
   auditee = auditees.sample
   company = auditee.company
