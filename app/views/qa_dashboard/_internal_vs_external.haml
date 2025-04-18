@@ -1,0 +1,29 @@
+.container.border.border-black.rounded-3.p-0.shadow-sm
+  %ul.nav.nav-tabs.mb-0
+    %li.nav-item.w-100
+      %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} 
+        .row.text-center.mb-1.mt-1
+          .col-md-5.text-primary.fw-bold.text-uppercase INTERNAL AUDITS
+          .col-md-2.fw-bold.text-uppercase VS
+          .col-md-5.text-success.fw-bold.text-uppercase EXTERNAL AUDITS
+
+  .row.text-center.min-height-90.p-0.m-0
+    .col-md-6.border-0.border-end.border.border-black
+      .border.border-primary.rounded-3.p-2.mt-4.mb-4
+        %span.fw-bold.text-uppercase.fs-5 Effectiveness
+
+      .position-relative.border.rounded-4.overflow-hidden.border-1.border-black{ style: "height: 77%; background-color: #ffffff;" }
+        - internal_progress = @internal_vs_external[:internal_average] || 0
+        .position-absolute.bottom-0.start-0.w-100.bg-primary{ style: "height: #{internal_progress}%;" }
+        .position-absolute.top-50.start-50.translate-middle.fw-bold.fs-3.text-black
+          = "#{internal_progress.to_i}%"
+
+    .col-md-6.border-0.border-start-0.border.border-black
+      .border.border-success.rounded-3.p-2.mt-4.mb-4
+        %span.fw-bold.text-uppercase.fs-5 Effectiveness
+
+      .position-relative.border.rounded-4.overflow-hidden.border-1.border-black{ style: "height: 77%; background-color: #ffffff;" }
+        - external_progress = @internal_vs_external[:external_average] || 0
+        .position-absolute.bottom-0.start-0.w-100.bg-success{ style: "height: #{external_progress}%;" }
+        .position-absolute.top-50.start-50.translate-middle.fw-bold.fs-3.text-black
+          = "#{external_progress.to_i}%"
