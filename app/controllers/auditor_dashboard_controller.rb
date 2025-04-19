@@ -16,7 +16,7 @@ class AuditorDashboardController < ApplicationController
   end
 
   private
-  def documents()
+  def documents() # to ensure that only documents related to the user can be accessed and any other no, but hard to do with current setup
     @documents = []
     Document.all.each do |d|
       @documents << {
