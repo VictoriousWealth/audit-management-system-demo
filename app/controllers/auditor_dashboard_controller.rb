@@ -53,24 +53,35 @@ class AuditorDashboardController < ApplicationController
 
   def audit_fidnings
     @audit_fidnings = []
-    AuditFinding.all.each do |c|
-      category = case c.category
-                when 0 then "critical"
-                when 1 then "major"
-                else "minor"
-                end
-
-      short_description = c.description.length > 15 ? "#{c.description[0...12]}..." : c.description
-
+  
+    AuditFinding.includes(report: { audit: :audit_assignments }).find_each do |finding|
+      audit = finding.report&.audit
+      next unless audit
+  
+      # Only include if current_user is assigned as lead/support/sme
+      relevant = audit.audit_assignments.any? do |assignment|
+        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+      end
+      next unless relevant
+  
+      category = case finding.category
+                 when 0 then "critical"
+                 when 1 then "major"
+                 else "minor"
+                 end
+  
+      short_description = finding.description.length > 15 ? "#{finding.description[0...12]}..." : finding.description
+  
       @audit_fidnings << {
-        id: c.id,
-        audit_type: Audit.find_by(id: Report.find_by(id: c.report_id)&.audit_id)&.audit_type,
+        id: finding.id,
+        audit_type: audit.audit_type,
         truncated_description: short_description,
-        full_description: c.description,
-        category: category,
+        full_description: finding.description,
+        category: category
       }
     end
   end
+  
 
 
   def calendar_events
