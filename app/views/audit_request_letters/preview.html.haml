@@ -95,6 +95,7 @@
               %br= @lead_auditor.email || "gtimc@sheffield.ac.uk"
 
             .form-group.mt-4.d-flex.justify-content-between
-              = link_to "Cancel", audit_path(@audit), class: "btn btn-danger"
+              = link_to "Cancel", new_audit_audit_request_letters_path(@audit), class: "btn btn-danger"
+              = link_to "Edit", "#", class: "btn btn-warning", onclick: "history.back(); return false;"
               = f.submit "Verify", class: "btn btn-success", id: "verifyBtn"
  
