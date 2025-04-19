@@ -446,6 +446,7 @@ User.where(email: 'jane@sheffield.ac.uk').first_or_create(
   password_confirmation: 'Password1234'
 )
 
+#Senior Manager
 User.where(email: 'LYBE2004@hotmail.com').first_or_create(
   first_name: 'Leroy',
   last_name: 'Barnie',
