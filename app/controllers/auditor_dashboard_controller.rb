@@ -29,27 +29,40 @@ class AuditorDashboardController < ApplicationController
 
   def corrective_actions
     @corrective_actions = []
-    CorrectiveAction.all.each do |c|
-      progress = 0
-      case c.status
-      when 0 # pending
-        progress = 33
-      when 1 # in_progress
-        progress = 66
-      else # completed
-        progress = 100
+  
+    CorrectiveAction.includes(audit: { audit_assignments: :user }).find_each do |c|
+      audit = c.audit
+      next unless audit
+  
+      # Only include if current_user is lead/support/sme
+      relevant = audit.audit_assignments.any? do |assignment|
+        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
       end
+      next unless relevant
+  
+      # Determine progress based on status enum
+      progress = case c.status
+                 when 0 then 33  # pending
+                 when 1 then 66  # in_progress
+                 else 100        # completed
+                 end
+  
       short_description = c.action_description.length > 15 ? "#{c.action_description[0...12]}..." : c.action_description
-      
+  
+      # Get auditee's company name
+      auditee_assignment = audit.audit_assignments.find { |a| a.role == "auditee" }
+      company_name = auditee_assignment&.user&.company&.name
+  
       @corrective_actions << {
         id: c.id,
         truncated_description: short_description,
         full_description: c.action_description,
-        vendor: Company.find_by(id: User.find_by(id: AuditAssignment.find_by(audit_id: c.audit_id).where(role: :auditee)&.user_id)&.company_id).first&.name,
-        progress: progress, 
+        vendor: company_name,
+        progress: progress
       }
     end
   end
+  
 
   def audit_fidnings
     @audit_fidnings = []
