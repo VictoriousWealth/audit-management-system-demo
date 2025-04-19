@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   get 'auditee_dashboard', to: 'dashboard#auditee', as: 'auditee_dashboard'
   get 'qa_manager_dashboard', to: 'qa_dashboard#qa_manager', as: 'qa_manager_dashboard'
   get 'senior_manager_dashboard', to: 'dashboard#senior_manager', as: 'senior_manager_dashboard'
-  get 'auditor_dashboard', to: 'dashboard#auditor', as: 'auditor_dashboard'
+  get 'auditor_dashboard', to: 'auditor_dashboard#auditor', as: 'auditor_dashboard'
 
 
 
