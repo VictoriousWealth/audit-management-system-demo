@@ -192,37 +192,37 @@ class AuditorDashboardController < ApplicationController
   end
 
   def compliance_score_graph_over_time_month
-    # @compliance_score_by_month = {}
-    # @compliance_score_by_month_labels = {}
+    # Time range for the current month
+    current_month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
+  
+    # All completed + scored audits in the current month
+    all_monthly_audits = Audit.where.not(score: nil)
+                              .where.not(actual_end_date: nil)
+                              .where(actual_end_date: current_month_range)
+                              .includes(:audit_assignments)
+                              .order(:actual_end_date)
+  
+    # Only audits where the current user is involved as lead/support/sme
+    my_monthly_audits = all_monthly_audits.select do |audit|
+      audit.audit_assignments.any? do |assignment|
+        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+      end
+    end
+  
     @compliance_score_by_month = [
-      {
-        name: "Internal",
-        color: "#42CA68",
-        data: Audit.where(audit_type: "internal")
-                  .where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
-      },
-      {
-        name: "External",
-        color: "#F39C12",
-        data: Audit.where(audit_type: "external")
-                  .where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
-      },
       {
         name: "All Audits",
         color: "#3498DB",
-        data: Audit.where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: all_monthly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "My Audits",
+        color: "#42CA68",
+        data: my_monthly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
       }
     ]
   end
+  
 
   def compliance_score_graph_over_time_all
     # Filter all scored + completed audits
