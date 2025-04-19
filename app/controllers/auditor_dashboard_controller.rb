@@ -217,12 +217,12 @@ class AuditorDashboardController < ApplicationController
       {
         name: "All Audits",
         color: "#3498DB",
-        data: all_weekly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: all_weekly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "My Audits",
         color: "#42CA68",
-        data: my_weekly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: my_weekly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
   end
@@ -250,12 +250,12 @@ class AuditorDashboardController < ApplicationController
       {
         name: "All Audits",
         color: "#3498DB",
-        data: all_monthly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: all_monthly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "My Audits",
         color: "#42CA68",
-        data: my_monthly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: my_monthly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
   end
@@ -276,12 +276,12 @@ class AuditorDashboardController < ApplicationController
       {
         name: "All Audits",
         color: "#3498DB",
-        data: all_scored_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: all_scored_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "My Audits",
         color: "#42CA68",
-        data: my_scored_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: my_scored_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
   end
