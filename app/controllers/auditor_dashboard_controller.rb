@@ -159,37 +159,37 @@ class AuditorDashboardController < ApplicationController
   end
 
   def compliance_score_graph_over_time_week
-    # @compliance_score_by_week = {}
-    # @compliance_score_by_week_labels = {}
+    # Time range for the current week
+    current_week_range = Time.zone.now.beginning_of_week..Time.zone.now.end_of_week
+  
+    # All completed + scored audits in the current week
+    all_weekly_audits = Audit.where.not(score: nil)
+                             .where.not(actual_end_date: nil)
+                             .where(actual_end_date: current_week_range)
+                             .includes(:audit_assignments)
+                             .order(:actual_end_date)
+  
+    # Only audits where the current user is involved as lead/support/sme
+    my_weekly_audits = all_weekly_audits.select do |audit|
+      audit.audit_assignments.any? do |assignment|
+        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+      end
+    end
+  
     @compliance_score_by_week = [
-      {
-        name: "Internal",
-        color: "#42CA68",
-        data: Audit.where(audit_type: "internal")
-                  .where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
-      },
-      {
-        name: "External",
-        color: "#F39C12",
-        data: Audit.where(audit_type: "external")
-                  .where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
-      },
       {
         name: "All Audits",
         color: "#3498DB",
-        data: Audit.where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: all_weekly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "My Audits",
+        color: "#42CA68",
+        data: my_weekly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
       }
     ]
   end
+  
 
   def compliance_score_graph_over_time_month
     # Time range for the current month
