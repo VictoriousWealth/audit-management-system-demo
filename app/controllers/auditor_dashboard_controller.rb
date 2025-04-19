@@ -128,35 +128,37 @@ class AuditorDashboardController < ApplicationController
   end
 
   def compliance_score_graph_over_time_day
+    # Time range for today
+    today_range = Time.zone.today.beginning_of_day..Time.zone.today.end_of_day
+  
+    # All completed + scored audits today
+    all_daily_audits = Audit.where.not(score: nil)
+                            .where.not(actual_end_date: nil)
+                            .where(actual_end_date: today_range)
+                            .includes(:audit_assignments)
+                            .order(:actual_end_date)
+  
+    # Only audits where the current user is involved as lead/support/sme
+    my_daily_audits = all_daily_audits.select do |audit|
+      audit.audit_assignments.any? do |assignment|
+        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+      end
+    end
+  
     @compliance_score_by_day = [
-      {
-        name: "Internal",
-        color: "#42CA68",
-        data: Audit.where(audit_type: "internal")
-                  .where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
-      },
-      {
-        name: "External",
-        color: "#F39C12",
-        data: Audit.where(audit_type: "external")
-                  .where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
-      },
       {
         name: "All Audits",
         color: "#3498DB",
-        data: Audit.where.not(score: nil)
-                  .where.not(actual_end_date: nil)
-                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: all_daily_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
+      },
+      {
+        name: "My Audits",
+        color: "#42CA68",
+        data: my_daily_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
   end
+  
 
   def compliance_score_graph_over_time_week
     # Time range for the current week
