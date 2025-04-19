@@ -246,16 +246,32 @@ class AuditorDashboardController < ApplicationController
   end
 
   def bar_chart_data
+    visible_audits = Audit
+      .includes(:audit_assignments)
+      .select { |audit|
+        audit.audit_assignments.any? do |assignment|
+          assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+        end
+      }
+  
     @bar_chart_data = [
-      { name: "Completed", data: [["Audits", Audit.where(status: :completed).count]] },
-      { name: "In Progress (on time)", data: [["Audits", Audit.where(status: :in_progress).where('actual_start_date <= scheduled_start_date').count]] },
-      { name: "In Progress (late)", data: [["Audits", Audit.where(status: :in_progress).where('actual_start_date > scheduled_start_date').count]] },
-      { name: "Not Started", data: [["Audits", Audit.where(status: :not_started).count]] }
+      { name: "Completed", data: [["Audits", visible_audits.count { |a| a.status == "completed" }]] },
+  
+      { name: "In Progress (on time)", data: [["Audits", visible_audits.count { |a|
+        a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date <= a.scheduled_start_date
+      }]] },
+  
+      { name: "In Progress (late)", data: [["Audits", visible_audits.count { |a|
+        a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date > a.scheduled_start_date
+      }]] },
+  
+      { name: "Not Started", data: [["Audits", visible_audits.count { |a| a.status == "not_started" }]] }
     ]
-
+  
+    # Calculate suggested max for y-axis scaling
     max_value = @bar_chart_data.map { |s| s[:data][0][1] }.max
     suggested_max = (max_value * 1.1).ceil
-
+  
     @bar_chart_library = {
       title: { text: "Audit Status Overview", display: true },
       scales: {
@@ -285,6 +301,7 @@ class AuditorDashboardController < ApplicationController
       }
     }
   end
+  
 
   def pie_chart_data
     visible_audits = Audit
