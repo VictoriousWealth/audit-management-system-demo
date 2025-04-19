@@ -96,11 +96,11 @@ class AuditRequestLettersController < ApplicationController
   # DELETE /audit/audit_id/create-audit-request-letter
   def destroy
     @audit_request_letter = AuditRequestLetter.find_by(audit: @audit)
-    if @audit_request_letter.present?
-      @audit_request_letter.destroy
-      redirect_to audit_audit_request_letters_path(@audit), notice: "Audit Request Letter deleted successfully."
+    if @audit_request_letter.destroy
+      # TODO change this to redirect to the audit page when integrated
+      redirect_to new_audit_audit_request_letters_path(@audit), notice: "Audit Request Letter was successfully destroyed.", status: :see_other
     else
-      redirect_to new_audit_audit_request_letters_path(@audit), alert: "Audit Request Letter not found."
+      redirect_to audit_request_letters_path(@audit), alert: "Unable to destroy letter."
     end
   end
 

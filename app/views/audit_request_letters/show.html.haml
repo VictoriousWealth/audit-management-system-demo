@@ -95,6 +95,7 @@
               %br= @lead_auditor.email || "gtimc@sheffield.ac.uk"
 
             .form-group.mt-4.d-flex.justify-content-between
-              = link_to "Go Back to audit",audit_path(@audit), class: "btn btn-danger"
+              = link_to "Go Back to audit",audit_path(@audit), class: "btn btn-warning"
+              = link_to 'Delete Request Letter', audit_audit_request_letters_path(@audit) , method: :delete, data: { confirm: 'Are you sure you want to delete this letter?' }, class: 'btn btn-danger'      
 
  
