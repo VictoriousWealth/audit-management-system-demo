@@ -75,51 +75,62 @@ class AuditorDashboardController < ApplicationController
 
   def calendar_events
     # === Calendar Event Component ===
-    
     today = Time.zone.today
     @calendar_events = []
-
+  
+    # === Base: Only audits relevant to the current user ===
+    user_audits = Audit
+      .includes(:audit_assignments)
+      .select do |audit|
+        audit.audit_assignments.any? do |assignment|
+          assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+        end
+      end
+  
     # === Category 1: Scheduled to End Per Date ===
-    Audit.where.not(scheduled_end_date: nil).group("DATE(scheduled_end_date)").count.each do |date, count|
+    user_audits.select { |a| a.scheduled_end_date.present? }
+               .group_by { |a| a.scheduled_end_date.to_date }
+               .each do |date, audits|
       @calendar_events << {
-        title: "🔵#{count}",
+        title: "🔵#{audits.size}",
         date: date,
         allDay: true,
         textColor: "#000",
-        description: "#{count} audit(s) scheduled to end on #{date}"
+        description: "#{audits.size} audit(s) scheduled to end on #{date}"
       }
     end
-
-    # === Category 2: Overdue Audits (status ≠ completed && end date < today) === to change to in progress late
-    overdue_count = Audit.where.not(status: :completed).where.not(scheduled_end_date: nil)
-                         .where("DATE(scheduled_end_date) < ?", today)
-                         .count
-
-    if overdue_count > 0
+  
+    # === Category 2: In Progress (Late) ===
+    overdue_audits = user_audits.select do |a|
+      a.status != "completed" && a.scheduled_end_date.present? && a.scheduled_end_date.to_date < today
+    end
+  
+    if overdue_audits.any?
       @calendar_events << {
-        title: "🔴#{overdue_count}",
+        title: "🔴#{overdue_audits.count}",
         date: today,
         allDay: true,
         textColor: "#000",
-        description: "#{overdue_count} audit(s) overdue as of today"
+        description: "#{overdue_audits.count} audit(s) overdue as of today"
       }
     end
-
-    # === Category 3: In progress === to change to in progress on time
-    missing_dates_count = Audit.where(status: :in_progress)
-                               .count
-
-    if missing_dates_count > 0
+  
+    # === Category 3: In Progress (On Time) ===
+    on_time_audits = user_audits.select do |a|
+      a.status == "in_progress" && (a.scheduled_end_date.blank? || a.scheduled_end_date.to_date >= today)
+    end
+  
+    if on_time_audits.any?
       @calendar_events << {
-        title: "🟡#{missing_dates_count}",
+        title: "🟡#{on_time_audits.count}",
         date: today,
         allDay: true,
         textColor: "#000",
-        description: "#{missing_dates_count} audit(s) in progress"
+        description: "#{on_time_audits.count} audit(s) in progress (on time)"
       }
     end
   end
-
+  
   def compliance_score_graph_over_time
     compliance_score_graph_over_time_all()
     compliance_score_graph_over_time_day()
