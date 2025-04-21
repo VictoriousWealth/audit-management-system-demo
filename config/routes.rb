@@ -36,6 +36,11 @@ Rails.application.routes.draw do
   #Get to your notifications
   get 'notifications', to: 'notifications#index'
 
+  resources :notifications do
+    patch :accept, on: :member
+  end
+
+
   # Defines the root path route ("/")
 
   # For logged in users
@@ -47,7 +52,7 @@ Rails.application.routes.draw do
   unauthenticated do
     root to: 'pages#home'
   end
-  
+
   resources :create_edit_audits, only: [:new, :create, :edit, :update]
   resources :audits do
     resources :audit_closure_letters, except: [:index]
