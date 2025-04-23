@@ -30,7 +30,8 @@ class AuditRequestLettersController < ApplicationController
         purpose: params[:audit_purpose],
         objectives: params[:audit_objectives],
         location: params[:audit_location],
-        criteria: params[:audit_criteria]
+        criteria: params[:audit_criteria],
+        boundaries: params[:audit_boundaries],
       },
       assignments: {
         lead_auditor: @lead_auditor,
@@ -130,6 +131,7 @@ class AuditRequestLettersController < ApplicationController
       @audit_scope = @audit_detail.scope
       @audit_purpose = @audit_detail.purpose
       @audit_objectives = @audit_detail.objectives
+      @audit_boundaries = @audit_detail.boundaries
 
       # Array of all standards for audit (The criteria of the audit)
       @audit_criteria = AuditStandard.where(audit_detail: @audit_detail).map(&:standard).join(", ")  

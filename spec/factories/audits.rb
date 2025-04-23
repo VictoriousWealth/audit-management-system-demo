@@ -31,6 +31,7 @@
 #
 FactoryBot.define do
   factory :audit do
+    company_id { 1 }
     scheduled_start_date { "2025-03-12 14:20:57" }
     scheduled_end_date { "2025-03-12 14:20:57" }
     actual_start_date { "2025-03-12 14:20:57" }

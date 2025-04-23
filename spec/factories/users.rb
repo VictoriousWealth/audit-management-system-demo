@@ -53,7 +53,7 @@ FactoryBot.define do
     role { 2 }
   end
 
-  #QA manager
+  #Senior manager
   factory :user3, class: 'User' do
     first_name { "Senior" }
     last_name { "User" }
@@ -62,11 +62,19 @@ FactoryBot.define do
     role { 3 }
   end
 
-  #QA manager
+  #Auditor
   factory :user4, class: 'User' do
     first_name { "Auditor" }
     last_name { "User" }
     email { "Auditor@User.com" }
+    password { "Password" }
+    role { 0 }
+  end
+  #Auditor 2
+  factory :user5, class: 'User' do
+    first_name { "Auditor" }
+    last_name { "Two" }
+    email {"AuditorTwo@User.com"}
     password { "Password" }
     role { 0 }
   end
