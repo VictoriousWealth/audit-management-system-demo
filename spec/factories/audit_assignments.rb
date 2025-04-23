@@ -26,6 +26,6 @@ FactoryBot.define do
     role { 1 }
     status { 1 }
     time_accepted { "2025-03-12 14:02:42" }
-    user { nil }
+    user { 1 }
   end
 end
