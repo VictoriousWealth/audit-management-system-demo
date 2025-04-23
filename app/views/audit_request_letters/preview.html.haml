@@ -102,6 +102,6 @@
             .form-group.mt-4.d-flex.justify-content-between
               = link_to "Cancel", new_audit_audit_request_letters_path(@audit), class: "btn btn-danger"
               -# goes back to editing the letter but keeps user entered text in text areas
-              = link_to "Edit", "#", class: "btn btn-warning", onclick: "history.back(); return false;" 
+              = link_to "Edit", "#", class: "btn btn-warning", onclick: "history.back(); return false;", id: "editBtn"
               = f.submit "Verify", class: "btn btn-success", id: "verifyBtn"
  

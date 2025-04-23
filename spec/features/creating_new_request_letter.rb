@@ -106,7 +106,7 @@ describe "Creating a new audit request letter" do
     fill_in "audit_boundaries", with: "New boundaries"
 
     click_button "Preview"
-    puts "Audit request letter created - running test 6"
+    puts "Audit request letter created"
     expect(page).to have_content("Audit Request Letter created successfully.")
     expect(page).to have_content("Audit Request Letter")
     expect(page).to have_content("New scope")
