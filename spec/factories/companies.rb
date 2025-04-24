@@ -13,6 +13,8 @@
 FactoryBot.define do
   factory :company do
     name { "MyString" }
-    address { "MyString" }
+    street_name { "MyString" }
+    city {"String"}
+    postcode {"String"}
   end
 end

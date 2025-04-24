@@ -128,8 +128,7 @@ class CreateEditAuditsController < ApplicationController
     # === Notify assigned auditors and SMEs ===
     @audit.audit_assignments.each do |assignment|
       user = assignment.user
-      if user.role == "auditor" or user.role == "qa_manager"
-        AuditMailer.notify_assignment(user, @audit).deliver_later
+      AuditMailer.notify_assignment(assignment).deliver_later
     end
 
     redirect_to edit_create_edit_audit_path(@audit), notice: 'Audit created successfully.'
