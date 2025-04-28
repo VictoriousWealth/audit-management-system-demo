@@ -11,4 +11,15 @@ class AuditMailer < ApplicationMailer
       subject: "You have been assigned to audit ##{@audit.id} as  #{@role.to_s.humanize}"
     )
   end
+
+  def update_audit(assignment)
+    @user = assignment.user
+    @audit = assignment.audit
+    @role = assignment.role
+
+    mail(
+      to: @user.email,
+      subject: "Update to audit ##{@audit.id}"
+    )
+  end
 end

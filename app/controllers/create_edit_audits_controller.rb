@@ -277,26 +277,33 @@ class CreateEditAuditsController < ApplicationController
 
     # === Update AuditAssignments ===
     @audit.audit_assignments.destroy_all
-    @audit.audit_assignments.create(user_id: assignment[:lead_auditor], role: :lead_auditor, status: :assigned)
-    @audit.audit_assignments.create(user_id: assignment[:auditee], role: :auditee, status: :assigned)
+    @audit.audit_assignments.create(user_id: assignment[:lead_auditor], role: :lead_auditor, status: :assigned, assigned_by: current_user.id)
+    @audit.audit_assignments.create(user_id: assignment[:auditee], role: :auditee, status: :assigned, assigned_by: current_user.id)
 
     if assignment[:support_auditor].present?
       assignment[:support_auditor].reject(&:blank?).each do |id|
-        AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :auditor, status: :assigned)
+        #AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :auditor, status: :assigned)
+        @audit.audit_assignments.create!(audit_id: @audit.id, user_id: id, role: :auditor, status: :assigned, assigned_by: current_user.id)
+
       end
     end
 
     if assignment[:sme].present?
       assignment[:sme].reject(&:blank?).each do |id|
-        AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :sme, status: :assigned)
+        #AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :sme, status: :assigned)
+        @audit.audit_assignments.create!(audit_id: @audit.id, user_id: id, role: :sme, status: :assigned, assigned_by: current_user.id)
+
       end
     end
+
+    @audit.audit_assignments.reload
+
 
     #------------------------------------------------------------------------------------------------
     # === Notify assigned auditors and SMEs about update ===
     @audit.audit_assignments.each do |assignment|
       user = assignment.user
-      AuditMailer.notify_assignment(assignment).deliver_later
+      AuditMailer.update_audit(assignment).deliver_later
     end
 
     redirect_to edit_create_edit_audit_path(@audit.reload), notice: "Audit updated successfully."
