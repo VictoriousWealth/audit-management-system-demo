@@ -24,6 +24,6 @@ FactoryBot.define do
     scope { "The scope of test audit" }
     purpose { "Purpose of test audit" }
     objectives { "Objectives of test audit" }
-    boundries { "Boundaries of test audit" }
+    boundaries { "Boundaries of test audit" }
   end
 end

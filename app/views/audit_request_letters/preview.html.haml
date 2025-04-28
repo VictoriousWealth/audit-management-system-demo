@@ -82,6 +82,11 @@
               = @content.dig("audit", "objectives")
 
             %p.mt-4
+              The objectives of this audit are to:
+              %br/
+              = @content.dig("audit", "boundaries")
+
+            %p.mt-4
               The audit will include a review of relevant documentation, site walkthroughs, and interviews with key personnel.
               We kindly request your cooperation in facilitating this process by providing access to necessary records, personnel, and facilities. Please confirm your availability for the proposed dates or suggest alternative dates if required.
               Should you have any questions or require further clarification, please do not hesitate to contact us at Lead Auditor Contact. We appreciate your time and cooperation in this matter and look forward to working with you.
@@ -96,6 +101,7 @@
 
             .form-group.mt-4.d-flex.justify-content-between
               = link_to "Cancel", new_audit_audit_request_letters_path(@audit), class: "btn btn-danger"
-              = link_to "Edit", "#", class: "btn btn-warning", onclick: "history.back(); return false;"
+              -# goes back to editing the letter but keeps user entered text in text areas
+              = link_to "Edit", "#", class: "btn btn-warning", onclick: "history.back(); return false;", id: "editBtn"
               = f.submit "Verify", class: "btn btn-success", id: "verifyBtn"
  

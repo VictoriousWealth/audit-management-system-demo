@@ -18,6 +18,6 @@
 #
 FactoryBot.define do
   factory :audit_standard do
-    standard { "MyString" }
+    standard { "Standard 1" }
   end
 end
