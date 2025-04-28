@@ -12,6 +12,8 @@ module ApplicationHelper
       senior_manager_dashboard_path
     when 'auditor'
       auditor_dashboard_path
+    when 'sme'
+      sme_dashboard_path
     else
       root_path
     end

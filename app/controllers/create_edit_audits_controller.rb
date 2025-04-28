@@ -292,6 +292,13 @@ class CreateEditAuditsController < ApplicationController
       end
     end
 
+    #------------------------------------------------------------------------------------------------
+    # === Notify assigned auditors and SMEs about update ===
+    @audit.audit_assignments.each do |assignment|
+      user = assignment.user
+      AuditMailer.notify_assignment(assignment).deliver_later
+    end
+
     redirect_to edit_create_edit_audit_path(@audit.reload), notice: "Audit updated successfully."
   end
 
