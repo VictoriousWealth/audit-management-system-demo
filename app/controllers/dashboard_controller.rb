@@ -23,6 +23,7 @@ class DashboardController < ApplicationController
   def auditor
   end
 
+  # this method can be removed
   def auditee
   end
 
