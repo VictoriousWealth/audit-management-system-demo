@@ -15,5 +15,9 @@ class Company < ApplicationRecord
   has_many :audits
   has_many :contacts
   has_many :vendor_rpns, dependent: :destroy
-end
 
+
+  def address
+    [street_name, city, postcode].compact.join(", ")
+  end  
+end
