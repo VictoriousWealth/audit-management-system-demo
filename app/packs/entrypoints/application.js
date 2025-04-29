@@ -2,8 +2,8 @@ import Rails from "@rails/ujs";
 import "bootstrap"
 import './styles'
 import '../scripts/audit_form';
-import '../scripts/nick_chart'
-import '../scripts/nick_calendar'
+import '../scripts/iChart'
+import '../scripts/iCalendar'
 
 import "../scripts/nav_bar";
 import "../scripts/create_audit_closure_letter";
