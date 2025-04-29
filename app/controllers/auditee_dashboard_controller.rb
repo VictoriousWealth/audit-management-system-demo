@@ -16,7 +16,7 @@ class AuditeeDashboardController < ApplicationController
   end
 
   private
-  def documents() # to ensure that only documents related to the user can be accessed and any other no, but hard to do with current setup
+  def documents() #TODO: to ensure that only documents related to the user can be accessed and any other no, but hard to do with current setup
     @documents = []
     Document.all.each do |d|
       @documents << {
@@ -36,7 +36,7 @@ class AuditeeDashboardController < ApplicationController
   
       # Only include if current_user is lead/support/sme
       relevant = audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
       end
       next unless relevant
   
@@ -73,7 +73,7 @@ class AuditeeDashboardController < ApplicationController
   
       # Only include if current_user is assigned as lead/support/sme
       relevant = audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
       end
       next unless relevant
   
@@ -107,7 +107,7 @@ class AuditeeDashboardController < ApplicationController
       .includes(:audit_assignments)
       .select do |audit|
         audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
         end
       end
   
@@ -173,10 +173,10 @@ class AuditeeDashboardController < ApplicationController
                             .includes(:audit_assignments)
                             .order(:actual_end_date)
   
-    # Only audits where the current user is involved as lead/support/sme
+    # Only audits where the current user is the auditee
     my_daily_audits = all_daily_audits.select do |audit|
       audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
       end
     end
   
@@ -206,10 +206,10 @@ class AuditeeDashboardController < ApplicationController
                              .includes(:audit_assignments)
                              .order(:actual_end_date)
   
-    # Only audits where the current user is involved as lead/support/sme
+    # Only audits where the current user is the auditee
     my_weekly_audits = all_weekly_audits.select do |audit|
       audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
       end
     end
   
@@ -239,10 +239,10 @@ class AuditeeDashboardController < ApplicationController
                               .includes(:audit_assignments)
                               .order(:actual_end_date)
   
-    # Only audits where the current user is involved as lead/support/sme
+    # Only audits where the current user is the auditee
     my_monthly_audits = all_monthly_audits.select do |audit|
       audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
       end
     end
   
@@ -265,10 +265,10 @@ class AuditeeDashboardController < ApplicationController
     # Filter all scored + completed audits
     all_scored_audits = Audit.where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date)
   
-    # Filter scored + completed audits where current_user is involved as lead/support/sme
+    # Filter scored + completed audits where current_user is the auditee
     my_scored_audits = all_scored_audits.select do |audit|
       audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
       end
     end
   
@@ -292,7 +292,7 @@ class AuditeeDashboardController < ApplicationController
       .includes(:audit_assignments)
       .select { |audit|
         audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
         end
       }
   
@@ -350,7 +350,7 @@ class AuditeeDashboardController < ApplicationController
       .includes(:audit_assignments)
       .select { |audit|
         audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
         end
       }
   
@@ -377,7 +377,7 @@ class AuditeeDashboardController < ApplicationController
       .includes(audit_assignments: :user, audit_detail: :audit_standards)
       .select { |audit|
         audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
         end
       }
       .map do |audit|
@@ -406,7 +406,7 @@ class AuditeeDashboardController < ApplicationController
       .includes(audit_assignments: :user, audit_detail: :audit_standards)
       .select { |audit|
         audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
         end
       }
       .map do |audit|
@@ -437,7 +437,7 @@ class AuditeeDashboardController < ApplicationController
       .includes(audit_assignments: :user, audit_detail: :audit_standards)
       .select { |audit|
         audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[lead_auditor auditor sme].include?(assignment.role)
+          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
         end
       }
       .map do |audit|
