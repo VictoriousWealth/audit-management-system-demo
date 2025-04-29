@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let customContent = document.getElementById('custom-content');
     let questionnaireDropdown = document.getElementById('template-content').children[1];
     let accordionContainer = document.getElementById('section-accordion-container');
-    let addQuestionBtn = document.getElementById('add-question');
 
     templateRadBtn.addEventListener('change', function() {
         if (templateRadBtn.checked) {
@@ -42,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Clear accordionContainer content
             accordionContainer.innerHTML = "";
 
-            // Dynamically add new sections
             data.sections.forEach((section, index) => {
                 let accordionItem = document.createElement("div");
                 accordionItem.className = `accordion-item-${index}`;
@@ -60,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </button>
                     <div id="collapse${index}" class="collapse">
-                        <div data-controller="modals" class="template-questionnaire-inner-container">
+                        <div data-controller="modals" class="modal-controller template-questionnaire-inner-container">
                             <a data-action="modals#removeSectionQuestions" class="remove-all-questions-btn">Remove All Questions</a>
                             <ol id="question-list-${index}">
                                 ${section.questions.map((q, i) => `
@@ -76,14 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </li>
                             `).join('')}
                             </ol>
-                            <div data-controller="modals">
-                                <a class='add-question' id="add-question" data-bs-toggle="collapse" href="#add-question-container" role="button" aria-expanded="false" aria-controls="collapse">
+                            <div data-controller="modals" class="modal-controller">
+                                <a class='add-question' id="add-question" data-bs-toggle="collapse" href="#add-question-container-${index}" role="button" aria-expanded="false" aria-controls="collapse">
                                     <i class="bi bi-plus-circle-fill"></i>
                                     Add Question
                                 </a>
-                                <div class="add-question-container collapse" id="add-question-container">
-                                    <button class="questionnaire-btn add-question-btn">Insert Question From Question Bank</button>
-                                    <button class="questionnaire-btn add-question-btn" data-action='modals#showAddQuestion' data-add-question-path='_add_question' data-section-id='${section.id}' data-questionnaire-section-id='${section.questionnaire_section_id}' data-section-name='${section.name}' data-list-index='${index}'>Add Custom Question</button>
+                                <div class="add-question-container collapse" id="add-question-container-${index}" data-section-id='${section.id}' data-questionnaire-section-id='${section.questionnaire_section_id}' data-section-name='${section.name}' data-list-index='${index}'>
+                                    <button class="questionnaire-btn add-question-btn" data-action='modals#showAddQuestionBankQuestion' data-add-question-path='_add_question_bank_question'>Insert Question From Question Bank</button>
+                                    <button class="questionnaire-btn add-question-btn" data-action='modals#showAddQuestion' data-add-question-path='_add_question'>Add Custom Question</button>
                                 </div>
                             </div>
                         </div>
@@ -105,4 +103,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    openModal();
 });
+
+function openModal() {
+    document.addEventListener("turbo:frame-load", function(e) {
+        if (e.target.id === "modal") {
+          document.body.classList.add("modal-open");
+        }
+    });
+}

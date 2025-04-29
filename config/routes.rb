@@ -71,5 +71,7 @@ Rails.application.routes.draw do
   post 'questionnaire/save_questionnaire', to: 'questionnaires#save_questionnaire', as: 'save_questionnaire'
   post 'questionnaire/_add_question', to: 'questionnaires#add_question', as: 'add_question'
   post 'questionnaire/_edit_new_question', to: 'questionnaires#edit_new_question', as: 'edit_new_question'
-  # post 'questionnaire/_edit_new_question/:id', to: 'questionnaires#edit_new_question', as: 'edit_new_question'
+  post 'questionnaire/_add_question_bank_question', to: 'questionnaires#add_question_bank_question', as: 'add_question_bank_question'
+  post '/get_questionnaire_questions', to: 'questionnaires#get_questionnaire_questions', as: 'get_questionnaire_questions'
+  post '/update_modal_layout', to: 'questionnaires#update_modal_layout', as: 'update_modal_layout'
 end

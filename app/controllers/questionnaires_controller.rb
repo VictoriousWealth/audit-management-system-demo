@@ -1,5 +1,5 @@
 class QuestionnairesController < ApplicationController
-  before_action :get_questionnaires, only: [:new, :create, :edit]
+  before_action :get_questionnaires, only: [:new, :create, :edit, :add_question_bank_question]
   before_action :authenticate_user!
 
   def new
@@ -43,40 +43,17 @@ class QuestionnairesController < ApplicationController
     @new_question_id = question_order_id.to_i + 1 # accounting for 1-indexing of list items
     @question = QuestionBank.new(question_text: @question_text)
 
+
+    puts "question_order_id, #{question_order_id}"
+    puts "@new_question_id, #{@new_question_id}"
     render "edit_new_question", layout: "application"
   end
 
   def update_questionnaire_layout
     selected_questionnaire_name = params[:questionnaire_type]
-    selected_questionnaire = CustomQuestionnaire.where(name: selected_questionnaire_name).first
-    questionnaire_id = selected_questionnaire.id
-    section_questions = QuestionBank
-      .joins("LEFT OUTER JOIN section_questions ON section_questions.question_bank_id = question_banks.id")
-      .select("question_banks.*, section_questions.questionnaire_section_id")
-    questionnaire_sections = QuestionnaireSection.where(custom_questionnaire_id: questionnaire_id)
+    sections = build_questionnaire_sections(selected_questionnaire_name)
 
-    if selected_questionnaire
-      sections_data = questionnaire_sections.each_with_index.map do |questionnaire_section, index| 
-        section_qs = section_questions.select { |sq| sq.questionnaire_section_id == questionnaire_section.id }
-      
-        {
-          id: questionnaire_section.section_order,
-          questionnaire_section_id: questionnaire_section.id,
-          name: questionnaire_section.name,
-          edit_section_path: edit_section_path(questionnaire_section),
-          questions: section_qs.map do |sq|
-            {
-              question_text: sq.question_text,
-              edit_question_path: edit_question_path(sq)
-            }
-          end
-        }
-      end
-  
-      render json: { sections: sections_data }
-    else
-      render json: { message: "Questionnaire not found" }
-    end
+    render json: { sections: sections }
   end
 
   def edit_section
@@ -97,6 +74,27 @@ class QuestionnairesController < ApplicationController
     render "add_question", layout: "application"
   end
 
+  def add_question_bank_question
+    @section_order = params[:section_order]
+    @section_name = params[:section_name]
+    @list_index = params[:list_index]
+    @questionnaire_section_id = params[:questionnaire_section_id]
+    @question = QuestionBank.new
+  end
+
+  def get_questionnaire_questions
+    puts "get_questionnaire_questions"
+    questionnaire_template = params[:questionnaire_type]
+    @sections = build_questionnaire_sections(questionnaire_template)
+    
+    render json: { sections: @sections }
+  end
+
+  def update_modal_layout
+    puts "UPDATE MODAL LAYOUT"
+    render json: { message: "Changed template" }
+  end
+
   def save_questionnaire
     render json: { message: "Saved Questionnaire" }
   end
@@ -105,6 +103,37 @@ class QuestionnairesController < ApplicationController
 
     def get_questionnaires
       @questionnaires = CustomQuestionnaire.all
+    end
+
+    def build_questionnaire_sections(questionnaire_name)
+      selected_questionnaire = CustomQuestionnaire.where(name: questionnaire_name).first
+      questionnaire_id = selected_questionnaire.id
+      section_questions = QuestionBank
+        .joins("LEFT OUTER JOIN section_questions ON section_questions.question_bank_id = question_banks.id")
+        .select("question_banks.*, section_questions.questionnaire_section_id")
+      questionnaire_sections = QuestionnaireSection.where(custom_questionnaire_id: questionnaire_id)
+
+      if selected_questionnaire
+        sections_data = questionnaire_sections.each_with_index.map do |questionnaire_section, index| 
+          section_qs = section_questions.select { |sq| sq.questionnaire_section_id == questionnaire_section.id }
+        
+          {
+            id: questionnaire_section.section_order,
+            questionnaire_section_id: questionnaire_section.id,
+            name: questionnaire_section.name,
+            edit_section_path: edit_section_path(questionnaire_section),
+            questions: section_qs.map do |sq|
+              {
+                question_text: sq.question_text,
+                edit_question_path: edit_question_path(sq)
+              }
+            end
+          }
+        end
+        return sections_data
+      else
+        return []
+      end
     end
 
     # Only allow a list of trusted parameters through

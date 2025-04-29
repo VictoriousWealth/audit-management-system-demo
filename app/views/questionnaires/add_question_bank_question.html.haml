@@ -1,0 +1,20 @@
+= turbo_frame_tag "modal", data: { controller: "modals" } do
+    .modal-overlay
+        .modal.taller-modal{ data: { controller: "modals", modals_list_index_value: @list_index, modal_section_value: @section_order, modal_questionnaire_section_id: @questionnaire_section_id } }
+            %h2.questionnaire-title Add Question Bank Questions
+            %h3.questionnaire-title.questionnaire-subtitle= @section_name
+            .question-modal-form-container
+                = simple_form_for @question, url: add_question_bank_question_path, html: { data: { action: "submit->modals#addQuestionBankQuestions" } } do |f|
+                    .question-form#question-form
+                        .question-bank-upper-container
+                            .select-template#select-template
+                                %h4.questionnaire-title.questionnaire-subtitle Select Template
+                                = select_tag 'questionnaire-template', options_for_select(@questionnaires.collect { |q| q.name }), data: { action: "change->modals#getTemplateQuestions" }
+                            .question-search-container 
+                                %i.bi.bi-search
+                                = text_field_tag :search, nil, placeholder: "Search", class: "search-question", data: { action: "input->modals#filterQuestions" }, label: false
+                        .browse-questions-container
+                            %h4.questionnaire-title.questionnaire-subtitle Browse Template Questions
+                            #questions-box
+                        = f.submit "Add", class: 'questionnaire-btn add-question-bank-questions-btn'
+                = link_to "x", "#", class: 'cancel-button align-top align-right', data: { controller: "modals", action: "modals#close" }
