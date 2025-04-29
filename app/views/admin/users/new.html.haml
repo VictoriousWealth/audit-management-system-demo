@@ -19,7 +19,7 @@
       = f.password_field :password_confirmation, required: true
     .form-group
       = f.label :role, "Role"
-      = f.select :role, options_for_select([['Select a role', ''], ['QA Manager', 'qa_manager'], ['Auditor', 'auditor'], ['Auditee', 'auditee'], ['Senior Manager', 'senior_manager']]), {}, { required: true, id: 'role_select' }
+      = f.select :role, options_for_select([['Select a role', ''], ['QA Manager', 'qa_manager'], ['Auditor', 'auditor'], ['Auditee', 'auditee'], ['Senior Manager', 'senior_manager'], ['SME', 'sme']]), {}, { required: true, id: 'role_select' }
     .form-group#company_field{ style: "display: none;" }
       = f.label :company, "Company"
       = f.text_field :company, placeholder: "Enter company name", id: "company_name"

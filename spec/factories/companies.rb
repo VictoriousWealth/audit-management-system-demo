@@ -12,9 +12,12 @@
 #
 FactoryBot.define do
   factory :company do
+<<<<<<< HEAD
+=======
     name { "Company 1" }
     street_name { "Street 1" }
     city { "City 1" }
     postcode { "12345" }
+>>>>>>> 187d30bf269f1c427642d901d03433805557c483
   end
 end

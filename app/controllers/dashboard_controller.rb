@@ -12,6 +12,8 @@ class DashboardController < ApplicationController
       redirect_to qa_manager_dashboard_path
     when 'senior_manager'
       redirect_to senior_manager_dashboard_path
+    when 'sme'
+      redirect_to sme_dashboard_path
     else
       redirect_to root_path
     end
