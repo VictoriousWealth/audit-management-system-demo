@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Routes for different dashboards
-  get 'auditee_dashboard', to: 'dashboard#auditee', as: 'auditee_dashboard'
+  get 'auditee_dashboard', to: 'auditee_dashboard#auditee', as: 'auditee_dashboard'
   get 'qa_manager_dashboard', to: 'qa_dashboard#qa_manager', as: 'qa_manager_dashboard'
   get 'senior_manager_dashboard', to: 'dashboard#senior_manager', as: 'senior_manager_dashboard'
   get 'auditor_dashboard', to: 'auditor_dashboard#auditor', as: 'auditor_dashboard'

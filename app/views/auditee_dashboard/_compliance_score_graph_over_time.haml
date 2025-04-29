@@ -1,0 +1,25 @@
+.container.custom-tab-container.p-0
+  %ul.nav.nav-tabs.mb-0.bottom-black-border
+    %li.nav-item.w-100
+      %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Compliance Score Graph Over Time
+
+  .tab-content.flex-grow-1
+    = render partial: 'line_chart', locals: { compliance_score_all: @compliance_score_by_day, compliance_score_labels: @compliance_score_by_day_labels }
+
+  / Bottom Time Filter Tabs
+  %ul.nav.nav-tabs.nav-fill.mt-3#compliance-chart-filter-tabs
+    %li.nav-item.special-black-border
+      %a.nav-link.active{href: '#', data: { filter: 'day' }} Day
+    %li.nav-item.special-black-border
+      %a.nav-link{href: '#', data: { filter: 'week' }} Week
+    %li.nav-item.special-black-border
+      %a.nav-link{href: '#', data: { filter: 'month' }} Month
+    %li.nav-item.special-black-border
+      %a.nav-link{href: '#', data: { filter: 'all' }} All
+
+
+  :javascript
+    window.complianceScoreByDay = #{@compliance_score_by_day.to_json.html_safe};
+    window.complianceScoreByWeek = #{@compliance_score_by_week.to_json.html_safe};
+    window.complianceScoreByMonth = #{@compliance_score_by_month.to_json.html_safe};
+    window.complianceScoreAll = #{@compliance_score_all.to_json.html_safe};    
