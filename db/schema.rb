@@ -19,7 +19,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.integer "status"
     t.datetime "time_accepted"
     t.bigint "user_id", null: false
-    t.bigint "assigned_by", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
