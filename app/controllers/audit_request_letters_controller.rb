@@ -11,7 +11,7 @@ class AuditRequestLettersController < ApplicationController
     @today_date = Date.today.strftime("%d/%m/%Y")
   end
     
-  # POST /audit/audit_id/create-audit-request-letter
+  # POST /audit/audit_id/audit-request-letter
   def create
     @today_date = Date.today.strftime("%d/%m/%Y")
 
