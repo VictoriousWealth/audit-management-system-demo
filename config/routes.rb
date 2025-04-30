@@ -55,6 +55,7 @@ Rails.application.routes.draw do
       get 'preview', on: :member
       post 'verify', on: :member
     end
+    resources :report, only: [:new, :create, :show, :destroy]
   end
 
   resources :audit_closure_letters, only: [:index]
