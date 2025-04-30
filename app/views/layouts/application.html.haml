@@ -77,6 +77,10 @@
         - if current_user.role == "qa_manager"
           = link_to 'Add New User', new_admin_user_path
 
+        = link_to destroy_user_session_path, method: :delete, class: 'nav-link' do
+          Log out
+
+
 
 
     - else 
