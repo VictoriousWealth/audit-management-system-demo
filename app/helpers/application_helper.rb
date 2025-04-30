@@ -1,5 +1,5 @@
 module ApplicationHelper
-  #Basically helps you find the correct dashborad for each user
+  #Helps you find the correct dashboard for each user
   def dashboard_path_for(user)
     helpers = Rails.application.routes.url_helpers
 
