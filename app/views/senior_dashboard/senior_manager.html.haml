@@ -11,6 +11,9 @@
       = render partial: 'risk_map'
 
   .container.d-flex.flex-row.overflow-x-auto.p-2.m-2.min-width-webkit-fill-available
+    .container.min-width-440.overflow-auto.me-4.p-0.d-grid{id: 'internal-vs-external', style: "max-height: 529px; height: 529px;"}
+      = render partial: 'internal_vs_external'
+
     .container.min-width-600.overflow-auto.me-4.ms-4.p-0.d-inline-grid{id: 'recurring-compliance-issues', style: "max-height: 529px; height: 529px;"}
       = render partial: 'recurring_compliance_issues'
     
@@ -20,8 +23,6 @@
     .container.min-width-440.overflow-auto.me-4.p-0.d-inline-grid{id: 'document-quick-access', style: " max-height: 529px; height: 529px;"}
       = render partial: 'document_quick_access'
     
-    .container.min-width-440.overflow-auto.me-4.p-0.d-grid{id: 'internal-vs-external', style: "max-height: 529px; height: 529px;"}
-      = render partial: 'internal_vs_external'
     
   .container.d-flex.flex-row.overflow-auto.p-0.pb-2.pt-2.m-0.min-width-webkit-fill-available.max-width-470
     .container.p-0.d-inline-grid.min-width-webkit-fill-available.m-1.place-self-anchor-center{id: 'Audit', style: "max-height: 529px; height: 529px;"}
