@@ -1,4 +1,5 @@
 - content_for :title, 'Create Audit Report'
+- append_javascript_pack_tag('findings')
 %meta{name: "csrf-token", content: form_authenticity_token}
 
 .row.justify-content-center
@@ -35,7 +36,7 @@
             %br/
             -# Card for Auditee details
             .card.card-light
-              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#audit_details' }, aria: { controls: 'audit_details', expanded: 'true' }}
+              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#auditee_details' }, aria: { controls: 'auditee_details', expanded: 'true' }}
                 %h4 Auditee Details
 
               #auditee_details.card-body.collapse.show
@@ -47,21 +48,63 @@
                   %dt.col-sm-3
                     Auditee Name:
                   %dd.col-sm-9
-                    -# #{@auditee.first_name} #{@auditee.last_name}
+                    #{@auditee.first_name} #{@auditee.last_name}
                   %dt.col-sm-3
                     Contacts:
                   %dd.col-sm-9
-                    -# #{@contact.contact_email}
+                    #{@contact}
             %br/
-            -# Card for Auditor details
+            -# Card for Auditors details
             .card.card-light
-              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#audit_details' }, aria: { controls: 'audit_details', expanded: 'true' }}
-                %h4 Auditee Details
+              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#auditors_details' }, aria: { controls: 'auditors_details', expanded: 'true' }}
+                %h4 Auditors Details
 
-              #auditee_details.card-body.collapse.show
+              #auditors_details.card-body.collapse.show
                 %dl.row
                   %dt.col-sm-3
                     Lead Auditor:
                   %dd.col-sm-9
-                    -# #{@lead_auditor.first_name} #{@lead_auditor.last_name}
- 
+                    #{@lead_auditor.full_name}
+                %dl.row
+                  %dt.col-sm-3
+                    Assigned Auditor(s):
+                  %dd.col-sm-9
+                    - @assigned_auditors.each do |auditor|
+                      = auditor.full_name
+                      %br/
+                %dl.row
+                  %dt.col-sm-3
+                    Subject Matter Expert(s):
+                  %dd.col-sm-9
+                    - @smes.each do |sme|
+                      = sme.full_name
+                      %br/
+            %br/
+
+            -# Card for Detailed Findings
+            .card.card-light
+              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#detailed_findings' }, aria: { controls: 'detailed_findings', expanded: 'true' }}
+                %h4 Detailed Findings
+
+              #detailed_findings.card-body.collapse.show
+                %table#items-table.table
+                  %thead
+                    %tr
+                      %th Name
+                      %th Description
+                  %tbody
+                    - @assigned_auditors.each do |item|
+                      %tr
+                        %td= item.first_name
+                        %td= item.last_name
+                = button_tag "Add Item", class: "btn btn-primary", data: { bs_toggle: "modal", bs_target: "#itemModal" }
+
+                .modal.fade#itemModal{ tabindex: "-1" }
+                  .modal-dialog
+                    .modal-content
+                      .modal-header
+                        %h5.modal-title Add Item
+                        %button.btn-close{"data-bs-dismiss" => "modal"}
+                      .modal-body
+                        = render 'form', item: @item
+
