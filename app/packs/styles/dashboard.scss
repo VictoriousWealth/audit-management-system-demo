@@ -212,4 +212,14 @@ $container-height: 529px;
             font-size: 13.25px !important;
         }
     }
+
+    .risk-cell {
+        width: 100px;
+        height: 100px;
+        vertical-align: middle;
+        text-align: center;
+        font-weight: bold;
+        line-height: 100px; /* vertically center text */
+        border: 1px solid #000; /* optional: border clarity */
+    }      
 }
