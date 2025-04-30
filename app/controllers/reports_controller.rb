@@ -1,6 +1,7 @@
 class ReportsController < ApplicationController
   before_action :set_audit, :set_audit_detail, only: [:new, :create]
   before_action :set_audit_detail, only: [:new, :create]
+  before_action :set_assignments, only: [:new, :create]
   # before_action :set_audit, only: [:new, :create, :show]
   before_action :authenticate_user!
   skip_before_action :verify_authenticity_token, only: [:save_audit_letter] 
@@ -45,18 +46,20 @@ class ReportsController < ApplicationController
     end
 
     def set_assignments
+      audit_assignments = @audit.audit_assignments.includes(:user)
+
       # Get the auditee
-      @auditee = audit.audit_assignments.find_by(role: :auditee)&.user 
-      @contact = @company&.contact.find_by(last_name: @auditee.last_name)
+      @auditee = audit_assignments.find_by(role: :auditee)&.user 
+      @contact = @company&.contacts.find_by(company_id: @company.id) || "N/A"
 
 
       # Creates an array of all auditors
-      @assigned_auditors = audit.audit_assignments.where(role: :auditor).map(&:user) 
+      @assigned_auditors = audit_assignments.where(role: :auditor).map(&:user) 
       # Get the lead auditor
-      @lead_auditor = audit.audit_assignments.find_by(role: :lead_auditor)&.user 
+      @lead_auditor = audit_assignments.find_by(role: :lead_auditor)&.user 
 
       # Get the SMEs
-      @sme = @audit.audit_assignments.where(role: "sme").map(&:user)
+      @smes = audit_assignments.where(role: "sme").map(&:user)
     end
 
 end
