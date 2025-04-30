@@ -3,15 +3,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("closure-letter-dropdown-form");
   const button = document.getElementById("start-letter-btn");
 
-  select.addEventListener("change", function () {
-    button.disabled = !select.value;
-  });
+  if (select && button) {
+    select.addEventListener("change", function () {
+      button.disabled = !select.value;
+    });
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    if (select.value) {
-      const auditId = select.value;
-      window.location.href = `/audits/${auditId}/audit_closure_letters/new`;
-    }
-  });
-})
+    // Disable the button initially if no value
+    button.disabled = !select.value;
+  }
+
+  if (form && select) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (select.value) {
+        const auditId = select.value;
+        window.location.href = `/audits/${auditId}/audit_closure_letters/new`;
+      }
+    });
+  }
+});
