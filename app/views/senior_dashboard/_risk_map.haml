@@ -11,15 +11,15 @@
   %table.table.text-center.mt-3
     %thead
       %tr
-        %th RPN \ Risk
+        %th.fs-6 RPN \ Risk
         - ["Low Risk", "Medium Risk", "High Risk"].each do |risk|
           %th= risk
     %tbody
       - ["Low RPN", "Medium RPN", "High RPN"].each do |rpn|
         %tr
-          %th= rpn
+          %th.fs-6= rpn
           - ["Low Risk", "Medium Risk", "High Risk"].each do |risk|
             - value = @heatmap_matrix[rpn][risk]
             - color = cell_color(risk, value, @max_heat_value)
-            %td.risk-cell{ style: "background-color: #{color}; color: #000;" }
+            %td.fs-2.risk-cell{ style: "background-color: #{color}; color: #000;" }
               = value
