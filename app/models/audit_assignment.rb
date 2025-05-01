@@ -39,4 +39,6 @@ class AuditAssignment < ApplicationRecord
   }
   belongs_to :user
   belongs_to :audit
+  belongs_to :assigner, class_name: "User", foreign_key: "assigned_by"
+
 end

@@ -21,9 +21,9 @@
 #
 FactoryBot.define do
   factory :audit_detail do
-    scope { "MyString" }
-    purpose { "MyString" }
-    objectives { "MyString" }
-    boundries { "MyString" }
+    scope { "The scope of test audit" }
+    purpose { "Purpose of test audit" }
+    objectives { "Objectives of test audit" }
+    boundaries { "Boundaries of test audit" }
   end
 end

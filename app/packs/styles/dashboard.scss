@@ -6,141 +6,220 @@ $container-height: 529px;
 
 
 *{
-    font-family: Helvetica, Arial, sans-serif;
-}
-.nav-tabs .nav-link.active {
-    background-color: $active-tab-bg; 
-    color: $active-tab-color; 
-    border-color: black;
-    font-weight: 700;
+    font-family: Helvetica, Arial, sans-serif !important;
 }
 
-.nav-tabs .nav-link {
-    background-color: $non-active-tab-bg; 
-    color: $non-active-tab-color; 
-    border-color: black;
-    text-align: center;
-    font-weight: 500;
-}
-
-.custom-tab-container {
-    width: 100%;
-    height: $container-height;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-}
-  
-.nav-tabs {
-margin-bottom: 0 !important;
-}
-
-.table-bordered-black {
-    border: 1px solid black;
-  
-    th,
-    td {
-        border: 1px solid black !important;
-    }
-}
-
-#Audit table {
-    font-size: 13.25px !important;
-    max-width: 800px !important;
-    min-width: 600px;
-}
-
-.progress {
-    background-color: $active-tab-color;
-    height: 15px;
-    padding: 0;
-    border: black solid 1px;
-}
-
-.progress-bar {
-    background-color: $active-tab-bg;
-}
-
-$table-scroll-buffer: 31px; // space taken by the tabs at top
-$table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
-
-.table-scroll-container {
-  max-height: #{$table-scroll-height};
-  border-top: 1px solid #dee2e6;
-  border-bottom: 1px solid #dee2e6;
-
-  table {
-    margin-bottom: 0;
-  }
-}
-
-.tab-content {
-    flex-grow: 1;
-    max-height: calc(#{$container-height} - 42px); // 42px for both tab bars
-}
-  
-#Audits-Status-Overview{
+.max-width-400{
     max-width: 400px !important;
+}
+
+.max-width-470{
+    max-width: 470px !important;
+}
+
+.max-width-600{
+    max-width: 600px !important;
+}
+
+.min-width-400{
     min-width: 400px !important;
 }
 
+.min-width-420{
+    min-width: 420px !important;
+}
 
-#Audits-Status-Overview, #Audit{
-    min-width: 605px !important; 
+.min-width-440{
+    min-width: 440px !important;
+}
+
+.min-width-600{
+    min-width: 600px !important;
+}
+.overflow-auto{
     overflow: auto !important;
 }
+.min-width-webkit-fill-available{
+    min-width: -webkit-fill-available !important;
+}
+.white-space-nowrap {
+    white-space: nowrap;
+} 
 
-#Compliance-Score-Graph-Over-Time {
-    min-width: 600px !important; 
+.place-self-anchor-center {
+    place-self: anchor-center;
 }
 
-#auditCalendar {
-    height: 90%;
+.min-height-90{
+    min-height: 90%;
 }
 
-.fc-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-  
-.fc-toolbar-title {
-    flex-grow: 1;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.3rem;
-}
-
-.fc-toolbar-chunk:has(.fc-toolbar-title) {
-    /* This only works in modern browsers like Safari 15+, Chrome 105+ */
-    display: flex;
-    flex-grow: 1;
-}
-
-.fc {
-    
-    .fc-col-header-cell-cushion {
-        display: inline-block;
-        padding: 2px 4px;
-        color: black;
-        text-decoration: none;
-    } 
-
-    .fc-daygrid-day-number {
-        padding: 4px;
-        position: relative;
-        z-index: 4;
-        color: black;
-        text-decoration: none;
+#qa-dashboard, #create-edit-audits {
+    .nav-tabs .nav-link.active {
+        background-color: $active-tab-bg; 
+        color: $active-tab-color; 
+        border-color: black;
+        font-weight: 700;
     }
-}
 
-.fc-event, 
-.fc-daygrid-event {
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  color: inherit !important;
+
+    .nav-tabs .nav-link {
+        background-color: $non-active-tab-bg; 
+        color: $non-active-tab-color; 
+        border-color: black;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .nav-tabs {
+        margin-bottom: 0 !important;
+    }
+
+    .custom-tab-container {
+        width: 100%;
+        height: $container-height;
+        max-height: $container-height;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .table-bordered-black {
+        border: 1px solid black;
+    
+        th,
+        td {
+            border: 1px solid black !important;
+        }
+    }
+
+    #Audit table {
+        font-size: 13.25px !important;
+        max-width: 800px !important;
+        min-width: 600px;
+    }
+
+    .progress {
+        background-color: $active-tab-color;
+        height: 15px;
+        padding: 0;
+        border: black solid 1px;
+    }
+
+    .progress-bar {
+        background-color: $active-tab-bg;
+    }
+
+    $table-scroll-buffer: 31px; // space taken by the tabs at top
+    $table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
+
+    .table-scroll-container {
+        max-height: #{$table-scroll-height};
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
+
+        table {
+            margin-bottom: 0;
+        }
+    }
+
+    .tab-content {
+        flex-grow: 1;
+        max-height: calc(#{$container-height} - 42px); // 42px for both tab bars
+    }
+    
+
+    #Audit{
+        min-width: 605px; 
+        overflow: auto !important;
+    }
+
+    #Compliance-Score-Graph-Over-Time {
+        border: black 1px solid;
+        padding: 0;
+        border-radius: 1.5em;
+        *{
+            border: none;
+        }
+        .bottom-black-border {
+            border-bottom: black solid 2px !important;
+        }
+        .special-black-border {
+            border: black solid 1px !important;
+            border-top-left-radius: 0.5em;
+            border-top-right-radius: 0.5em;
+        }
+    }
+
+    #auditCalendar {
+        height: 90%;
+    }
+
+    .fc-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .fc-toolbar-title {
+        flex-grow: 1;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.3rem;
+    }
+
+    .fc-toolbar-chunk:has(.fc-toolbar-title) {
+        /* This only works in modern browsers like Safari 15+, Chrome 105+ */
+        display: flex;
+        flex-grow: 1;
+    }
+
+    .fc {
+        
+        .fc-col-header-cell-cushion {
+            display: inline-block;
+            padding: 2px 4px;
+            color: black;
+            text-decoration: none;
+        } 
+
+        .fc-daygrid-day-number {
+            padding: 4px;
+            position: relative;
+            z-index: 4;
+            color: black;
+            text-decoration: none;
+        }
+    }
+
+    .fc-event, 
+    .fc-daygrid-event {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: inherit !important;
+    }
+
+    th.p-3, td.p-3 {
+        text-wrap-mode: nowrap;
+    }
+
+    #document-quick-access, #Actions-CAPAs, #recurring-compliance-issues, #pre-audit-readiness-tracker {
+        font-size: 13.25px !important;
+        .fs-6 {
+            font-size: 13.25px !important;
+        }
+    }
+
+    .risk-cell {
+        width: 100px;
+        height: 100px;
+        vertical-align: middle;
+        text-align: center;
+        font-weight: bold;
+        line-height: 100px; /* vertically center text */
+        border: 1px solid #000; /* optional: border clarity */
+    }      
 }

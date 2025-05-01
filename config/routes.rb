@@ -22,10 +22,12 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Routes for different dashboards
-  get 'auditee_dashboard', to: 'dashboard#auditee', as: 'auditee_dashboard'
+  get 'auditee_dashboard', to: 'auditee_dashboard#auditee', as: 'auditee_dashboard'
   get 'qa_manager_dashboard', to: 'qa_dashboard#qa_manager', as: 'qa_manager_dashboard'
-  get 'senior_manager_dashboard', to: 'dashboard#senior_manager', as: 'senior_manager_dashboard'
-  get 'auditor_dashboard', to: 'dashboard#auditor', as: 'auditor_dashboard'
+  get 'senior_manager_dashboard', to: 'senior_dashboard#senior_manager', as: 'senior_manager_dashboard'
+  get 'auditor_dashboard', to: 'auditor_dashboard#auditor', as: 'auditor_dashboard'
+  get 'sme_dashboard', to: 'dashboard#sme', as: 'sme_dashboard'
+
 
 
 
@@ -34,6 +36,11 @@ Rails.application.routes.draw do
 
   #Get to your notifications
   get 'notifications', to: 'notifications#index'
+
+  resources :notifications do
+    patch :accept, on: :member
+  end
+
 
   # Defines the root path route ("/")
 
@@ -47,11 +54,15 @@ Rails.application.routes.draw do
     root to: 'pages#home'
   end
 
+  resources :create_edit_audits, only: [:new, :create, :edit, :update]
   resources :audits do
-    resources :audit_closure_letters, only: [:new, :create]
+    resources :audit_closure_letters, except: [:index]
+    resource :audit_request_letters, only: [:new, :create, :show, :destroy] do
+      get 'preview', on: :member
+      post 'verify', on: :member
+    end
   end
 
-  resources :create_edit_audits, only: [:new, :create, :edit, :update]
 
   # Defines the route for the audit request letter creation page ('/create-audit-request-letter')
   get 'letters/create-audit-request-letter', to: 'letters#audit_request_letter_create'
@@ -82,4 +93,6 @@ Rails.application.routes.draw do
   post 'questionnaire/_add_question_bank_question', to: 'questionnaires#add_question_bank_question', as: 'add_question_bank_question'
   # Updating the questionnaire questions for the question bank
   post '/get_questionnaire_questions', to: 'questionnaires#get_questionnaire_questions', as: 'get_questionnaire_questions'
+
+  resources :audit_closure_letters, only: [:index]
 end

@@ -3,12 +3,12 @@
 .row.justify-content-center
   .col-sm-10.col-lg-8
     .card.card-light
-      = simple_form_for @audit_closure_letter, url: audit_audit_closure_letters_path(@audit), method: :post do |f|
+      = simple_form_for @audit_closure_letter, url: audit_audit_closure_letters_path(@audit), method: :post do |f| 
         .card-header
           %h2 Create Audit Closure Letter
         .card-body
           .form-group
-            %label Select Template
+            %label Select Template (Currently not functional)
             = select_tag :template, options_for_select(["Default Template"]), class: "form-control"
             %a.mt-2{ href: "#" } Create new template
             %hr
@@ -20,14 +20,16 @@
               %br Business Park, Europa Ave, Tinsley
               %br Sheffield, S9 1ZA
               %br
-              %em GTIMC email
+              %em gtimc@sheffield.ac.uk
               %br 0114 222 2238
 
             %p.mt-3= Date.today.strftime("%d/%m/%Y")
 
-            %p
-              = @company.name
-              %br= @company.address
+            %p.mt-4
+              =@company.name
+              %br=@company.street_name
+              =@company.city
+              =@company.postcode
 
             %p
               %strong Subject: Official Audit Report - #{@audit.id.to_s.rjust(6, "0")}
@@ -88,10 +90,6 @@
                 %ul
                   - @findings.select { |f| f.risk_level != "low" }.each do |finding|
                     %li= finding.description
-              %li
-                %strong Overall Compliance Status:
-                -# ?
-
             %h4.mt-4 5. Detailed Findings
             %table.table.table-striped
               %thead
@@ -117,7 +115,7 @@
               %li Overall Audit Score: #{@audit.score}
               -# compliance percentage as a placeholder for now
               %li Compliance Percentage: #{@audit.score.to_i}% 
-              %li Audit Performance Level: #{@audit.final_outcome.titleize}
+              %li Audit Performance Level: #{@audit.final_outcome&.titleize || "0"}
 
             %h4.mt-4 7. Recommendations & Corrective Actions
             %ul
@@ -134,16 +132,20 @@
             %ul
               %li
                 %strong Summary Statement:
-                Placeholder
+                = text_area_tag 'audit_closure_letter[summary_statement]', nil, class: "form-control", rows: 2
+              %li
+                %strong Overall Compliance Status:
+                = text_area_tag 'audit_closure_letter[overall_compliance]', nil, class: "form-control", rows: 2
               %li 
                 %strong Lead Auditor Signature: 
-                = current_user&.full_name|| "________________"
+                = check_box_tag 'audit_closure_letter[auditor_acknowledged]', '1', false, id: 'auditor_acknowledged'
               %li 
                 %strong Date: 
                 = Date.today.strftime("%d/%m/%Y")
-              %li 
-                %strong Auditee Acknowledgment: ______________________
-
+              %li
+                %strong Auditee Acknowledgement:
+                = check_box_tag 'audit_closure_letter[auditee_acknowledged]', '1', false, id: 'auditee_acknowledged'
+                
             %h4.mt-4 9. Distribution List
             %ul
               %li Recipients of the Report: placeholder
@@ -164,6 +166,5 @@
               %br= @lead_auditor&.email || "placeholder@gtimc.com"
 
             .form-group.mt-4.d-flex.justify-content-between
-              = link_to "Cancel", audit_path(@audit), class: "btn btn-danger"
-              = f.submit "Save Changes", class: "btn btn-warning"
-              = link_to "Preview", "#", class: "btn btn-success"        
+              = link_to "Cancel", audit_closure_letters_path, class: "btn btn-danger"
+              = f.submit "Generate Letter", class: "btn btn-success"      

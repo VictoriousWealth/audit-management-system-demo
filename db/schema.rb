@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.0].define(version: 2025_03_29_183408) do
+=======
+ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
+>>>>>>> c55918cb304ae240cf21c6d32100603b7e43846c
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -143,9 +147,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_29_183408) do
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
-    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "street_name"
+    t.string "city"
+    t.string "postcode"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -339,7 +345,24 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_29_183408) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+<<<<<<< HEAD
   add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
+=======
+  create_table "vendor_rpns", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.datetime "time_of_creation", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "material_criticality", null: false
+    t.integer "supplier_compliance_history", null: false
+    t.integer "regulatory_approvals", null: false
+    t.integer "supply_chain_complexity", null: false
+    t.integer "previous_supplier_performance", null: false
+    t.integer "contamination_adulteration_risk", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_vendor_rpns_on_company_id"
+  end
+
+>>>>>>> c55918cb304ae240cf21c6d32100603b7e43846c
   add_foreign_key "audit_assignments", "audits"
   add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"
@@ -374,4 +397,5 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_29_183408) do
   add_foreign_key "selected_responses", "response_choices"
   add_foreign_key "supporting_documents", "audits"
   add_foreign_key "users", "companies"
+  add_foreign_key "vendor_rpns", "companies"
 end

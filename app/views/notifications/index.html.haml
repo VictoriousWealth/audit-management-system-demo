@@ -1,2 +1,53 @@
-%h1 One must imagine the notifications page present 
+.notifications-page
+    %h1 Notifications
+    %div.notifications-container
+        %h2 Assignments
+        %table.assignments-table
+            %thead
+                %tr
+                    %th Time (DD-MM-YYYY, HH:MM:SS)
+                    %th Title
+                    %th From 
+                    %th Acknowledge 
+            %tbody
+                - @unacknowledged_assignments.each do |assignment|
+                    %tr
+                        %td=assignment.updated_at.strftime("%d-%m-%Y, %H:%M:%S")
+                        %td= "You have a pending assignment for Audit ##{assignment.audit_id}"
+                        %td= "#{assignment.assigner.first_name} #{assignment.assigner.last_name}"
+                        %td
+                            = link_to accept_notification_path(assignment), method: :patch, class: "ack-button" do
+                                %i.bi.bi-check
 
+                -# This is just for an empty table row
+                %tr
+                    %td 
+                    %td 
+                    %td 
+                    %td 
+
+      
+        - if current_user.role == "qa_manager"
+            %h2 Acknowledgments 
+            %table.notifications-table
+                %thead
+                    %tr
+                        %th Time (DD-MM-YYYY, HH:MM:SS)
+                        %th Title
+                        %th From 
+                        %th View Notification 
+                %tbody
+                    - @acknowledged_assignments.each do |assignment|
+                        %tr
+                            %td=assignment.time_accepted.strftime("%d-%m-%Y, %H:%M:%S")
+                            %td= "Audit ##{assignment.audit_id} has been acknowledged."
+                            %td= "#{assignment.user.first_name} #{assignment.user.last_name}"
+                            %td Should be link to page when view audit done
+                        -# This is just for an empty table row
+                    %tr
+                        %td 
+                        %td 
+                        %td 
+                        %td 
+
+          

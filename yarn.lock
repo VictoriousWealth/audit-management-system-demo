@@ -1041,6 +1041,7 @@
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
+<<<<<<< HEAD
 "@epigenesys/epi-js@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@epigenesys/epi-js/-/epi-js-1.0.3.tgz#2dc9985249a40320b99b7a70b7dc99ae2b77adb2"
@@ -1087,6 +1088,8 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "6.7.2"
 
+=======
+>>>>>>> c55918cb304ae240cf21c6d32100603b7e43846c
 "@fullcalendar/core@^6.1.15":
   version "6.1.15"
   resolved "https://registry.npmjs.org/@fullcalendar/core/-/core-6.1.15.tgz"

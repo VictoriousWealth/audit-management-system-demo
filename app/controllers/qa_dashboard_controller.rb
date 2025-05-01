@@ -1,173 +1,91 @@
 class QaDashboardController < ApplicationController
+  before_action :authenticate_user!
+
   def qa_manager
-    @audits = Audit.includes(:user, :company, :audit_detail).all
+    scheduled_audits()
+    in_progress_audits()
+    completed_audits()
 
-    @scheduled_audits = Audit
-                          .where(status: :not_started)
-                          .where.not(scheduled_start_date: nil, scheduled_end_date: nil)
-                          .includes(:user, :company, :audit_detail)
+    pie_chart_data()
+    bar_chart_data()
+    compliance_score_graph_over_time()
 
-    @completed_audits = Audit
-                          .where(status: :completed)
-                          .includes(:user, :company, :audit_detail)
+    calendar_events()
+    audit_fidnings()
+    corrective_actions()
+    internal_vs_external()
+  end
 
-    @in_progress_audits = Audit
-                            .where(status: :in_progress)
-                            .includes(:user, :company, :audit_detail)
+  private
+  def internal_vs_external
+    internal_avg = Audit.internal.average(:score)&.round(2) || 0
+    external_avg = Audit.external.average(:score)&.round(2) || 0
+  
+    @internal_vs_external = {
+      internal_average: internal_avg,
+      external_average: external_avg
+    }
+  end
+  
 
-    @to_be_scheduled_audits = Audit
-                                .where(status: :not_started)
-                                .where("scheduled_start_date IS NULL OR scheduled_end_date IS NULL")    
-                                .includes(:user, :company, :audit_detail) # I dont remember why this line is neccessary
-
-    # === Overall Counts ===
-    completed_count = Audit.where(status: :completed).count
-    in_progress_count = Audit.where(status: :in_progress).count
-    not_started_count = Audit.where(status: :not_started).count
-    total_count = completed_count + in_progress_count + not_started_count
-
-    # === Helper to Calculate Percentages ===
-    def compute_percentages(counts)
-      total = counts.values.sum
-      return {} if total.zero?
-
-      counts.transform_values { |v| ((v.to_f / total) * 100).round(1) }
+  def documents()
+    @documents = []
+    Document.all.each do |d|
+      @documents << {
+        id: d.id,
+        title: d.name,
+        content: d.content,
+      }
     end
+  end
 
-    # === Pie Chart Data: All ===
-    all_counts = {
-      "Completed" => completed_count,
-      "In Progress" => in_progress_count,
-      "Not Started" => not_started_count
-    }
-    @pie_chart_data_all = compute_percentages(all_counts)
-
-    # === Pie Chart Data: Day (Today) ===
-    today_range = Time.zone.today.all_day
-    day_counts = {
-      "Completed" => Audit.where(status: :completed, created_at: today_range).count,
-      "In Progress" => Audit.where(status: :in_progress, created_at: today_range).count,
-      "Not Started" => Audit.where(status: :not_started, created_at: today_range).count
-    }
-    @pie_chart_data_by_day = compute_percentages(day_counts)
-
-    # === Pie Chart Data: Week (Last 7 Days) ===
-    week_range = Time.zone.now.beginning_of_week..Time.zone.now.end_of_week
-    week_counts = {
-      "Completed" => Audit.where(status: :completed, created_at: week_range).count,
-      "In Progress" => Audit.where(status: :in_progress, created_at: week_range).count,
-      "Not Started" => Audit.where(status: :not_started, created_at: week_range).count
-    }
-    @pie_chart_data_by_week = compute_percentages(week_counts)
-
-    # === Pie Chart Data: Month (Last Month) ===
-    month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
-
-    month_counts = {
-      "Completed" => Audit.where(status: :completed, created_at: month_range).count,
-      "In Progress" => Audit.where(status: :in_progress, created_at: month_range).count,
-      "Not Started" => Audit.where(status: :not_started, created_at: month_range).count
-    }
-    @pie_chart_data_by_month = compute_percentages(month_counts)
-
-    # === Bar Chart Data ===
-    @chart_data_all = [
-      { name: "Completed", data: [["Label", all_counts["Completed"]]] },
-      { name: "In Progress", data: [["Label", all_counts["In Progress"]]] },
-      { name: "Not Started", data: [["Label", all_counts["Not Started"]]] }
-    ]
-    @chart_data_by_month = [
-      { name: "Completed", data: [["Label", month_counts["Completed"]]] },
-      { name: "In Progress", data: [["Label", month_counts["In Progress"]]] },
-      { name: "Not Started", data: [["Label", month_counts["Not Started"]]] }
-    ]
-    @chart_data_by_week = [
-      { name: "Completed", data: [["Label", week_counts["Completed"]]] },
-      { name: "In Progress", data: [["Label", week_counts["In Progress"]]] },
-      { name: "Not Started", data: [["Label", week_counts["Not Started"]]] }      
-    ]
-    @chart_data_by_day = [
-      { name: "Completed", data: [["Label", day_counts["Completed"]]] },
-      { name: "In Progress", data: [["Label", day_counts["In Progress"]]] },
-      { name: "Not Started", data: [["Label", day_counts["Not Started"]]] }      
-    ]
-
-    # Compliance Score – Grouped by Time (Assume you calculate 'score')
-    def compliance_score_data(range, group_by)
-      Audit.where(created_at: range).group_by_period(group_by, :created_at, format: "%d %b").average(:score)
+  def corrective_actions
+    @corrective_actions = []
+    CorrectiveAction.all.each do |c|
+      progress = 0
+      case c.status
+      when 0 # pending
+        progress = 33
+      when 1 # in_progress
+        progress = 66
+      else # completed
+        progress = 100
+      end
+      short_description = c.action_description.length > 15 ? "#{c.action_description[0...12]}..." : c.action_description
+      
+      @corrective_actions << {
+        id: c.id,
+        truncated_description: short_description,
+        full_description: c.action_description,
+        vendor: Company.find_by(id: User.find_by(id: AuditAssignment.find_by(audit_id: c.audit_id).where(role: :auditee)&.user_id)&.company_id).first&.name,
+        progress: progress, 
+      }
     end
+  end
 
-    # Ranges
-    today_range = Time.zone.today.all_day
-    week_range = Time.zone.now.beginning_of_week..Time.zone.now.end_of_week
-    month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
+  def audit_fidnings
+    @audit_fidnings = []
+    AuditFinding.all.each do |c|
+      category = case c.category
+                when 0 then "critical"
+                when 1 then "major"
+                else "minor"
+                end
 
-    # Grouped Data
-    # Daily Data (grouped by hour)
-    @compliance_score_by_day = [
-      { 
-        name: "Your Compliance", 
-        data: Audit.where(user: current_user, actual_end_date: today_range).group_by_period(:hour, :created_at, format: "%H:%M").average(:score)
-      },
-      { 
-        name: "Org Compliance", 
-        data: Audit.where(actual_end_date: today_range).group_by_period(:hour, :created_at, format: "%H:%M").average(:score)
+      short_description = c.description.length > 15 ? "#{c.description[0...12]}..." : c.description
+
+      @audit_fidnings << {
+        id: c.id,
+        audit_type: Audit.find_by(id: Report.find_by(id: c.report_id)&.audit_id)&.audit_type,
+        truncated_description: short_description,
+        full_description: c.description,
+        category: category,
       }
-    ]
-    
-    # Weekly Data (grouped by day)
-    @compliance_score_by_week = [
-      { 
-        name: "Your Compliance", 
-        data: Audit.where(user: User.last, actual_end_date: week_range)
-                  .group_by_period(:day, :actual_end_date, format: "%d %b")
-                  .average(:score)
-      },
-      { 
-        name: "Org Compliance", 
-        data: Audit.where(actual_end_date: week_range)
-                  .group_by_period(:day, :actual_end_date, format: "%d %b")
-                  .average(:score)
-      }
-    ]
-
-    # Monthly Data (grouped by month)
-    @compliance_score_by_month = [
-      { 
-        name: "Your Compliance", 
-        data: Audit.where(user: User.last, actual_end_date: month_range)
-                   .group_by_period(:month, :actual_end_date, format: "%b %Y")
-                   .average(:score)
-      },
-      { 
-        name: "Org Compliance", 
-        data: Audit.where(actual_end_date: month_range)
-                   .group_by_period(:month, :actual_end_date, format: "%b %Y")
-                   .average(:score)
-      }
-    ]
-    
-    # @compliance_score_all = Audit.group_by_month(:created_at, format: "%b %Y").average(:score)
-    @compliance_score_all = [
-      { 
-        name: "Your Compliance", 
-        data: Audit.where(user: User.last)
-                   .group_by_period(:hour, :created_at, format: "%H:%M")
-                   .average(:score)
-      },
-      { 
-        name: "Org Compliance", 
-        data: Audit.where(created_at: Audit.minimum(:created_at)..Time.zone.now)
-                   .group_by_period(:hour, :created_at, format: "%H:%M")
-                   .average(:score)
-      }
-    ]
-    
-    # Your vs Org Score (Today)
-    @your_compliance_score = 67 #TODO: replace with real query for current user
-    @org_compliance_score = Audit.average(:score)&.round
+    end
+  end
 
 
+  def calendar_events
     # === Calendar Event Component ===
     
     today = Time.zone.today
@@ -184,8 +102,8 @@ class QaDashboardController < ApplicationController
       }
     end
 
-    # === Category 2: Overdue Audits (status ≠ completed && end date < today) ===
-    overdue_count = Audit.where.not(status: :completed)
+    # === Category 2: Overdue Audits (status ≠ completed && end date < today) === to change to in progress late
+    overdue_count = Audit.where.not(status: :completed).where.not(scheduled_end_date: nil)
                          .where("DATE(scheduled_end_date) < ?", today)
                          .count
 
@@ -199,9 +117,8 @@ class QaDashboardController < ApplicationController
       }
     end
 
-    # === Category 3: Not Started + Missing Dates ===
-    missing_dates_count = Audit.where(status: :not_started)
-                               .where("scheduled_start_date IS NULL OR scheduled_end_date IS NULL")
+    # === Category 3: In progress === to change to in progress on time
+    missing_dates_count = Audit.where(status: :in_progress)
                                .count
 
     if missing_dates_count > 0
@@ -210,8 +127,283 @@ class QaDashboardController < ApplicationController
         date: today,
         allDay: true,
         textColor: "#000",
-        description: "#{missing_dates_count} audit(s) missing start/end dates"
+        description: "#{missing_dates_count} audit(s) in progress"
       }
     end
   end
+
+  def compliance_score_graph_over_time
+    compliance_score_graph_over_time_all()
+    compliance_score_graph_over_time_day()
+    compliance_score_graph_over_time_week()
+    compliance_score_graph_over_time_month()
+  end
+
+  def compliance_score_graph_over_time_day
+    @compliance_score_by_day = [
+      {
+        name: "Internal",
+        color: "#42CA68",
+        data: Audit.where(audit_type: "internal")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "External",
+        color: "#F39C12",
+        data: Audit.where(audit_type: "external")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "All Audits",
+        color: "#3498DB",
+        data: Audit.where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      }
+    ]
+  end
+
+  def compliance_score_graph_over_time_week
+    # @compliance_score_by_week = {}
+    # @compliance_score_by_week_labels = {}
+    @compliance_score_by_week = [
+      {
+        name: "Internal",
+        color: "#42CA68",
+        data: Audit.where(audit_type: "internal")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "External",
+        color: "#F39C12",
+        data: Audit.where(audit_type: "external")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "All Audits",
+        color: "#3498DB",
+        data: Audit.where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      }
+    ]
+  end
+
+  def compliance_score_graph_over_time_month
+    # @compliance_score_by_month = {}
+    # @compliance_score_by_month_labels = {}
+    @compliance_score_by_month = [
+      {
+        name: "Internal",
+        color: "#42CA68",
+        data: Audit.where(audit_type: "internal")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "External",
+        color: "#F39C12",
+        data: Audit.where(audit_type: "external")
+                  .where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "All Audits",
+        color: "#3498DB",
+        data: Audit.where.not(score: nil)
+                  .where.not(actual_end_date: nil)
+                  .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      }
+    ]
+  end
+
+  def compliance_score_graph_over_time_all
+    @compliance_score_all = [
+      {
+        name: "Internal",
+        color: "#42CA68",
+        data: Audit.where(audit_type: "internal").where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      
+      },
+      {
+        name: "External",
+        color: "#F39C12",
+        data: Audit.where(audit_type: "external").where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      },
+      {
+        name: "All Audits",
+        color: "#3498DB",
+        data: Audit.where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+      }
+    ]
+  end
+
+  def bar_chart_data
+    @bar_chart_data = [
+      { name: "Completed", data: [["Audits", Audit.where(status: :completed).count]] },
+      { name: "In Progress (on time)", data: [["Audits", Audit.where(status: :in_progress).where('actual_start_date <= scheduled_start_date').count]] },
+      { name: "In Progress (late)", data: [["Audits", Audit.where(status: :in_progress).where('actual_start_date > scheduled_start_date').count]] },
+      { name: "Not Started", data: [["Audits", Audit.where(status: :not_started).count]] }
+    ]
+
+    max_value = @bar_chart_data.map { |s| s[:data][0][1] }.max
+    suggested_max = (max_value * 1.1).ceil
+
+    @bar_chart_library = {
+      title: { text: "Audit Status Overview", display: true },
+      scales: {
+        y: {
+          suggestedMax: suggested_max
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          fullSize: false,
+          labels: {
+            padding: 20,
+            usePointStyle: true,
+            pointStyle: 'circle',
+            color: "#000",
+            font: { weight: 'bold', size: 12 }
+          }
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          color: '#000',
+          font: { weight: 'bold' }
+        }
+      }
+    }
+  end
+
+  
+  def pie_chart_data
+    @pie_chart_data = {
+      "Completed": Audit.where(status: :completed).count, # Any
+      "In Progress (on time)": Audit.where(status: :in_progress)
+                                    .where('actual_start_date <= scheduled_start_date')
+                                    # .where('actual_end_date <= scheduled_end_date')
+                                    .count, # to be replaced with scheduled_audits task
+      "In Progress (late)": Audit.where(status: :in_progress)
+                                    .where('actual_start_date > scheduled_start_date')
+                                    # .where('actual_end_date > scheduled_end_date')
+                                    .count, # to be replaced with scheduled_audits task
+      "Not Started": Audit.where(status: :not_started)
+                        .count,
+    }
+  end
+
+  def scheduled_audits
+    @scheduled_audits = Audit.where(status: :not_started)
+                              .includes(:audit_assignments => :user, :audit_detail => :audit_standards)
+                              .map do |audit|
+      lead_auditor = audit.audit_assignments.where(role: :lead_auditor).first&.user
+      auditee = audit.audit_assignments.where(role: :auditee).first&.user
+      {
+        id: audit.id,
+        audit_type: audit.audit_type,
+        company_name: audit.company&.name,
+        auditee: auditee&.full_name,
+        lead_auditor: lead_auditor&.full_name,
+        support_auditors: audit.auditors(),
+        smes: audit.smes(),
+        scheduled_start_date: audit.scheduled_start_date,
+        scheduled_end_date: audit.scheduled_end_date,
+        rpn: VendorRpn.where(company_id: audit.company&.id).order(created_at: :desc).first&.calculate_rpn(),
+      }
+    end
+  end
+
+  def in_progress_audits
+    @in_progress_audits = Audit.where(status: :in_progress)
+                                .includes(:audit_assignments => :user)
+                                .map do |audit|
+      lead_auditor = audit.audit_assignments.where(role: :lead_auditor).first&.user
+      auditee = audit.audit_assignments.where(role: :auditee).first&.user
+      {
+        id: audit.id,
+        audit_type: audit.audit_type,
+        company_name: audit.company&.name,
+        auditee: auditee&.full_name,
+        lead_auditor: lead_auditor&.full_name,
+        support_auditors: audit.auditors(),
+        smes: audit.smes(),
+        scheduled_start_date: audit.scheduled_start_date,
+        scheduled_end_date: audit.scheduled_end_date,
+        actual_start_date: audit.actual_start_date,
+        progress: audit.score,
+        rpn: VendorRpn.where(company_id: audit.company&.id).order(created_at: :desc).first&.calculate_rpn(),
+      }
+    end
+  end
+
+  def completed_audits
+    @completed_audits = Audit.where(status: :completed)
+                              .includes(:audit_assignments => :user, :audit_detail => :audit_standards)
+                              .map do |audit|
+      lead_auditor = audit.audit_assignments.where(role: :lead_auditor).first&.user
+      auditee = audit.audit_assignments.where(role: :auditee).first&.user
+      {
+        id: audit.id,
+        audit_type: audit.audit_type,
+        company_name: audit.company&.name,
+        auditee: auditee&.full_name,
+        lead_auditor: lead_auditor&.full_name,
+        score: audit.score,
+        final_outcome: audit.final_outcome,
+        scheduled_start_date: audit.scheduled_start_date,
+        scheduled_end_date: audit.scheduled_end_date,
+        actual_start_date: audit.actual_start_date,
+        actual_end_date: audit.actual_end_date,
+        rpn: VendorRpn.where(company_id: audit.company&.id).order(created_at: :desc).first&.calculate_rpn(),
+        risk_level: risk_level(audit), 
+      }
+    end
+  end
+
+  def risk_level(audit)
+    categories = AuditFinding.categories.keys # ["major", "minor", "critical"]
+    category_counts = AuditFinding.where(report_id: Report.where(audit_id: audit.id).pluck(:id)) # there are multiple reports per one audit, idk why :(
+                                  .group(:category)
+                                  .count
+
+    category_counts = categories.each_with_object({}) do |category, hash|
+      hash[category] = category_counts[category] || 0
+    end
+
+    if category_counts["critical"] >= 1
+      "High Risk"
+    elsif category_counts["major"] >= 5
+      "High Risk"
+    elsif category_counts["minor"] >= 5
+      "Medium Risk"
+    elsif category_counts["major"] >= 1
+      "Medium Risk"
+    else
+      "Low Risk"
+    end    
+  end
 end
+
