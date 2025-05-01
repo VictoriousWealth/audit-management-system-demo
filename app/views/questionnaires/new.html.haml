@@ -4,6 +4,7 @@
         = simple_form_for @custom_questionnaire, url: questionnaire_path, method: :post do |f|
             %h2.questionnaire-title Questionnaire Title
             = f.input :name, class: 'title-input'
+            %strong.red.hide#title-error Title cannot be empty
             %h2.questionnaire-title Questionnaire Type
             #option-template
                 %label.questionnaire-radio
@@ -13,10 +14,13 @@
                 %label.questionnaire-radio
                 = radio_button_tag 'option', 'custom'
                 Custom
+            %strong.red.hide#questionnaire-type-error Please select a questionnaire type
 
             #template-content.hide
                 %h2.questionnaire-title Template Selection
-                = select_tag 'questionnaire_type', options_for_select(@questionnaires.collect{ |q| q.name })
+                = select_tag 'questionnaire_type', options_for_select(@questionnaires.collect{ |q| q.name }), include_blank: true
+                %div
+                    %strong.red.hide#template-select-error Please select a template
                 %h2.questionnaire-title Template Questionnaire
                 
                 .template-questionnaire-container
@@ -31,6 +35,5 @@
                 %h2{:class => "questionnaire-title"} Custom Questionnaire
         
 
-            .questionnaire-btn-container 
-                %button.questionnaire-btn Save
-                = f.submit "Create Questionnaire", class: 'questionnaire-btn'
+            .questionnaire-btn-container
+                = f.submit "Create Questionnaire", class: 'questionnaire-btn', data: { controller: "modals", action: "modals#create" }

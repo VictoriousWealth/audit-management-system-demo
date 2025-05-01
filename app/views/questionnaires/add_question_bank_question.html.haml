@@ -9,7 +9,7 @@
                         .question-bank-upper-container
                             .select-template#select-template
                                 %h4.questionnaire-title.questionnaire-subtitle Select Template
-                                = select_tag 'questionnaire-template', options_for_select(@questionnaires.collect { |q| q.name }), data: { action: "change->modals#getTemplateQuestions" }
+                                = select_tag 'questionnaire-template', options_for_select(@questionnaires.collect { |q| q.name }), include_blank: true, data: { action: "change->modals#getTemplateQuestions" }
                             .question-search-container 
                                 %i.bi.bi-search
                                 = text_field_tag :search, nil, placeholder: "Search", class: "search-question", data: { action: "input->modals#filterQuestions" }, label: false
