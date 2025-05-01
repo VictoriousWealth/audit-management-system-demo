@@ -1,0 +1,11 @@
+= turbo_frame_tag "modal", data: { controller: "modals" } do
+    .modal-overlay
+        .modal{ data: { controller: "modals", modals_section_id_value: @question_section.section_order } }
+            %h2.questionnaire-title Edit Section
+            .question-modal-form-container
+                = simple_form_for @question_section, url: edit_section_path(@section), html: { data: { action: "submit->modals#saveSectionEdit" } } do |f|
+                    .question-form#question-form
+                        = f.input :name, class: 'title-input', id: 'section-name'
+                        = f.submit "Save", class: 'questionnaire-btn align-bottom align-right'
+                = link_to "Remove All", "#", class: 'remove-button align-bottom align-left', data: { controller: "modals", action: "modals#removeSection" }
+                = link_to "x", "#", class: 'cancel-button align-top align-right', data: { controller: "modals", action: "modals#close" }

@@ -85,6 +85,5 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
 
     # Adding all created section questions
     SectionQuestion.insert_all(section_questions)
-
   end
 end

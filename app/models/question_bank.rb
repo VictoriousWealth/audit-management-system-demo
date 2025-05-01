@@ -18,6 +18,8 @@
 #  fk_rails_...  (response_choices_id => response_choices.id)
 #
 class QuestionBank < ApplicationRecord
-  belongs_to :section_question, optional: true
-  has_many :response_choices
+  has_many :section_questions
+  has_many :questionnaire_sections, through: :section_questions
+  
+  has_many :responses
 end
