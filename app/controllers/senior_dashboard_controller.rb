@@ -64,25 +64,19 @@ class SeniorDashboardController < ApplicationController
   end
 
   def audit_fidnings
-    @audit_fidnings = []
-    AuditFinding.all.each do |c|
-      category = case c.category
-                when 0 then "critical"
-                when 1 then "major"
-                else "minor"
-                end
-
+    @audit_fidnings = AuditFinding.where.not(category: "minor").map do |c|
       short_description = c.description.length > 15 ? "#{c.description[0...12]}..." : c.description
-
-      @audit_fidnings << {
+  
+      {
         id: c.id,
         audit_type: Audit.find_by(id: Report.find_by(id: c.report_id)&.audit_id)&.audit_type,
         truncated_description: short_description,
         full_description: c.description,
-        category: category,
+        category: c.category, 
       }
     end
   end
+  
 
   def compliance_score_graph_over_time
     compliance_score_graph_over_time_all()
