@@ -1,0 +1,11 @@
+= turbo_frame_tag "modal", data: { controller: "modals" } do
+    .modal-overlay
+        .modal{ data: { controller: "modals", modals_list_index_value: @list_index, modal_section_value: @section_order, modal_questionnaire_section_id: @questionnaire_section_id } }
+            %h2.questionnaire-title Add Question
+            %h3.questionnaire-title.questionnaire-subtitle= @section_name
+            .question-modal-form-container
+                = simple_form_for @question, url: add_question_path, html: { data: { action: "submit->modals#addQuestion" } } do |f|
+                    .question-form#question-form
+                        = f.input :question_text, class: 'title-input', id: 'question-text'
+                        = f.submit "Save", class: 'questionnaire-btn align-bottom align-right'
+                = link_to "x", "#", class: 'cancel-button align-top align-right', data: { controller: "modals", action: "modals#close" }

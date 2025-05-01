@@ -6,3 +6,5 @@ import '../styles/layout';
 import '../styles/styles';
 import '../styles/dashboard'
 import '../styles/create_edit_audits';
+import '../styles/create_questionnaire';
+import '../styles/modal';
