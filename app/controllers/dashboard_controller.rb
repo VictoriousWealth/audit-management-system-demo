@@ -19,19 +19,4 @@ class DashboardController < ApplicationController
     end
   end
 
-  # this method can be removed
-  def auditor
-  end
-
-  # this method can be removed
-  def auditee
-  end
-
-  # this method can be removed
-  def qa_manager
-  end
-
-  def senior_manager
-  end
-
 end
