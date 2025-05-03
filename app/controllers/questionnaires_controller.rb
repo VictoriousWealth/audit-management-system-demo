@@ -1,7 +1,7 @@
 class QuestionnairesController < ApplicationController
   # Methods to run before executing any other methods
   before_action :authenticate_user!
-  before_action :get_questionnaires, :authorize_questionnaire_access, only: [:new, :create, :edit, :add_question_bank_question]
+  before_action :authorize_questionnaire_access, :get_questionnaires, only: [:new, :create, :edit, :add_question_bank_question]
 
   def authorize_questionnaire_access
     allowed_roles = ["qa_manager", "senior_manager", "auditor"]
