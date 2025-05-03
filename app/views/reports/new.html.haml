@@ -97,14 +97,4 @@
                       %tr
                         %td= item.first_name
                         %td= item.last_name
-                = button_tag "Add Item", class: "btn btn-primary", data: { bs_toggle: "modal", bs_target: "#itemModal" }
-
-                .modal.fade#itemModal{ tabindex: "-1" }
-                  .modal-dialog
-                    .modal-content
-                      .modal-header
-                        %h5.modal-title Add Item
-                        %button.btn-close{"data-bs-dismiss" => "modal"}
-                      .modal-body
-                        = render 'form', item: @item
 
