@@ -23,18 +23,18 @@
           %td.p-2.white-space-nowrap= audit[:auditee]
           %td.p-2.white-space-nowrap= audit[:lead_auditor]
           
-          / ✅ SUPPORT AUDITOR BUTTON + MODAL
+          / SUPPORT AUDITOR BUTTON + MODAL
           %td.p-2.white-space-nowrap
             - if audit[:support_auditors].present?
-              %button.btn.btn-sm.btn-outline-dark{ data: { bs_toggle: "modal", bs_target: "#supportAuditorsModal-#{audit[:id]}" } }
+              %button.btn.btn-sm.btn-outline-dark{ data: { bs_toggle: "modal", bs_target: "#supportAuditorsModal-#{audit[:id]}", turbo: "false" } }
                 = "#{audit[:support_auditors].size} Auditor(s)"
 
               / Modal for support auditors
-              .modal.fade{id: "supportAuditorsModal-#{audit[:id]}", tabindex: "-1", aria: { labelledby: "supportAuditorsModalLabel-#{audit[:id]}", hidden: "true" } }
+              .modal.fade{ id: "supportAuditorsModal-#{audit[:id]}", tabindex: "-1", aria: { labelledby: "supportAuditorsModalLabel-#{audit[:id]}" }, data: { controller: "" } }
                 .modal-dialog
                   .modal-content
                     .modal-header
-                      %h5.modal-title{id: "supportAuditorsModalLabel-#{audit[:id]}"}
+                      %h5.modal-title{ id: "supportAuditorsModalLabel-#{audit[:id]}" }
                         Support Auditor(s) for Audit ##{audit[:id].to_s.rjust(4, '0')}
                       %button.btn-close{ data: { bs_dismiss: "modal" }, aria: { label: "Close" } }
                     .modal-body
@@ -46,18 +46,18 @@
             - else
               %span.text-muted N/A
 
-          / ✅ SME BUTTON + MODAL
+          / SME BUTTON + MODAL
           %td.p-2.white-space-nowrap
             - if audit[:smes].present?
-              %button.btn.btn-sm.btn-outline-dark{ data: { bs_toggle: "modal", bs_target: "#smesModal-#{audit[:id]}" } }
+              %button.btn.btn-sm.btn-outline-dark{ data: { bs_toggle: "modal", bs_target: "#smesModal-#{audit[:id]}", turbo: "false" } }
                 = "#{audit[:smes].size} SME(s)"
 
-              / Modal for support auditors
-              .modal.fade{id: "smesModal-#{audit[:id]}", tabindex: "-1", aria: { labelledby: "smesModalLabel-#{audit[:id]}", hidden: "true" } }
+              / Modal for SMEs
+              .modal.fade{ id: "smesModal-#{audit[:id]}", tabindex: "-1", aria: { labelledby: "smesModalLabel-#{audit[:id]}" }, data: { controller: "" } }
                 .modal-dialog
                   .modal-content
                     .modal-header
-                      %h5.modal-title{id: "smesModalLabel-#{audit[:id]}"}
+                      %h5.modal-title{ id: "smesModalLabel-#{audit[:id]}" }
                         SME(s) for Audit ##{audit[:id].to_s.rjust(4, '0')}
                       %button.btn-close{ data: { bs_dismiss: "modal" }, aria: { label: "Close" } }
                     .modal-body
