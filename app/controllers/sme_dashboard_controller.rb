@@ -1,7 +1,7 @@
 class SmeDashboardController < ApplicationController
   before_action :authenticate_user!
 
-  def auditor
+  def sme
     scheduled_audits()
     in_progress_audits()
     completed_audits()
