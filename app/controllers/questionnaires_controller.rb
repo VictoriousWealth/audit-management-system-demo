@@ -1,7 +1,14 @@
 class QuestionnairesController < ApplicationController
   # Methods to run before executing any other methods
-  before_action :get_questionnaires, only: [:new, :create, :edit, :add_question_bank_question]
   before_action :authenticate_user!
+  before_action :get_questionnaires, :authorize_questionnaire_access, only: [:new, :create, :edit, :add_question_bank_question]
+
+  def authorize_questionnaire_access
+    allowed_roles = ["qa_manager", "senior_manager", "auditor"]
+    unless allowed_roles.include?(current_user.role)
+      redirect_to root_path, alert: "You are not authorized to access that page."
+    end
+  end  
 
   # Retrieving data for rendering the page
   def new

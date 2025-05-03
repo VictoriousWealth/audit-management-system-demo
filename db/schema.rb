@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.0].define(version: 2025_03_29_183408) do
-=======
-ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
->>>>>>> c55918cb304ae240cf21c6d32100603b7e43846c
+ActiveRecord::Schema[7.0].define(version: 202503309183408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -345,9 +341,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-<<<<<<< HEAD
-  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
-=======
   create_table "vendor_rpns", force: :cascade do |t|
     t.bigint "company_id", null: false
     t.datetime "time_of_creation", default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -362,7 +355,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.index ["company_id"], name: "index_vendor_rpns_on_company_id"
   end
 
->>>>>>> c55918cb304ae240cf21c6d32100603b7e43846c
+  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
   add_foreign_key "audit_assignments", "audits"
   add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"

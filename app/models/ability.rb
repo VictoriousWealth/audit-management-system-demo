@@ -21,6 +21,9 @@ class Ability
       end
     end
 
+    if (user.role == "qa_manager" || user.role == "senior_manager" || user.role == "auditor")
+      can :manager, CreateAuditQuestionnaires
+    end
 
     # Define abilities for the user here. For example:
     #
