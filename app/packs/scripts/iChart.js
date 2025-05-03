@@ -21,7 +21,7 @@ function waitForCharts(callback, retries = 10, delay = 100) {
   } else if (retries > 0) {
     setTimeout(() => waitForCharts(callback, retries - 1, delay), delay);
   } else {
-    console.error("Chart 'complianceScoreChart' not found.");
+    // console.error("Chart 'complianceScoreChart' not found.");
   }
 }
 

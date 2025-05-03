@@ -1,0 +1,6 @@
+= simple_form_for @question, url: edit_question_path(@question), method: :patch do |f|
+  .question-form
+    = f.input :question_text, class: 'title-input'
+
+  .card-footer.d-flex
+    %button.btn.btn-primary{ type: 'submit' }

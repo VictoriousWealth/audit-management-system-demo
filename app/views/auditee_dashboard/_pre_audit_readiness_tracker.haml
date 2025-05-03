@@ -1,0 +1,23 @@
+.container.custom-tab-container.p-0.border.border-dark{style: "display: inline-table;"}
+  %ul.nav.nav-tabs.mb-0
+    %li.nav-item.w-100
+      %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Pre-audit Readiness Tracker
+
+  .table-scroll-container
+    %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+      %thead
+        %tr
+          %th.p-3 Item id
+          %th.p-3 Item description
+          %th.p-3 Progress 
+      %tbody
+        - if @items.present?
+          - @items.each do |item|
+            %tr
+              %td.p-3= item[:id]
+              %td.p-3= item[:description]
+              %td.p-3
+                - progress = item[:progress] || 0  
+                .progress
+                  .progress-bar{style: "width: #{progress}%"}
+                    %span.visually-hidden= "#{progress}%"

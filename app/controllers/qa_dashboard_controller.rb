@@ -12,12 +12,78 @@ class QaDashboardController < ApplicationController
 
     calendar_events()
     audit_fidnings()
+    corrective_actions()
+    internal_vs_external()
   end
 
   private
-  def audit_fidnings
-    @audit_fidnings = {}
+  def internal_vs_external
+    internal_avg = Audit.internal.average(:score)&.round(2) || 0
+    external_avg = Audit.external.average(:score)&.round(2) || 0
+  
+    @internal_vs_external = {
+      internal_average: internal_avg,
+      external_average: external_avg
+    }
   end
+  
+
+  def documents()
+    @documents = []
+    Document.all.each do |d|
+      @documents << {
+        id: d.id,
+        title: d.name,
+        content: d.content,
+      }
+    end
+  end
+
+  def corrective_actions
+    @corrective_actions = []
+    CorrectiveAction.all.each do |c|
+      progress = 0
+      case c.status
+      when 0 # pending
+        progress = 33
+      when 1 # in_progress
+        progress = 66
+      else # completed
+        progress = 100
+      end
+      short_description = c.action_description.length > 15 ? "#{c.action_description[0...12]}..." : c.action_description
+      
+      @corrective_actions << {
+        id: c.id,
+        truncated_description: short_description,
+        full_description: c.action_description,
+        vendor: Company.find_by(id: User.find_by(id: AuditAssignment.find_by(audit_id: c.audit_id).where(role: :auditee)&.user_id)&.company_id).first&.name,
+        progress: progress, 
+      }
+    end
+  end
+
+  def audit_fidnings
+    @audit_fidnings = []
+    AuditFinding.all.each do |c|
+      category = case c.category
+                when 0 then "critical"
+                when 1 then "major"
+                else "minor"
+                end
+
+      short_description = c.description.length > 15 ? "#{c.description[0...12]}..." : c.description
+
+      @audit_fidnings << {
+        id: c.id,
+        audit_type: Audit.find_by(id: Report.find_by(id: c.report_id)&.audit_id)&.audit_type,
+        truncated_description: short_description,
+        full_description: c.description,
+        category: category,
+      }
+    end
+  end
+
 
   def calendar_events
     # === Calendar Event Component ===
@@ -192,14 +258,46 @@ class QaDashboardController < ApplicationController
   end
 
   def bar_chart_data
-    @bar_chart_data =@bar_chart_data = [
+    @bar_chart_data = [
       { name: "Completed", data: [["Audits", Audit.where(status: :completed).count]] },
       { name: "In Progress (on time)", data: [["Audits", Audit.where(status: :in_progress).where('actual_start_date <= scheduled_start_date').count]] },
       { name: "In Progress (late)", data: [["Audits", Audit.where(status: :in_progress).where('actual_start_date > scheduled_start_date').count]] },
       { name: "Not Started", data: [["Audits", Audit.where(status: :not_started).count]] }
     ]
-    
+
+    max_value = @bar_chart_data.map { |s| s[:data][0][1] }.max
+    suggested_max = (max_value * 1.1).ceil
+
+    @bar_chart_library = {
+      title: { text: "Audit Status Overview", display: true },
+      scales: {
+        y: {
+          suggestedMax: suggested_max
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          fullSize: false,
+          labels: {
+            padding: 20,
+            usePointStyle: true,
+            pointStyle: 'circle',
+            color: "#000",
+            font: { weight: 'bold', size: 12 }
+          }
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          color: '#000',
+          font: { weight: 'bold' }
+        }
+      }
+    }
   end
+
   
   def pie_chart_data
     @pie_chart_data = {

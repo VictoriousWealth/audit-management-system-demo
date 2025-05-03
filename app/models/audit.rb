@@ -68,19 +68,18 @@ class Audit < ApplicationRecord
 
 
 
-
   def auditors
     audit_assignments.includes(:user).where(role: :auditor).map do |assignment|
       user = assignment.user
       user ? "#{user.first_name} #{user.last_name}" : "N/A"
-    end.join(', ')
+    end
   end
-
+  
   def smes
     audit_assignments.includes(:user).where(role: :sme).map do |assignment|
       user = assignment.user
       user ? "#{user.first_name} #{user.last_name}" : "N/A"
-    end.join(', ')
+    end
   end
 
   def formatted_auditors

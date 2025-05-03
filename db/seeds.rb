@@ -10,14 +10,15 @@
 require 'faker'
 
 # Clear existing data (only in development/testing!)
-Company.destroy_all
-User.destroy_all
-Audit.destroy_all
-AuditDetail.destroy_all
-AuditAssignment.destroy_all
 AuditStandard.destroy_all
-
-
+AuditAssignment.destroy_all
+AuditDetail.destroy_all
+AuditFinding.destroy_all
+Report.destroy_all
+Audit.destroy_all
+VendorRpn.destroy_all
+User.destroy_all
+Company.destroy_all
 
 
 
@@ -65,7 +66,7 @@ auditees = 70.times.map do
     email: Faker::Internet.unique.email,
     role: :auditee,
     company: company,
-    password: "password123",          
+    password: "password123",
     password_confirmation: "password123"
   )
   puts "✅ Auditee ##{user.id} with name: #{user.full_name} from company #{company.name} created!"
@@ -79,8 +80,8 @@ auditors = 25.times.map do
     last_name: Faker::Name.last_name,
     email: Faker::Internet.unique.email,
     role: :auditor,
-    password: "password123",         
-    password_confirmation: "password123"  
+    password: "password123",
+    password_confirmation: "password123"
   )
   puts "✅ Auditor ##{user.id} with name: #{user.full_name} created!"
   user
@@ -93,19 +94,35 @@ smes = 15.times.map do
     last_name: Faker::Name.last_name,
     email: Faker::Internet.unique.email,
     role: :sme,
-    password: "password123",         
-    password_confirmation: "password123"  
+    password: "password123",
+    password_confirmation: "password123"
   )
   puts "✅ SME ##{user.id} with name: #{user.full_name} created!"
   user
 end
 
+# QAs
+qas = 5.times.map do
+  user = User.create!(
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    email: Faker::Internet.unique.email,
+    role: 2,
+    password: "password123",
+    password_confirmation: "password123"
+  )
+  puts "✅ QA ##{user.id} with name: #{user.full_name} created!"
+  user
+end
+
 # Eligible assignable users (lead/sme/support)
 eligible_assigners = auditors + smes
+#Eligible assigned by
+assigners = qas
 
 # === 3. Create Not Started Audits ===
 
-300.times do
+30.times do
   local_assigners = eligible_assigners.dup
   auditee = auditees.sample
   company = auditee.company
@@ -145,7 +162,9 @@ eligible_assigners = auditors + smes
   audit.audit_assignments.create!(
     user_id: lead.id,
     role: :lead_auditor,
-    status: :assigned
+    status: :assigned,
+    assigned_by: qas.sample.id
+
   )
   local_assigners -= [lead]
 
@@ -153,7 +172,9 @@ eligible_assigners = auditors + smes
   audit.audit_assignments.create!(
     user_id: auditee.id,
     role: :auditee,
-    status: :assigned
+    status: :assigned,
+    assigned_by: qas.sample.id
+
   )
 
   # Support Auditors
@@ -161,7 +182,9 @@ eligible_assigners = auditors + smes
     audit.audit_assignments.create!(
       user_id: support.id,
       role: :auditor,
-      status: :assigned
+      status: :assigned,
+      assigned_by: qas.sample.id
+
     )
     local_assigners -= [support]
   end
@@ -171,7 +194,8 @@ eligible_assigners = auditors + smes
     audit.audit_assignments.create!(
       user_id: sme.id,
       role: :sme,
-      status: :assigned
+      status: :assigned,
+      assigned_by: qas.sample.id
     )
   end
 
@@ -193,8 +217,8 @@ end
 
 
 # === 4. Create In-Progress Audits ===
-# Late ones --- TO BE CHANGED as it is only a mock of a mockery 
-105.times do
+# Late ones --- TO BE CHANGED as it is only a mock of a mockery
+11.times do
   local_assigners = eligible_assigners.dup
   auditee = auditees.sample
   company = auditee.company
@@ -230,25 +254,25 @@ end
 
   # === Assignments ===
   lead = auditors.sample
-  audit.audit_assignments.create!(user_id: lead.id, role: :lead_auditor, status: :assigned)
+  audit.audit_assignments.create!(user_id: lead.id, role: :lead_auditor, status: :assigned, assigned_by: qas.sample.id)
   local_assigners -= [lead]
 
-  audit.audit_assignments.create!(user_id: auditee.id, role: :auditee, status: :assigned)
+  audit.audit_assignments.create!(user_id: auditee.id, role: :auditee, status: :assigned, assigned_by: qas.sample.id)
 
   (auditors - [lead]).sample(2).each do |support|
-    audit.audit_assignments.create!(user_id: support.id, role: :auditor, status: :assigned)
+    audit.audit_assignments.create!(user_id: support.id, role: :auditor, status: :assigned, assigned_by: qas.sample.id)
     local_assigners -= [support]
   end
 
   local_assigners.sample(2).each do |sme|
-    audit.audit_assignments.create!(user_id: sme.id, role: :sme, status: :assigned)
+    audit.audit_assignments.create!(user_id: sme.id, role: :sme, status: :assigned, assigned_by: qas.sample.id)
   end
 
   puts "🟡 Created In-Progress Audit ##{audit.id} with score #{audit.score} for #{company.name} with lead auditor #{lead.full_name}"
 end
 
-# On time ones --- TO BE CHANGED as it is only a mock of a mockery 
-170.times do
+# On time ones --- TO BE CHANGED as it is only a mock of a mockery
+17.times do
   local_assigners = eligible_assigners.dup
   auditee = auditees.sample
   company = auditee.company
@@ -284,18 +308,18 @@ end
 
   # === Assignments ===
   lead = auditors.sample
-  audit.audit_assignments.create!(user_id: lead.id, role: :lead_auditor, status: :assigned)
+  audit.audit_assignments.create!(user_id: lead.id, role: :lead_auditor, status: :assigned, assigned_by: qas.sample.id)
   local_assigners -= [lead]
 
-  audit.audit_assignments.create!(user_id: auditee.id, role: :auditee, status: :assigned)
+  audit.audit_assignments.create!(user_id: auditee.id, role: :auditee, status: :assigned, assigned_by: qas.sample.id)
 
   (auditors - [lead]).sample(2).each do |support|
-    audit.audit_assignments.create!(user_id: support.id, role: :auditor, status: :assigned)
+    audit.audit_assignments.create!(user_id: support.id, role: :auditor, status: :assigned, assigned_by: qas.sample.id)
     local_assigners -= [support]
   end
 
   local_assigners.sample(2).each do |sme|
-    audit.audit_assignments.create!(user_id: sme.id, role: :sme, status: :assigned)
+    audit.audit_assignments.create!(user_id: sme.id, role: :sme, status: :assigned, assigned_by: qas.sample.id)
   end
 
   puts "🟡 Created In-Progress Audit ##{audit.id} with score #{audit.score} for #{company.name} with lead auditor #{lead.full_name}"
@@ -320,7 +344,7 @@ end
 
 # === 5. Create Completed Audits ===
 
-200.times do
+20.times do
   local_assigners = eligible_assigners.dup
   auditee = auditees.sample
   company = auditee.company
@@ -359,18 +383,18 @@ end
 
   # === AuditAssignments ===
   lead = auditors.sample
-  audit.audit_assignments.create!(user_id: lead.id, role: :lead_auditor, status: :assigned)
+  audit.audit_assignments.create!(user_id: lead.id, role: :lead_auditor, status: :assigned, assigned_by: qas.sample.id)
   local_assigners -= [lead]
 
-  audit.audit_assignments.create!(user_id: auditee.id, role: :auditee, status: :assigned)
+  audit.audit_assignments.create!(user_id: auditee.id, role: :auditee, status: :assigned, assigned_by: qas.sample.id)
 
   (auditors - [lead]).sample(2).each do |support|
-    audit.audit_assignments.create!(user_id: support.id, role: :auditor, status: :assigned)
+    audit.audit_assignments.create!(user_id: support.id, role: :auditor, status: :assigned, assigned_by: qas.sample.id)
     local_assigners -= [support]
   end
 
   local_assigners.sample(2).each do |sme|
-    audit.audit_assignments.create!(user_id: sme.id, role: :sme, status: :assigned)
+    audit.audit_assignments.create!(user_id: sme.id, role: :sme, status: :assigned, assigned_by: qas.sample.id)
   end
 
   # === Report ===
@@ -417,7 +441,7 @@ User.where(email: 'bob@sheffield.ac.uk').first_or_create(
 )
 
 #Auditee
-company = Company.first 
+company = Company.first
 User.where(email: 'alex@sheffield.ac.uk').first_or_create(
   first_name: 'Alex',
   last_name: 'Turner',
@@ -445,6 +469,7 @@ User.where(email: 'jane@sheffield.ac.uk').first_or_create(
   password_confirmation: 'Password1234'
 )
 
+#Senior Manager
 User.where(email: 'LYBE2004@hotmail.com').first_or_create(
   first_name: 'Leroy',
   last_name: 'Barnie',

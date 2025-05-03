@@ -19,6 +19,6 @@
 #  fk_rails_...  (questionnaire_section_id => questionnaire_sections.id)
 #
 class SectionQuestion < ApplicationRecord
-  belongs_to :questionnaire_section, optional: true
-  has_many :question_banks
+  belongs_to :question_bank
+  belongs_to :questionnaire_section
 end

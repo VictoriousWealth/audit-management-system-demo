@@ -1,4 +1,5 @@
 - content_for :title, 'Create Audit Request Letter'
+%meta{name: "csrf-token", content: form_authenticity_token}
 
 .row.justify-content-center
   .col-sm-10.col-lg-8
@@ -26,7 +27,7 @@
               %em gtimc@sheffield.ac.uk
               %br 0114 222 2238
 
-            %p.mt-4= Date.today.strftime("%d/%m/%Y")
+            %p.mt-4= @today_date
 
             %p.mt-4
               =@company.name
@@ -53,11 +54,12 @@
             %p.mt-4
               Audit Scope:
               %br/
-              = text_area_tag :audit_scope, @audit_detail.scope, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+              = text_area_tag :audit_scope, @audit_scope, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
             %br/
             %p.mt-4 Audit Date(s): #{@audit.scheduled_start_date.strftime("%d/%m/%Y")} - #{@audit.scheduled_end_date.strftime("%d/%m/%Y")}
-            - start = DateTime.parse("2025-03-01 14:00:00")
-            - finish = DateTime.parse("2025-11-12 14:00:00")
+
+            - start = @audit.scheduled_start_date
+            - finish = @audit.scheduled_end_date
             - duration = finish - start
             - duration = distance_of_time_in_words(start, finish)
 
@@ -67,21 +69,30 @@
             %br/
 
             %p.mt-4
-              Location of Audit: 
+              Location of Audit (Street Name): 
               - company_id = @audit.company_id
               - location = Company.find(company_id).street_name
               = text_area_tag :audit_location, location ,class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 2
 
-
             %p.mt-4
-              Audit Criteria:
+              The Criteria of this Audit:
               %br/
-              = text_area_tag :audit_scope, @audit_detail.objectives, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+              = text_area_tag :audit_criteria,@audit_criteria, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
             
             %p.mt-4
               The purpose of this audit is to assess:
               %br/
-              = text_area_tag :audit_objectives, @audit_detail.purpose, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+              = text_area_tag :audit_purpose, @audit_purpose, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+
+            %p.mt-4
+              The objectives of this audit are to:
+              %br/
+              = text_area_tag :audit_objectives, @audit_objectives, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
+            
+            %p.mt-4
+              The boundaries  of this audit are to:
+              %br/
+              = text_area_tag :audit_boundaries, @audit_boundaries, class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 3
 
             %p.mt-4
               The audit will include a review of relevant documentation, site walkthroughs, and interviews with key personnel.
@@ -98,5 +109,7 @@
 
             .form-group.mt-4.d-flex.justify-content-between
               = link_to "Cancel", audit_path(@audit), class: "btn btn-danger"
-              = f.submit "Save Changes", class: "btn btn-warning"
-              = link_to "Preview", "show", class: "btn btn-success"    
+              %hidden 
+              = f.submit "Preview", class: "btn btn-success", id: "previewBtn"
+              
+ 

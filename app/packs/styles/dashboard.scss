@@ -9,6 +9,51 @@ $container-height: 529px;
     font-family: Helvetica, Arial, sans-serif !important;
 }
 
+.max-width-400{
+    max-width: 400px !important;
+}
+
+.max-width-470{
+    max-width: 470px !important;
+}
+
+.max-width-600{
+    max-width: 600px !important;
+}
+
+.min-width-400{
+    min-width: 400px !important;
+}
+
+.min-width-420{
+    min-width: 420px !important;
+}
+
+.min-width-440{
+    min-width: 440px !important;
+}
+
+.min-width-600{
+    min-width: 600px !important;
+}
+.overflow-auto{
+    overflow: auto !important;
+}
+.min-width-webkit-fill-available{
+    min-width: -webkit-fill-available !important;
+}
+.white-space-nowrap {
+    white-space: nowrap;
+} 
+
+.place-self-anchor-center {
+    place-self: anchor-center;
+}
+
+.min-height-90{
+    min-height: 90%;
+}
+
 #qa-dashboard, #create-edit-audits {
     .nav-tabs .nav-link.active {
         background-color: $active-tab-bg; 
@@ -71,13 +116,13 @@ $container-height: 529px;
     $table-scroll-height: calc(#{$container-height} - #{$table-scroll-buffer});
 
     .table-scroll-container {
-    max-height: #{$table-scroll-height};
-    border-top: 1px solid #dee2e6;
-    border-bottom: 1px solid #dee2e6;
+        max-height: #{$table-scroll-height};
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
 
-    table {
-        margin-bottom: 0;
-    }
+        table {
+            margin-bottom: 0;
+        }
     }
 
     .tab-content {
@@ -85,19 +130,13 @@ $container-height: 529px;
         max-height: calc(#{$container-height} - 42px); // 42px for both tab bars
     }
     
-    #Audits-Status-Overview{
-        max-width: 400px !important;
-        min-width: 400px !important;
-    }
 
-
-    #Audits-Status-Overview, #Audit{
-        min-width: 605px !important; 
+    #Audit{
+        min-width: 605px; 
         overflow: auto !important;
     }
 
     #Compliance-Score-Graph-Over-Time {
-        min-width: 600px !important; 
         border: black 1px solid;
         padding: 0;
         border-radius: 1.5em;
@@ -166,4 +205,21 @@ $container-height: 529px;
     th.p-3, td.p-3 {
         text-wrap-mode: nowrap;
     }
+
+    #document-quick-access, #Actions-CAPAs, #recurring-compliance-issues, #pre-audit-readiness-tracker {
+        font-size: 13.25px !important;
+        .fs-6 {
+            font-size: 13.25px !important;
+        }
+    }
+
+    .risk-cell {
+        width: 100px;
+        height: 100px;
+        vertical-align: middle;
+        text-align: center;
+        font-weight: bold;
+        line-height: 100px; /* vertically center text */
+        border: 1px solid #000; /* optional: border clarity */
+    }      
 }

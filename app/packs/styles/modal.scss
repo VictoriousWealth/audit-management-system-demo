@@ -1,0 +1,68 @@
+body.modal-open {
+    overflow: hidden;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    border: 2px solid #328166B3;
+    box-shadow: 0 15px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    max-width: 600px;
+    width: 100%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    display: block;
+    height: -webkit-fill-available;
+    color: #444444;
+    font-family: "Helvetica";
+    z-index: 99999999;
+}
+
+.taller-modal {
+    height: fit-content;
+}
+
+.remove-button {
+    background-color: #f77070;
+    font-size: 15px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 5px 15px 5px 15px;
+    font-family: "Helvetica";
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.remove-button:hover {
+    background-color: #f88c8c;
+}
+
+.cancel-button {
+    text-decoration: none;
+    color: black;
+    font-size: 25px;
+}
+
+.cancel-button:hover {
+    color: rgb(121, 121, 121);
+}

@@ -15,8 +15,8 @@
     = csrf_meta_tags
     = csp_meta_tag
 
-    = stylesheet_pack_tag 'styles', media: 'all'
-    = javascript_pack_tag "application", "data-turbo-track": "reload"
+    = stylesheet_pack_tag 'styles', media: 'all', 'data-turbo-track': 'reload'
+    = javascript_pack_tag "application", "data-turbo-track": "reload", defer: true
 
 
   %body
@@ -50,7 +50,7 @@
 
         %a.dropdown-btn{ href: "#" } Questionnaires
         %div.dropdown-container
-          %a{ href: "#" } Create Questionnaire
+          %a{ href: "/questionnaire/new" } Create Questionnaire
           %a{ href: "#" } Preview Questionnaire
           %a{ href: "#" } Send Email
           %a{ href: "#" } Questionnaire Response
@@ -77,6 +77,10 @@
         - if current_user.role == "qa_manager"
           = link_to 'Add New User', new_admin_user_path
 
+        = link_to destroy_user_session_path, method: :delete, class: 'nav-link' do
+          Log out
+
+
 
 
     - else 
@@ -95,7 +99,7 @@
     %main
       .container-fluid
         = yield
-
+      = turbo_frame_tag "modal"
     .footer
       %p &copy; GTIMC 2025
 

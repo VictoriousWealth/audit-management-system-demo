@@ -6,25 +6,25 @@ RSpec.describe CreateEditAuditsController, type: :controller do
   let!(:company) { Company.create(name: "Test Company") }
 
   # Create test users with specific roles
-  let!(:lead_auditor) { 
+  let!(:lead_auditor) {
     user = User.create(email: "lead@example.com", password: "password123", role: :auditor)
     puts user.errors.full_messages if user.errors.any? # Print any validation errors
     user
   }
-  
-  let!(:auditee) { 
+
+  let!(:auditee) {
     user = User.create(email: "auditee@example.com", password: "password123", role: :auditee)
     puts user.errors.full_messages if user.errors.any?
     user
   }
 
-  let!(:support_auditor) { 
+  let!(:support_auditor) {
     user = User.create(email: "support@example.com", password: "password123", role: :auditor)
     puts user.errors.full_messages if user.errors.any?
     user
   }
 
-  let!(:sme) { 
+  let!(:sme) {
     user = User.create(email: "sme@example.com", password: "password123", role: :auditor)
     puts user.errors.full_messages if user.errors.any?
     user
@@ -99,9 +99,30 @@ RSpec.describe CreateEditAuditsController, type: :controller do
       }.to change(Audit, :count).by(1) # 1 audit
        .and change(AuditAssignment, :count).by(4) # auditee, lead, support, SME
        .and change(AuditStandard, :count).by(1) # ISO 9001
-       
+
       expect(response).to redirect_to(edit_create_edit_audit_path(Audit.last))
     end
+
+    #Case 3.1: Successful and emails are sent
+    it "creates audit, associated records, and sends notification emails" do
+      expect(Company.count).to eq(1)
+      expect(User.count).to eq(4)
+
+      perform_enqueued_jobs do
+        expect {
+          post :create, params: valid_params
+        }.to change(Audit, :count).by(1) # 1 audit
+         .and change(AuditAssignment, :count).by(4) # auditee, lead, support, SME
+         .and change(AuditStandard, :count).by(1) # ISO 9001
+      end
+
+      expect(response).to redirect_to(edit_create_edit_audit_path(Audit.last))
+
+      # Check that emails were scheduled
+      notified_users = AuditAssignment.last(4).map(&:user).select { |user| user.role == "auditor" || user.role == "qa_manager" }
+      expect(enqueued_jobs.size).to eq(notified_users.size)
+    end
+
 
     # Case 4: SME and support_auditor are left blank - still should create audit
     it "does not raise error if support auditor or SME are blank" do
