@@ -69,7 +69,7 @@
             %br/
 
             %p.mt-4
-              Location of Audit: 
+              Location of Audit (Street Name): 
               - company_id = @audit.company_id
               - location = Company.find(company_id).street_name
               = text_area_tag :audit_location, location ,class: "form-control w-100 bg-light rounded-3 border-dark no-resize", rows: 2

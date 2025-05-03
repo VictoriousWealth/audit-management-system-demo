@@ -1,7 +1,9 @@
 class AuditRequestLettersController < ApplicationController
-  before_action :set_audit
-  before_action :set_audit_detail
+  before_action :set_audit, :set_audit_detail
   skip_before_action :verify_authenticity_token, only: [:save_audit_letter] 
+
+  # Check if the user is authorized to perform actions on the audit request letter
+  authorize_resource
 
   # GET /audit/audit_id/create-audit-request-letter
   def new
@@ -9,7 +11,7 @@ class AuditRequestLettersController < ApplicationController
     @today_date = Date.today.strftime("%d/%m/%Y")
   end
     
-  # POST /audit/audit_id/create-audit-request-letter
+  # POST /audit/audit_id/audit-request-letter
   def create
     @today_date = Date.today.strftime("%d/%m/%Y")
 

@@ -61,7 +61,7 @@
             %br/
 
             %p.mt-4
-              Location of Audit: 
+              Location of Audit (Street Name): 
               - company_id = @audit.company_id
               - location = @content.dig("company", "street_name")
               = location
@@ -101,6 +101,7 @@
 
             .form-group.mt-4.d-flex.justify-content-between
               = link_to "Go Back to audit",audit_path(@audit), class: "btn btn-warning"
-              = link_to 'Delete Request Letter', audit_audit_request_letters_path(@audit) , method: :delete, data: { confirm: 'Are you sure you want to delete this letter?' }, class: 'btn btn-danger'      
+              - if can?(:manage , AuditRequestLetter)
+                = link_to 'Delete Request Letter', audit_audit_request_letters_path(@audit) , method: :delete, data: { confirm: 'Are you sure you want to delete this letter?' }, class: 'btn btn-danger'      
 
  

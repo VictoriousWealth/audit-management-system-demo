@@ -61,6 +61,7 @@ Rails.application.routes.draw do
       get 'preview', on: :member
       post 'verify', on: :member
     end
+    resource :report, only: [:new, :create, :show, :destroy]
   end
 
 
