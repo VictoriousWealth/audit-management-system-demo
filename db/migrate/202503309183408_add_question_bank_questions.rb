@@ -42,19 +42,24 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
       updated_questions.push(updated_question)
     end
 
-    # Adding all created questions
-    QuestionBank.insert_all(updated_questions)
+    # Adding all created questions if they don't already exist
+    updated_questions.each do |q|
+      if (QuestionBank.find_by(question_text: q[:question_text]).nil?)
+        QuestionBank.create(q)
+      end
+    end
     
-    # Creating a user
-    user = { email: "jdoe@sheffield.ac.uk", first_name: "Jane", last_name: "Doe", password: "Password123", role: 0, created_at: Time.now, updated_at: Time.now }
-    User.create!(user)
+    # Finding or creating a user
+    User.find_or_create_by(email: "jdoe@sheffield.ac.uk")
     
-    # Creating a custom questionnaire
+    # Creating a custom questionnaire if it doesn't already exist
     custom_questionnaire = { name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire", time_of_creation: Time.now, created_at: Time.now, updated_at: Time.now, user: User.last }
-    CustomQuestionnaire.create!(custom_questionnaire)
+    if (CustomQuestionnaire.find_by(name: custom_questionnaire[:name]).nil?)
+      CustomQuestionnaire.create!(custom_questionnaire)
+    end
     
     # Finding the custom questionnaire
-    cq = CustomQuestionnaire.find_by(name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire")
+    cq = CustomQuestionnaire.find_by(name: custom_questionnaire[:name])
     cq_id = cq[:id]
   
     questionnaire_sections = [
@@ -62,8 +67,12 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
       { name: "Section 2", section_order: 2, created_at: Time.now, updated_at: Time.now, custom_questionnaire_id: cq_id }
     ]
 
-    # Adding the questionnaire_sections
-    QuestionnaireSection.insert_all(questionnaire_sections)
+    # Adding the questionnaire_sections if they don't already exist
+    questionnaire_sections.each do |qs|
+      if (QuestionnaireSection.find_by(custom_questionnaire_id: qs[:custom_questionnaire_id], name: qs[:name]).nil?)
+        QuestionnaireSection.create!(qs)
+      end
+    end
 
     # Populating fields for section questions
     section_questions = []
@@ -79,11 +88,15 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
       qb_id = question[:id]
       qs_id = qs[:id]
 
-      section_question = { id: i + 1, created_at: Time.now, updated_at: Time.now, question_bank_id: qb_id, questionnaire_section_id: qs_id }
+      section_question = { created_at: Time.now, updated_at: Time.now, question_bank_id: qb_id, questionnaire_section_id: qs_id }
       section_questions.push(section_question)
     end
 
-    # Adding all created section questions
-    SectionQuestion.insert_all(section_questions)
+    # Adding all created section questions if they don't already exist
+    section_questions.each do |sq|
+      if (SectionQuestion.find_by(question_bank_id: sq[:question_bank_id], questionnaire_section_id: sq[:questionnaire_section_id]).nil?)
+        SectionQuestion.create!(sq)
+      end
+    end
   end
 end
