@@ -37,4 +37,9 @@ module ApplicationHelper
     lightness = base_lightness - ((value.to_f / max_value) * lightness_range).clamp(0, lightness_range)
     "hsl(#{hue}, #{saturation}%, #{lightness.round}%)"
   end
+
+  def in_company_mode?
+    controller_name == 'company_mode' && action_name == 'company_mode'
+  end
+  
 end
