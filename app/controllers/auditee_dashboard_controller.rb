@@ -1,6 +1,6 @@
 class AuditeeDashboardController < ApplicationController
   before_action :authenticate_user!
-
+  
   def auditee
     scheduled_audits()
     in_progress_audits()
