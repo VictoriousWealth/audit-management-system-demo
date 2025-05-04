@@ -34,6 +34,9 @@ Rails.application.routes.draw do
   #Takes you to the profile page after clicking the name
   get 'profile', to: 'users#show', as: :profile
 
+  #Takes you to the company dashboard page after clicking the go company mode button 
+  get 'company_mode', to: 'company_mode#company_mode', as: :company_mode
+
   #Get to your notifications
   get 'notifications', to: 'notifications#index'
 
