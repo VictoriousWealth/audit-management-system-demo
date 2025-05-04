@@ -6,13 +6,10 @@ class SmeDashboardController < ApplicationController
     in_progress_audits()
     completed_audits()
 
-    pie_chart_data()
-    bar_chart_data()
-    compliance_score_graph_over_time()
-
     calendar_events()
     audit_fidnings()
     corrective_actions()
+    documents()
   end
 
   private
