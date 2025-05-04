@@ -1,0 +1,23 @@
+.container.custom-tab-container.p-0.border.border-dark{style: "display: inline-table;"}
+  %ul.nav.nav-tabs.mb-0
+    %li.nav-item.w-100
+      %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Risk Levels
+
+  .table-scroll-container
+    %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+      %thead
+        %tr
+          %th.p-3 Date
+          %th.p-3 Risk Level
+      %tbody
+        - @risk_levels.each do |entry|
+          - if entry[:risk_level] == "High Risk"
+            - risk_class = 'text-bg-danger'
+          - elsif entry[:risk_level] == "Medium Risk"
+            - risk_class = 'text-bg-warning'
+          - else
+            - risk_class = 'text-bg-success'
+
+          %tr
+            %td.p-3= entry[:date] || "N/A"
+            %td.p-3{class: risk_class, data: { bs_toggle: 'tooltip' }, title: entry[:risk_level]}= entry[:risk_level] || "N/A"

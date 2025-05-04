@@ -1,7 +1,9 @@
-class AuditeeDashboardController < ApplicationController
+class CompanyModeController < ApplicationController
   before_action :authenticate_user!
-  
-  def auditee
+  before_action :ensure_auditee!
+
+
+  def company_mode
     scheduled_audits()
     in_progress_audits()
     completed_audits()
@@ -10,13 +12,52 @@ class AuditeeDashboardController < ApplicationController
     bar_chart_data()
     compliance_score_graph_over_time()
 
-    calendar_events()
     audit_fidnings()
     corrective_actions()
     documents()
+    supplier_audit_histories()
   end
 
   private
+  def supplier_audit_histories
+    company_id = current_user.company_id
+    return unless company_id
+  
+    # Vendor RPNs over time
+    @vendor_rpns = VendorRpn.where(company_id: company_id).order(time_of_creation: :asc).map do |rpn|
+      {
+        date: rpn.time_of_creation.strftime("%Y-%m-%d"),
+        material_criticality: rpn.material_criticality,
+        compliance_history: rpn.supplier_compliance_history,
+        regulatory_approvals: rpn.regulatory_approvals,
+        complexity: rpn.supply_chain_complexity,
+        performance: rpn.previous_supplier_performance,
+        contamination_risk: rpn.contamination_adulteration_risk,
+        rpn: rpn.calculate_rpn
+      }
+    end
+  
+    # Audit scores over time — only completed audits
+    @audit_scores = Audit.where(company_id: company_id, status: :completed)
+                        .where.not(score: nil)
+                        .order(:actual_start_date)
+                        .map do |audit|
+      {
+        date: audit.actual_start_date&.strftime("%Y-%m-%d"),
+        score: audit.score
+      }
+    end
+
+    # Risk levels over time
+    @risk_levels = Audit.where(company_id: company_id).order(:actual_start_date).map do |audit|
+      {
+        date: audit.actual_start_date&.strftime("%Y-%m-%d"),
+        risk_level: risk_level(audit)
+      }
+    end
+  end
+  
+
   def documents() #TODO: to ensure that only documents related to the user can be accessed and any other no, but hard to do with current setup
     @documents = []
     Document.all.each do |d|
@@ -31,15 +72,12 @@ class AuditeeDashboardController < ApplicationController
   def corrective_actions
     @corrective_actions = []
   
-    CorrectiveAction.includes(audit: { audit_assignments: :user }).find_each do |c|
+    return unless current_user.company_id
+  
+    CorrectiveAction.includes(audit: [:company]).find_each do |c|
       audit = c.audit
       next unless audit
-  
-      # Only include if current_user is lead/support/sme
-      relevant = audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-      end
-      next unless relevant
+      next unless audit.company_id == current_user.company_id
   
       # Determine progress based on status enum
       progress = case c.status
@@ -50,9 +88,7 @@ class AuditeeDashboardController < ApplicationController
   
       short_description = c.action_description.length > 15 ? "#{c.action_description[0...12]}..." : c.action_description
   
-      # Get auditee's company name
-      auditee_assignment = audit.audit_assignments.find { |a| a.role == "auditee" }
-      company_name = auditee_assignment&.user&.company&.name
+      company_name = audit.company&.name
   
       @corrective_actions << {
         id: c.id,
@@ -64,19 +100,14 @@ class AuditeeDashboardController < ApplicationController
     end
   end
   
-
   def audit_fidnings
     @audit_fidnings = []
+    return unless current_user.company_id
   
-    AuditFinding.includes(report: { audit: :audit_assignments }).find_each do |finding|
+    AuditFinding.includes(report: { audit: :company }).find_each do |finding|
       audit = finding.report&.audit
       next unless audit
-  
-      # Only include if current_user is assigned as lead/support/sme
-      relevant = audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-      end
-      next unless relevant
+      next unless audit.company_id == current_user.company_id
   
       category = case finding.category
                  when 0 then "critical"
@@ -96,66 +127,6 @@ class AuditeeDashboardController < ApplicationController
     end
   end
   
-
-
-  def calendar_events
-    # === Calendar Event Component ===
-    today = Time.zone.today
-    @calendar_events = []
-  
-    # === Base: Only audits relevant to the current user ===
-    user_audits = Audit
-      .includes(:audit_assignments)
-      .select do |audit|
-        audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-        end
-      end
-  
-    # === Category 1: Scheduled to End Per Date ===
-    user_audits.select { |a| a.scheduled_end_date.present? }
-               .group_by { |a| a.scheduled_end_date.to_date }
-               .each do |date, audits|
-      @calendar_events << {
-        title: "🔵#{audits.size}",
-        date: date,
-        allDay: true,
-        textColor: "#000",
-        description: "#{audits.size} audit(s) scheduled to end on #{date}"
-      }
-    end
-  
-    # === Category 2: In Progress (Late) ===
-    overdue_audits = user_audits.select do |a|
-      a.status != "completed" && a.scheduled_end_date.present? && a.scheduled_end_date.to_date < today
-    end
-  
-    if overdue_audits.any?
-      @calendar_events << {
-        title: "🔴#{overdue_audits.count}",
-        date: today,
-        allDay: true,
-        textColor: "#000",
-        description: "#{overdue_audits.count} audit(s) overdue as of today"
-      }
-    end
-  
-    # === Category 3: In Progress (On Time) ===
-    on_time_audits = user_audits.select do |a|
-      a.status == "in_progress" && (a.scheduled_end_date.blank? || a.scheduled_end_date.to_date >= today)
-    end
-  
-    if on_time_audits.any?
-      @calendar_events << {
-        title: "🟡#{on_time_audits.count}",
-        date: today,
-        allDay: true,
-        textColor: "#000",
-        description: "#{on_time_audits.count} audit(s) in progress (on time)"
-      }
-    end
-  end
-  
   def compliance_score_graph_over_time
     compliance_score_graph_over_time_all()
     compliance_score_graph_over_time_day()
@@ -164,22 +135,16 @@ class AuditeeDashboardController < ApplicationController
   end
 
   def compliance_score_graph_over_time_day
-    # Time range for today
     today_range = Time.zone.today.beginning_of_day..Time.zone.today.end_of_day
   
     # All completed + scored audits today
     all_daily_audits = Audit.where.not(score: nil)
                             .where.not(actual_end_date: nil)
                             .where(actual_end_date: today_range)
-                            .includes(:audit_assignments)
                             .order(:actual_end_date)
   
-    # Only audits where the current user is the auditee
-    my_daily_audits = all_daily_audits.select do |audit|
-      audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-      end
-    end
+    # Company-specific audits (My Audits)
+    my_daily_audits = all_daily_audits.select { |a| a.company_id == current_user.company_id }
   
     @compliance_score_by_day = [
       {
@@ -195,24 +160,18 @@ class AuditeeDashboardController < ApplicationController
     ]
   end
   
-
+  
   def compliance_score_graph_over_time_week
-    # Time range for the current week
     current_week_range = Time.zone.now.beginning_of_week..Time.zone.now.end_of_week
   
     # All completed + scored audits in the current week
     all_weekly_audits = Audit.where.not(score: nil)
                              .where.not(actual_end_date: nil)
                              .where(actual_end_date: current_week_range)
-                             .includes(:audit_assignments)
                              .order(:actual_end_date)
   
-    # Only audits where the current user is the auditee
-    my_weekly_audits = all_weekly_audits.select do |audit|
-      audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-      end
-    end
+    # Company-specific audits (My Audits)
+    my_weekly_audits = all_weekly_audits.select { |a| a.company_id == current_user.company_id }
   
     @compliance_score_by_week = [
       {
@@ -228,24 +187,15 @@ class AuditeeDashboardController < ApplicationController
     ]
   end
   
-
   def compliance_score_graph_over_time_month
-    # Time range for the current month
     current_month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
   
-    # All completed + scored audits in the current month
     all_monthly_audits = Audit.where.not(score: nil)
                               .where.not(actual_end_date: nil)
                               .where(actual_end_date: current_month_range)
-                              .includes(:audit_assignments)
                               .order(:actual_end_date)
   
-    # Only audits where the current user is the auditee
-    my_monthly_audits = all_monthly_audits.select do |audit|
-      audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-      end
-    end
+    my_monthly_audits = all_monthly_audits.select { |audit| audit.company_id == current_user.company_id }
   
     @compliance_score_by_month = [
       {
@@ -260,18 +210,13 @@ class AuditeeDashboardController < ApplicationController
       }
     ]
   end
-  
 
   def compliance_score_graph_over_time_all
-    # Filter all scored + completed audits
-    all_scored_audits = Audit.where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date)
+    all_scored_audits = Audit.where.not(score: nil)
+                             .where.not(actual_end_date: nil)
+                             .order(:actual_end_date)
   
-    # Filter scored + completed audits where current_user is the auditee
-    my_scored_audits = all_scored_audits.select do |audit|
-      audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-      end
-    end
+    my_scored_audits = all_scored_audits.select { |audit| audit.company_id == current_user.company_id }
   
     @compliance_score_all = [
       {
@@ -285,27 +230,28 @@ class AuditeeDashboardController < ApplicationController
         data: my_scored_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
-  end
-  
+  end  
 
   def bar_chart_data
-    visible_audits = Audit
-      .includes(:audit_assignments)
-      .select { |audit|
-        audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-        end
-      }
+    company_id = current_user.company_id
+  
+    visible_audits = Audit.where(company_id: company_id)
   
     @bar_chart_data = [
       { name: "Completed", data: [["Audits", visible_audits.count { |a| a.status == "completed" }]] },
   
       { name: "In Progress (on time)", data: [["Audits", visible_audits.count { |a|
-        a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date <= a.scheduled_start_date
+        a.status == "in_progress" &&
+        a.actual_start_date.present? &&
+        a.scheduled_start_date.present? &&
+        a.actual_start_date <= a.scheduled_start_date
       }]] },
   
       { name: "In Progress (late)", data: [["Audits", visible_audits.count { |a|
-        a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date > a.scheduled_start_date
+        a.status == "in_progress" &&
+        a.actual_start_date.present? &&
+        a.scheduled_start_date.present? &&
+        a.actual_start_date > a.scheduled_start_date
       }]] },
   
       { name: "Not Started", data: [["Audits", visible_audits.count { |a| a.status == "not_started" }]] }
@@ -344,43 +290,38 @@ class AuditeeDashboardController < ApplicationController
       }
     }
   end
-  
 
   def pie_chart_data
-    visible_audits = Audit
-      .includes(:audit_assignments)
-      .select { |audit|
-        audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-        end
-      }
+    company_id = current_user.company_id
+    visible_audits = Audit.where(company_id: company_id)
   
     @pie_chart_data = {
-      "Completed": visible_audits.select { |a| a.status == "completed" }.count, # Any
+      "Completed": visible_audits.count { |a| a.status == "completed" },
   
-      "In Progress (on time)": visible_audits
-                                .select { |a| a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date <= a.scheduled_start_date }
-                                # .select { |a| a.actual_end_date && a.scheduled_end_date && a.actual_end_date <= a.scheduled_end_date }
-                                .count, # to be replaced with scheduled_audits task
+      "In Progress (on time)": visible_audits.count { |a|
+        a.status == "in_progress" &&
+        a.actual_start_date.present? &&
+        a.scheduled_start_date.present? &&
+        a.actual_start_date <= a.scheduled_start_date
+      },
   
-      "In Progress (late)": visible_audits
-                                .select { |a| a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date > a.scheduled_start_date }
-                                # .select { |a| a.actual_end_date && a.scheduled_end_date && a.actual_end_date > a.scheduled_end_date }
-                                .count, # to be replaced with scheduled_audits task
+      "In Progress (late)": visible_audits.count { |a|
+        a.status == "in_progress" &&
+        a.actual_start_date.present? &&
+        a.scheduled_start_date.present? &&
+        a.actual_start_date > a.scheduled_start_date
+      },
   
-      "Not Started": visible_audits.select { |a| a.status == "not_started" }.count
+      "Not Started": visible_audits.count { |a| a.status == "not_started" }
     }
   end
   
   def scheduled_audits
+    company_id = current_user.company_id
+  
     @scheduled_audits = Audit
-      .where(status: :not_started)
+      .where(status: :not_started, company_id: company_id)
       .includes(audit_assignments: :user, audit_detail: :audit_standards)
-      .select { |audit|
-        audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-        end
-      }
       .map do |audit|
         lead_auditor = audit.audit_assignments.find { |a| a.role == "lead_auditor" }&.user
         auditee = audit.audit_assignments.find { |a| a.role == "auditee" }&.user
@@ -402,14 +343,11 @@ class AuditeeDashboardController < ApplicationController
   end
   
   def in_progress_audits
+    company_id = current_user.company_id
+  
     @in_progress_audits = Audit
-      .where(status: :in_progress)
+      .where(status: :in_progress, company_id: company_id)
       .includes(audit_assignments: :user, audit_detail: :audit_standards)
-      .select { |audit|
-        audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-        end
-      }
       .map do |audit|
         lead_auditor = audit.audit_assignments.find { |a| a.role == "lead_auditor" }&.user
         auditee = audit.audit_assignments.find { |a| a.role == "auditee" }&.user
@@ -431,16 +369,13 @@ class AuditeeDashboardController < ApplicationController
         }
       end
   end
-
+  
   def completed_audits
+    company_id = current_user.company_id
+  
     @completed_audits = Audit
-      .where(status: :completed)
+      .where(status: :completed, company_id: company_id)
       .includes(audit_assignments: :user, audit_detail: :audit_standards)
-      .select { |audit|
-        audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[auditee].include?(assignment.role)
-        end
-      }
       .map do |audit|
         lead_auditor = audit.audit_assignments.find { |a| a.role == "lead_auditor" }&.user
         auditee = audit.audit_assignments.find { |a| a.role == "auditee" }&.user
@@ -460,8 +395,8 @@ class AuditeeDashboardController < ApplicationController
           risk_level: risk_level(audit)
         }
       end
-  end  
-
+  end
+  
   def risk_level(audit)
     categories = AuditFinding.categories.keys # ["major", "minor", "critical"]
     category_counts = AuditFinding.where(report_id: Report.where(audit_id: audit.id).pluck(:id)) # there are multiple reports per one audit, idk why :(
@@ -483,6 +418,13 @@ class AuditeeDashboardController < ApplicationController
     else
       "Low Risk"
     end    
+  end
+
+  def ensure_auditee!
+    unless current_user.role == 'auditee'
+      flash[:alert] = "Access denied: Only auditees can view that page."
+      redirect_to dashboard_index_path
+    end
   end
 end
 
