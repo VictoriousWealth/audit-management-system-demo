@@ -13,6 +13,7 @@ class AuditorDashboardController < ApplicationController
     calendar_events()
     audit_fidnings()
     corrective_actions()
+    documents()
   end
 
   private
