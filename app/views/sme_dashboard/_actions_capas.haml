@@ -1,0 +1,27 @@
+.container.custom-tab-container.p-0.border.border-dark{style: "display: inline-table;"}
+  %ul.nav.nav-tabs.mb-0
+    %li.nav-item.w-100
+      %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Actions & CAPAs
+
+  .tab-content.flex-grow-1
+    .table-scroll-container
+      %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+        %thead
+          %tr
+            %th.p-3 Action Id
+            %th.p-3 Issue Description
+            %th.p-3 Vendor
+            %th.p-3 Progress
+        %tbody
+          - @corrective_actions.each do |action|
+            %tr
+              %td.p-3 
+                = link_to "#" do 
+                  %i= action[:id].to_s.rjust(4, '0')
+              %td.p-3{ title: action[:full_description] }= action[:truncated_description]
+              %td.p-3= action[:vendor]
+              %td.p-3
+                - progress = action[:progress] || 0  #TODO: change to questionanire progress
+                .progress
+                  .progress-bar{style: "width: #{progress}%"}
+                    %span.visually-hidden= "#{progress}%"

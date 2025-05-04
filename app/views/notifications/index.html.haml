@@ -14,7 +14,7 @@
                     %tr
                         %td=assignment.updated_at.strftime("%d-%m-%Y, %H:%M:%S")
                         %td= "You have a pending assignment for Audit ##{assignment.audit_id}"
-                        %td= "#{assignment.assigner.first_name} #{assignment.assigner.last_name}"
+                        %td= "#{assignment.assigner.full_name}"
                         %td
                             = link_to accept_notification_path(assignment), method: :patch, class: "ack-button" do
                                 %i.bi.bi-check
