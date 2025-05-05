@@ -29,25 +29,29 @@
                 %th.p-2.white-space-nowrap Actual End Date
                 %th.p-2.white-space-nowrap Status
             %tbody
-              - @schedules.each do |schedule|
-                %tr
-                  %td= schedule.task
-                  %td= schedule.expected_start&.strftime('%H:%M %d/%m/%Y') || "TBD"
-                  %td= schedule.expected_end&.strftime('%H:%M %d/%m/%Y') || "TBD"
-                  %td= schedule.actual_start&.strftime('%H:%M %d/%m/%Y') || "TBD"
-                  %td= schedule.actual_end&.strftime('%H:%M %d/%m/%Y') || "TBD"
+              - if @schedules.present?
+                - @schedules.each do |schedule|
+                  %tr
+                    %td= schedule.task
+                    %td= schedule.expected_start&.strftime('%H:%M %d/%m/%Y') || "TBD"
+                    %td= schedule.expected_end&.strftime('%H:%M %d/%m/%Y') || "TBD"
+                    %td= schedule.actual_start&.strftime('%H:%M %d/%m/%Y') || "TBD"
+                    %td= schedule.actual_end&.strftime('%H:%M %d/%m/%Y') || "TBD"
 
-                  - if schedule.status
-                    - status_text = schedule.status.titleize
-                    - status_class = case schedule.status.to_sym
-                      - when :completed
-                        - 'text-success'
-                      - when :on_time
-                        - 'text-primary'
-                      - when :late
-                        - 'text-danger'
-                      - else
-                        - 'text-muted'
-                    %td{ class: "#{status_class} text-capitalize fw-semibold" }= status_text
-                  - else
-                    %td.text-muted.fw-semibold TBD
+                    - if schedule.status
+                      - status_text = schedule.status.titleize
+                      - status_class = case schedule.status.to_sym
+                        - when :completed
+                          - 'text-success'
+                        - when :on_time
+                          - 'text-primary'
+                        - when :late
+                          - 'text-danger'
+                        - else
+                          - 'text-muted'
+                      %td{ class: "#{status_class} text-capitalize fw-semibold" }= status_text
+                    - else
+                      %td.text-muted.fw-semibold TBD
+              - else
+                %tr
+                  %td.text-muted.colspan-6{ colspan: 6 } No scheduled audit tasks available
