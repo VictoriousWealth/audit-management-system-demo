@@ -37,15 +37,17 @@
                   %td= schedule.actual_start&.strftime('%H:%M %d/%m/%Y') || "TBD"
                   %td= schedule.actual_end&.strftime('%H:%M %d/%m/%Y') || "TBD"
 
-                  - status_text = schedule.status.titleize
-                  - status_class = case schedule.status.to_sym
-                    - when :completed
-                      - 'text-success'
-                    - when :on_time
-                      - 'text-primary'
-                    - when :late
-                      - 'text-danger'
-                    - else
-                      - 'text-muted'
-
-                  %td{ class: "#{status_class} text-capitalize fw-semibold" }= status_text
+                  - if schedule.status
+                    - status_text = schedule.status.titleize
+                    - status_class = case schedule.status.to_sym
+                      - when :completed
+                        - 'text-success'
+                      - when :on_time
+                        - 'text-primary'
+                      - when :late
+                        - 'text-danger'
+                      - else
+                        - 'text-muted'
+                    %td{ class: "#{status_class} text-capitalize fw-semibold" }= status_text
+                  - else
+                    %td.text-muted.fw-semibold TBD
