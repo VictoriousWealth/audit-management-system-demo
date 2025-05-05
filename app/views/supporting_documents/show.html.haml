@@ -16,4 +16,4 @@
     %p.small-space
       = link_to 'Download File', rails_blob_path(@supporting_document.file, disposition: 'attachment'), class: 'download-link'
 
-    = link_to 'Back to Documents', supporting_documents_path, class: 'back-link'
+    = link_to 'Back to Documents', request.referrer || supporting_documents_path, class: 'back-link'

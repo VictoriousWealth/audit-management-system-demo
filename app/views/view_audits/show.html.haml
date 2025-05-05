@@ -17,6 +17,9 @@
 
     %h2.font-helvetica.text-custom-black.mt-5.mb-3 Supporting Documents
     = render 'supporting_documents'
+    - if current_user.role == "auditee"
+      %div.button_container
+        = link_to "Add Document", new_supporting_document_path(audit_id: @audit.id), class: "link_bn"
 
     %h2.font-helvetica.text-custom-black.mt-5.mb-3 Summary
     = render 'summary'

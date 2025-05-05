@@ -333,10 +333,10 @@ body > .navbar {
     background-color: #328166;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 0.4rem;
     cursor: pointer;
-    padding: 10px 20px;
-    margin-top: 10px;
+    padding: 0.6rem 1rem;
+    margin-top: 1rem;
     transition: background 0.3s;
     text-decoration: none;
 
@@ -351,7 +351,6 @@ body > .navbar {
     }
 }
 
-<<<<<<< HEAD
 //The stuff for uploading supporting documents
 
 .upload-supporting-documents > main {
@@ -369,36 +368,6 @@ body > .navbar {
 }
 
 .rectangle-3 {
-=======
-//Notifications page ---------------------------------------------------------------------------------------
-
-.notifications-page {
-    margin-top: 0;
-    padding-top: 0 ;
-    padding-left: 1rem;
-    color: #444444;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    display: flexbox;
-    width: 100%;
-}
-
-.notifications-page > h1 {
-    padding-left: 10rem;
-    color: #444444;
-    padding-top: 2rem;
-    padding-bottom: 1rem;
-}
-
-.notifications-page > .notifications-container > h2 {
-    padding-left: 2rem;
-    color: #444444;
-    padding-left: 2rem;
-    padding-bottom: 1rem;
-}
-
-.notifications-container {
->>>>>>> e5eccb70306959dcb92566c327aa911b279334c1
     width: 80%;
     min-height: 50rem;  
     background: #FFFFFF;
@@ -409,7 +378,6 @@ body > .navbar {
     margin-bottom: 2rem;
 }
 
-<<<<<<< HEAD
 .rectangle-3 > h2 {
     margin-left: 2rem;
     color: #444444;
@@ -575,31 +543,6 @@ main.supporting_documents > h1 {
 
 
 .table_container  > table {
-=======
-.ack-button {
-    background-color: #328166;
-    color: white;
-    font-size: 1rem;
-    font-weight: 900;
-    text-decoration:solid;
-    margin-right: auto;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    text-decoration: none;
-    padding: 0.6rem;
-    display: inline-block; 
-    align-self: flex-end;  
-
-    &:hover {
-        background-color: #235a47;
-    }
-
-}
-
-
-.notification-table  > table {
->>>>>>> e5eccb70306959dcb92566c327aa911b279334c1
     border-collapse: collapse;
     padding-top: 2rem;
     margin-top: 2rem;
@@ -608,15 +551,14 @@ main.supporting_documents > h1 {
     margin-left: 2rem;
     margin-right: 2rem;
     margin-top: 1rem;
-<<<<<<< HEAD
 
 }
 
-.table_container > .button_container {
+.button_container {
     max-width: max-content;
     margin-left: auto;
     margin-right: 2rem;
-    padding-top: 1rem;
+    padding-top: 1.5rem;
 
 }
   
@@ -625,14 +567,6 @@ main.supporting_documents > h1 {
     max-width: fit-content;
     width: 80%;
     min-height: 50rem;  
-=======
-}
-  
-.notifications-table  {
-    //max-width: fit-content;
-    width: 80%;
-    //min-height: 50rem;  
->>>>>>> e5eccb70306959dcb92566c327aa911b279334c1
     background: #FFFFFF;
     border: 0.12rem solid rgb(178, 177, 177);
     border-radius: 2rem;
@@ -641,7 +575,6 @@ main.supporting_documents > h1 {
     margin-bottom: 2rem;
 }
 
-<<<<<<< HEAD
 .table_container > h2  {
     margin-left: 2rem;
     color: #444444;
@@ -722,62 +655,3 @@ main.view-supporting-documents > .main-container > .back-link  {
 
 
 }
-
-=======
-
-.notifications-table > th, td, tr > th {
-    padding: 0.2rem;
-    border: 0.1rem solid #ddd;
-    text-align: center;
-}
-
-.notifications-table >  thead > tr {
-    background-color: #C0C0C0;
-}
-  
-
-.assignments-table  {
-    //max-width: fit-content;
-    width: 80%;
-    background: #FFFFFF;
-    border: 0.12rem solid rgb(178, 177, 177);
-    border-radius: 2rem;
-    margin: 0 auto;
-    padding-top: 2rem;
-    margin-bottom: 2rem;
-}
-
-.assignments-table >  th, td, tr > th {
-    padding: 1rem;
-    border: 0.1rem solid #ddd;
-    text-align: center;
-}
-
-.assignments-table >  thead > tr {
-    background-color: #C0C0C0;
-}
-
-.d-contents {
-    display: contents !important;
-}
-
-.btn-green{
-    background-color: #328166 !important;
-}
-
-.btn-light-green{
-    background-color: #629C44 !important;
-}
-
-.w-20 {
-    width: 20%;
-}
-
-.opacity-90 {
-    opacity: 0.9 !important;
-}
-
-.bg-alice-blue {
-    background-color: aliceblue;
-}
->>>>>>> e5eccb70306959dcb92566c327aa911b279334c1

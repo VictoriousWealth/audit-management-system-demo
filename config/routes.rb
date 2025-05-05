@@ -31,13 +31,13 @@ Rails.application.routes.draw do
 
   resources :supporting_documents
 
-  resources :supporting_documents, only: [:new, :create, :index, :show]
+  resources :supporting_documents, only: [:new, :create, :show]
 
 
   #Takes you to the profile page after clicking the name
   get 'profile', to: 'users#show', as: :profile
 
-  #Takes you to the company dashboard page after clicking the go company mode button 
+  #Takes you to the company dashboard page after clicking the go company mode button
   get 'company_mode', to: 'company_mode#company_mode', as: :company_mode
 
   #Get to your notifications
@@ -91,9 +91,9 @@ Rails.application.routes.draw do
   # Updating the page layout with the chosen template questionnaire information
   post '/update_questionnaire_layout', to: 'questionnaires#update_questionnaire_layout'
   # Rendering the edit question modal page
-  get 'questionnaire/_edit_question/:id', to: 'questionnaires#edit_question', as: 'edit_question' 
+  get 'questionnaire/_edit_question/:id', to: 'questionnaires#edit_question', as: 'edit_question'
   # Rendering the edit section modal page
-  get 'questionnaire/_edit_section/:id', to: 'questionnaires#edit_section', as: 'edit_section' 
+  get 'questionnaire/_edit_section/:id', to: 'questionnaires#edit_section', as: 'edit_section'
   # Rendering the add question modal page
   post 'questionnaire/_add_question', to: 'questionnaires#add_question', as: 'add_question'
   # Rendering the edit new question modal page

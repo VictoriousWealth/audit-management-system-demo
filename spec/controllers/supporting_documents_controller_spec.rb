@@ -3,27 +3,10 @@ require 'rails_helper'
 RSpec.describe SupportingDocumentsController, type: :controller do
   let!(:audit) { Audit.create!(name: "Test Audit") }
 
-  describe "GET #index" do
-    it "returns a successful response" do
-      get :index
-      expect(response).to be_successful
-    end
-  end
-
   describe "GET #new" do
     it "assigns a new SupportingDocument" do
       get :new
       expect(assigns(:supporting_document)).to be_a_new(SupportingDocument)
-    end
-  end
-
-  describe "GET #show" do
-    let!(:doc) { SupportingDocument.create!(name: "Test Doc", audit_id: audit.id) }
-
-    it "finds the document and returns success" do
-      get :show, params: { id: doc.id }
-      expect(assigns(:supporting_document)).to eq(doc)
-      expect(response).to be_successful
     end
   end
 

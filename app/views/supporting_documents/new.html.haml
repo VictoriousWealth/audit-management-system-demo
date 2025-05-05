@@ -1,38 +1,19 @@
 %main.upload-supporting-documents
-  %h1 Upload Supporting Documents for Audit
+  %h1 Upload Supporting Document for #Audit #{@audit.id}
 
   %div.rectangle-3
-    %button.view-button View Audit
-
-    %h2 General Information
-    %table.general-information-table
-      %thead
-        %tr
-          %th Auditee Id
-          %th Auditee
-          %th Start Date (DD-MM-YYYY)
-          %th End Date (DD-MM-YYYY)
-          %th Status
-      %tbody
-        %tr
-          %td 
-          %td 
-          %td 
-          %td 
-          %td 
-
     %div.documents-part
-      %h2 Upload Documents
+      %h2 Upload Document
 
     = form_with(model: @supporting_document, local: true, html: { id: "upload-the-document" }) do |form|
+      
+      = form.hidden_field :audit_id, value: @audit.id
+
       %div.input-documents
         = form.file_field :file, id: "document-upload", required: true, accept: "application/pdf,image/jpeg,image/png"
 
-
-
-  
       %div.attachments-part
-        %p Add attachment
+        %p Add attachment details
         %div.rectangle-attachments
           %p Document Title
           = form.text_field :name, id: 'document-title', placeholder: 'Enter document title...', required: true
@@ -49,56 +30,56 @@
           
           %button.add-button#submit-button Add
 
-  -# :javascript
-  -#   document.addEventListener("DOMContentLoaded", () => {
-  -#     const addButton = document.getElementById("submit-button");
-  -#     const form = document.getElementById("upload-the-document");
-  -#     const fileInput = document.getElementById("document-upload");
-  -#     const attachmentSection = document.querySelector(".rectangle-attachments");
+  :javascript
+    document.addEventListener("DOMContentLoaded", () => {
+      const addButton = document.getElementById("submit-button");
+      const form = document.getElementById("upload-the-document");
+      const fileInput = document.getElementById("document-upload");
+      const attachmentSection = document.querySelector(".rectangle-attachments");
 
-  -#     // This is a listener for displaying the file's details
-  -#     fileInput.addEventListener("change", (e) => {
-  -#       const file = e.target.files[0];
-  -#       if (file) {
-  -#         const fileName = file.name;
-  -#         //Turning the size into kilobytes, we can change it for bigger files
-  -#         const fileSize = (file.size / 1024).toFixed(2); 
+      // This is a listener for displaying the file's details
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const fileName = file.name;
+          //Turning the size into kilobytes, we can change it for bigger files
+          const fileSize = (file.size / 1024).toFixed(2); 
 
-  -#         // Allow the user to preview the file
-  -#         const preview = document.createElement("div");
-  -#         preview.classList.add("file-preview");
-  -#         preview.innerHTML = `
-  -#           <p>${fileName} (${fileSize} KB)
-  -#             <a href="#" class="remove-preview">X</a>
-  -#           </p>
-  -#           <p><a href="${URL.createObjectURL(file)}" target="_blank">View File</a></p>
-  -#         `;
+          // Allow the user to preview the file
+          const preview = document.createElement("div");
+          preview.classList.add("file-preview");
+          preview.innerHTML = `
+            <p>${fileName} (${fileSize} KB)
+              <a href="#" class="remove-preview">X</a>
+            </p>
+            <p><a href="${URL.createObjectURL(file)}" target="_blank">View File</a></p>
+          `;
 
-  -#         // Put the file under attachments
-  -#         const attachmentParagraph = attachmentSection.querySelector("p:nth-of-type(2)");
-  -#         attachmentSection.insertBefore(preview, attachmentParagraph.nextSibling);
+          // Put the file under attachments
+          const attachmentParagraph = attachmentSection.querySelector("p:nth-of-type(2)");
+          attachmentSection.insertBefore(preview, attachmentParagraph.nextSibling);
           
-  -#         // Add listener to the remove button too
-  -#         const removeButton = preview.querySelector(".remove-preview");
-  -#         removeButton.addEventListener("click", (e) => {
-  -#           e.preventDefault(); 
-  -#           preview.remove();   
-  -#           fileInput.value = ''; 
-  -#         });
-  -#       }
-  -#     });
+          // Add listener to the remove button too
+          const removeButton = preview.querySelector(".remove-preview");
+          removeButton.addEventListener("click", (e) => {
+            e.preventDefault(); 
+            preview.remove();   
+            fileInput.value = ''; 
+          });
+        }
+      });
 
-  -#     // Only submit the form after adding 
-  -#     addButton.addEventListener("click", (e) => {
-  -#       e.preventDefault(); 
+      // Only submit the form after adding 
+      addButton.addEventListener("click", (e) => {
+        e.preventDefault(); 
         
-  -#       // Check the details before submitting
-  -#       if (form.checkValidity()) {
-  -#         form.submit();     
-  -#       } else {
-  -#         alert("Please fill in the required fields.");
-  -#       }
-  -#     });
-  -#   });
+        // Check the details before submitting
+        if (form.checkValidity()) {
+          form.submit();     
+        } else {
+          alert("Please fill in the required fields.");
+        }
+      });
+    });
 
   

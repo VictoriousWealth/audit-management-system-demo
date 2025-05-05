@@ -459,7 +459,7 @@ User.where(email: 'alex@sheffield.ac.uk').first_or_create(
   password: 'Password1234',
   password_confirmation: 'Password1234'
   )
-  
+
   #QA
   User.where(email: 'nina@sheffield.ac.uk').first_or_create(
     first_name: 'Nina',
@@ -487,28 +487,6 @@ User.where(email: 'LYBE2004@hotmail.com').first_or_create(
   password_confirmation: 'Password1234'
 )
 
-<<<<<<< HEAD
-puts "Users created or found successfully!"
-
-Audit.create!(
-  scheduled_start_date: DateTime.new(2025, 4, 10, 9, 0, 0),
-  scheduled_end_date:   DateTime.new(2025, 4, 10, 17, 0, 0),
-  actual_start_date:    nil,  # Audit hasn't started yet
-  actual_end_date:      nil,  # Audit hasn't ended yet
-  status:               0,    # Set an appropriate status (e.g., 0 for scheduled)
-  score:                nil,  # No score yet
-  final_outcome:        nil,  # No final outcome yet
-  time_of_creation:     DateTime.now,
-  time_of_verification: nil,  # Not verified yet
-  time_of_closure:      nil,  # Not closed yet
-  user_id:              auditor = User.find_by(email: 'bob@sheffield.ac.uk').id,
-  company_id:           1,    # Adjust to an existing company id in your DB
-  audit_type:           "internal"  # or any other type as appropriate
-)
-
-
-puts "Audit created successfully!"
-=======
 puts "✅ Users created or found successfully!"
 
 
@@ -532,4 +510,3 @@ puts "📋 Audits: #{Audit.count} (#{Audit.where(status: :not_started).count} no
 puts "🧾 Reports: #{Report.count}"
 puts "📍 Findings: #{AuditFinding.count}"
 puts "📦 VendorRPNs: #{VendorRpn.count}"
->>>>>>> e5eccb70306959dcb92566c327aa911b279334c1

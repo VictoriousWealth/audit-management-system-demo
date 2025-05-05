@@ -26,6 +26,8 @@ class SupportingDocument < ApplicationRecord
 
   belongs_to :audit, optional: true
   has_one_attached :file
+  belongs_to :user
+
 
   # Should set the uploaded time when one is made
   before_create :set_uploaded_at
