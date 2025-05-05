@@ -7,7 +7,7 @@ class ViewAuditsController < ApplicationController
     @request_letter = @audit.audit_request_letter
     @closure_letter = @audit.audit_closure_letter
     @report = @audit.reports.order(created_at: :desc).first
-    @supporting_documents = @audit.supporting_documents.order(created_at: :desc)
+    @supporting_documents = @audit.supporting_documents.includes(:user).order(created_at: :desc)
   end
 
   private
