@@ -312,7 +312,9 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
     t.index ["audit_id"], name: "index_supporting_documents_on_audit_id"
+    t.index ["user_id"], name: "index_supporting_documents_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -387,6 +389,7 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
   add_foreign_key "section_questions", "questionnaire_sections"
   add_foreign_key "selected_responses", "response_choices"
   add_foreign_key "supporting_documents", "audits"
+  add_foreign_key "supporting_documents", "users"
   add_foreign_key "users", "companies"
   add_foreign_key "vendor_rpns", "companies"
 end
