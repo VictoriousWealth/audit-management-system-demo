@@ -1,0 +1,19 @@
+%main.view-supporting-documents
+
+  %h1 Uploaded Document
+
+  %div.main-container
+
+    %h2
+      %strong Document:  
+      = @supporting_document.name
+    %p.small-space
+      %strong Content: 
+      = @supporting_document.content
+    %p.small-space
+      %strong Uploaded at: 
+      = @supporting_document.uploaded_at.strftime("%d-%m-%Y, %H:%M:%S")
+    %p.small-space
+      = link_to 'Download File', rails_blob_path(@supporting_document.file, disposition: 'attachment'), class: 'download-link'
+
+    = link_to 'Back to Documents', request.referrer || supporting_documents_path, class: 'back-link'
