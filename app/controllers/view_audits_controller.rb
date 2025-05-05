@@ -3,7 +3,7 @@ class ViewAuditsController < ApplicationController
 
   def show
     @assignments = @audit.audit_assignments.includes(:user)
-    @schedule = @audit.audit_schedules.order(:created_at)
+    @schedules = @audit.audit_schedules.includes(:user).order(:created_at)
     @request_letter = @audit.audit_request_letter
     @closure_letter = @audit.audit_closure_letter
     @report = @audit.reports.order(created_at: :desc).first
@@ -13,6 +13,9 @@ class ViewAuditsController < ApplicationController
   private
 
   def set_audit
-    @audit = Audit.includes(audit_detail: :audit_standards).find(params[:id])
+    @audit = Audit.includes(
+      :audit_schedules,
+      audit_detail: :audit_standards
+    ).find(params[:id])
   end  
 end
