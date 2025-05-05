@@ -49,9 +49,9 @@ class CompanyModeController < ApplicationController
     end
 
     # Risk levels over time
-    @risk_levels = Audit.where(company_id: company_id).order(:actual_start_date).map do |audit|
+    @risk_levels = Audit.where(company_id: company_id).where.not(actual_end_date: nil ).order(:actual_end_date).map do |audit|
       {
-        date: audit.actual_start_date&.strftime("%Y-%m-%d"),
+        date: audit.actual_end_date&.strftime("%Y-%m-%d"),
         risk_level: risk_level(audit)
       }
     end
