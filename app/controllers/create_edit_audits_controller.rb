@@ -1,4 +1,5 @@
 class CreateEditAuditsController < ApplicationController
+  before_action :authenticate_user!
 
   # GET /create_edit_audits/new
   def new
@@ -7,9 +8,9 @@ class CreateEditAuditsController < ApplicationController
 
   # POST /create_edit_audits
   def create
-    # Handle "Close Audit" action - redirect without saving anything
-    if params[:commit] == "Close Audit"
-      redirect_to create_edit_audits_path, notice: "Audit creation cancelled. No data was saved."
+    # Handle "Discard Edits" action - redirect without saving anything
+    if params[:commit] == "Discard Edits"
+      redirect_to view_audit_path(@audit), notice: "Audit creation cancelled. No data was saved."
       return
     end
 
@@ -164,9 +165,10 @@ class CreateEditAuditsController < ApplicationController
 
   # PATCH/PUT /create_edit_audits/:id
   def update
-    # Handle "Close Audit" without saving changes
-    if params[:commit] == "Close Audit"
-      redirect_to create_edit_audits_path, notice: "No changes were saved. Audit not modified."
+    # Handle "Discard Edits" without saving changes
+    @audit = Audit.find(params[:id])
+    if params[:commit] == "Discard Edits"
+      redirect_to view_audit_path(@audit), notice: "No changes were saved. Audit not modified."
       return
     end
 
