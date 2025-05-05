@@ -4,8 +4,8 @@ class ViewAuditsController < ApplicationController
   def show
     @assignments = @audit.audit_assignments.includes(:user)
     @schedule = @audit.audit_schedules.order(:created_at)
-    @request_letter = @audit.audit_request_letters.order(created_at: :desc).first
-    @closure_letter = @audit.audit_closure_letters.order(created_at: :desc).first
+    @request_letter = @audit.audit_request_letter
+    @closure_letter = @audit.audit_closure_letter
     @report = @audit.reports.order(created_at: :desc).first
     @supporting_documents = @audit.supporting_documents.order(created_at: :desc)
   end
