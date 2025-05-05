@@ -1,109 +1,112 @@
 require 'rails_helper'
 
 RSpec.describe CreateEditAuditsController, type: :controller do
-  let!(:company) {
-    Company.create(
-      name: "company",
-      city: "Sheffield",
-      postcode: "S1 2FF",
-      street_name: "89 London Rd"
-    )
-  }
+  setup do
+    let!(:company) {
+      Company.create(
+        name: "company",
+        city: "Sheffield",
+        postcode: "S1 2FF",
+        street_name: "89 London Rd"
+      )
+    }
 
-  let!(:senior_manager) { 
-    User.create(
-      email: 'senior.manager@test.com',
-      password: 'password123',
-      first_name: 'senior',
-      last_name: 'manager',
-      role: :senior_manager
-    ) 
-  }
+    let!(:senior_manager) { 
+      User.create(
+        email: 'senior.manager@test.com',
+        password: 'password123',
+        first_name: 'senior',
+        last_name: 'manager',
+        role: :senior_manager
+      ) 
+    }
 
-  let!(:qa_manager) { 
-    User.create(
-      email: 'qa.manager@test.com',
-      password: 'password123',
-      first_name: 'qa',
-      last_name: 'manager',
-      role: :qa_manager
-    ) 
-  }
+    let!(:qa_manager) { 
+      User.create(
+        email: 'qa.manager@test.com',
+        password: 'password123',
+        first_name: 'qa',
+        last_name: 'manager',
+        role: :qa_manager
+      ) 
+    }
 
-  let!(:lead_auditor) { 
-    User.create(
-      email: 'lead.auditor@test.com',
-      password: 'password123',
-      first_name: 'lead',
-      last_name: 'auditor',
-      role: :auditor
-    ) 
-  }
+    let!(:lead_auditor) { 
+      User.create(
+        email: 'lead.auditor@test.com',
+        password: 'password123',
+        first_name: 'lead',
+        last_name: 'auditor',
+        role: :auditor
+      ) 
+    }
 
-  let!(:support_auditor_1) { 
-    User.create(
-      email: 'support.auditor1@test.com',
-      password: 'password123',
-      first_name: 'support',
-      last_name: 'auditor1',
-      role: :auditor
-    ) 
-  }
+    let!(:support_auditor_1) { 
+      User.create(
+        email: 'support.auditor1@test.com',
+        password: 'password123',
+        first_name: 'support',
+        last_name: 'auditor1',
+        role: :auditor
+      ) 
+    }
 
-  let!(:support_auditor_2) { 
-    User.create(
-      email: 'support.auditor2@test.com',
-      password: 'password123',
-      first_name: 'support',
-      last_name: 'auditor2',
-      role: :auditor
-    ) 
-  }
+    let!(:support_auditor_2) { 
+      User.create(
+        email: 'support.auditor2@test.com',
+        password: 'password123',
+        first_name: 'support',
+        last_name: 'auditor2',
+        role: :auditor
+      ) 
+    }
 
-  let!(:auditee_1) { 
-    User.create(
-      email: 'auditee.1@test.com',
-      password: 'password123',
-      first_name: 'auditee',
-      last_name: '1',
-      role: :auditee,
-      company_id: company.id
-    ) 
-  }
+    let!(:auditee_1) { 
+      User.create(
+        email: 'auditee.1@test.com',
+        password: 'password123',
+        first_name: 'auditee',
+        last_name: '1',
+        role: :auditee,
+        company_id: company.id
+      ) 
+    }
 
-  let!(:auditee_2) { 
-    User.create(
-      email: 'auditee.2@test.com',
-      password: 'password123',
-      first_name: 'auditee',
-      last_name: '2',
-      role: :auditee
-    ) 
-  }
+    let!(:auditee_2) { 
+      User.create(
+        email: 'auditee.2@test.com',
+        password: 'password123',
+        first_name: 'auditee',
+        last_name: '2',
+        role: :auditee
+      ) 
+    }
 
-  let!(:sme_1) { 
-    User.create(
-      email: 'sme.1@test.com',
-      password: 'password123',
-      first_name: 'sme',
-      last_name: '1',
-      role: :sme
-    ) 
-  }
+    let!(:sme_1) { 
+      User.create(
+        email: 'sme.1@test.com',
+        password: 'password123',
+        first_name: 'sme',
+        last_name: '1',
+        role: :sme
+      ) 
+    }
 
-  let!(:sme_2) { 
-    User.create(
-      email: 'sme.2@test.com',
-      password: 'password123',
-      first_name: 'sme',
-      last_name: '2',
-      role: :sme
-    ) 
-  }
+    let!(:sme_2) { 
+      User.create(
+        email: 'sme.2@test.com',
+        password: 'password123',
+        first_name: 'sme',
+        last_name: '2',
+        role: :sme
+      ) 
+    }
 
-  # Use let to set the user dynamically for each test case
-  let(:user) { nil }
+    # Use let to set the user dynamically for each test case
+    let(:user) { nil }
 
+  end
+  
   before do
     sign_in user if user
   end
