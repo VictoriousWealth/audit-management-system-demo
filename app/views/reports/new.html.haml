@@ -1,5 +1,4 @@
 - content_for :title, 'Create Audit Report'
-- append_javascript_pack_tag('findings')
 %meta{name: "csrf-token", content: form_authenticity_token}
 
 .row.justify-content-center
@@ -87,14 +86,34 @@
                 %h4 Detailed Findings
 
               #detailed_findings.card-body.collapse.show
-                %table#items-table.table
-                  %thead
-                    %tr
-                      %th Name
-                      %th Description
-                  %tbody
-                    - @assigned_auditors.each do |item|
+
+                - if session[:audit_findings]
+                  %table
+                    %thead
                       %tr
-                        %td= item.first_name
-                        %td= item.last_name
+                        %th Description
+                        %th Risk Level
+                        %th Category
+                        %th Due Date
+
+                    %tbody
+                      - session[:audit_findings].each do |finding|
+                        %tr
+                          %td= finding[:description]
+                          %td= finding[:risk_level].titleize
+                          %td= finding[:category].titleize
+                          %td= finding[:due_date] || 'N/A'
+
+                          %td
+                            -# = link_to 'Edit', edit_audit_report_audit_finding_path(@audit, finding[:id]), class: 'btn btn-warning'
+                            = link_to 'Edit',audit_path(@audit), class: 'btn btn-warning'
+                          %td
+                            = link_to 'Delete', audit_report_audit_finding_path(@audit, description: finding[:description], id: finding[:description]), method: :delete, data: { confirm: "Are you sure you want to delete the finding?" }, class: 'btn btn-danger'
+                %br/
+                = link_to 'Add New Finding',new_audit_report_audit_finding_path(@audit),class: 'btn btn-primary'
+          %br/
+          = f.submit "Save Report", class: "btn btn-primary"
+          %br/
+    
+
 

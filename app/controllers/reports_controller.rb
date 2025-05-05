@@ -10,15 +10,26 @@ class ReportsController < ApplicationController
   # authorize_resource
 
   def new
+    @audit = Audit.find(params[:audit_id])
     @report = Report.find_or_initialize_by(audit: @audit)
-    @today_date = Date.today.strftime("%d/%m/%Y")
+    @pending_findings = session[:audit_findings] || []
   end
-
-  # GET /audit/audit_id/report/new
+  
   def create
+    @audit = Audit.find(params[:audit_id])
     @report = Report.find_or_initialize_by(audit: @audit)
-    @today_date = Date.today.strftime("%d/%m/%Y")
+
     @report.user = current_user
+    if @report.save
+      (session[:audit_findings] || []).each do |f|
+        puts "Creating finding: #{f.inspect}"
+        @report.audit_findings.create(f)
+      end
+      session[:audit_findings] = nil
+      redirect_to audit_path(@audit), notice: "Report created with findings"
+    else
+      render :show, notice: "Report not created"
+    end
   end
 
   # GET /audit/audit_id/report/show
@@ -60,6 +71,13 @@ class ReportsController < ApplicationController
 
       # Get the SMEs
       @smes = audit_assignments.where(role: "sme").map(&:user)
+    end
+
+    def report_params
+      params.require(:report).permit(
+        :audit_id,
+        :user_id,
+      )
     end
 
 end
