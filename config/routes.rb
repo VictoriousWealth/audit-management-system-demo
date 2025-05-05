@@ -77,6 +77,8 @@ Rails.application.routes.draw do
   # Defines the route for the audit request letter review page ('/review-audit-request-letter')
   get 'letters/review-audit-request-letter', to: 'pages#audit_request_letter_review'
 
+  # Defines the route for the view audit page ('/view_audits/:id')
+  get 'view_audits/:id', to: 'view_audits#show', as: 'view_audit'
 
   #### Custom Questionnaire page routes ####
   # Rendering the page

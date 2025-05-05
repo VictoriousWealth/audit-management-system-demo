@@ -17,7 +17,7 @@
       - @scheduled_audits.each do |audit|
         %tr
           %td.p-2.white-space-nowrap 
-            = link_to "/create_edit_audits/#{audit[:id]}/edit" do 
+            = link_to view_audit_path(audit[:id]) do 
               %i= audit[:id].to_s.rjust(4, '0')
           %td.p-2.white-space-nowrap= audit[:scope]
           %td.p-2.white-space-nowrap= audit[:location]
