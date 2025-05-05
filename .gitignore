@@ -55,6 +55,7 @@ yarn-debug.log*
 .rspec-examples
 
 /vendor/webdrivers
+/vendor/bundle/
 
 # ignore mailmap used for git log, shortlog, and alike 
 .mailmap
