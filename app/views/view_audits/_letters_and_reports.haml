@@ -14,7 +14,7 @@
           %td Audit Request Letter
           %td= @request_letter.updated_at&.strftime('%d-%m-%Y, %H:%M:%S') || "N/A"
           %td
-            = link_to "View", audit_request_letter_path(@request_letter), class: "btn btn-sm btn-outline-primary", target: "_blank"
+            = link_to "View", audit_audit_request_letters_path(@audit), class: "btn btn-sm btn-outline-primary", target: "_blank"
 
       - if @closure_letter
         - has_documents = true
@@ -22,7 +22,7 @@
           %td Audit Closure Letter
           %td= @closure_letter.updated_at&.strftime('%d-%m-%Y, %H:%M:%S') || "N/A"
           %td
-            = link_to "View", audit_closure_letter_path(@closure_letter), class: "btn btn-sm btn-outline-primary", target: "_blank"
+            = link_to "View", audit_audit_closure_letter_path(@audit, @closure_letter), class: "btn btn-sm btn-outline-primary", target: "_blank"
 
       - if @report
         - has_documents = true
@@ -30,8 +30,9 @@
           %td Audit Report
           %td= @report.updated_at&.strftime('%d-%m-%Y, %H:%M:%S') || "N/A"
           %td
-            = link_to "View", report_path(@report), class: "btn btn-sm btn-outline-primary", target: "_blank"
+            = link_to "View", audit_report_path(@audit), class: "btn btn-sm btn-outline-primary", target: "_blank"
 
       - unless has_documents
         %tr
           %td.text-muted.colspan-3{ colspan: 3 } No documents available
+ 
