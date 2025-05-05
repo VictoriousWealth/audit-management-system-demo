@@ -1,0 +1,78 @@
+%div.mt-4.accordion.border.border-black.rounded-4.overflow-hidden#accordionAssignments
+  %div.accordion-item.border-0
+    %h2.accordion-header#headingAssignments
+      %button.accordion-button.collapsed.rounded-top-4.d-flex.justify-content-between.align-items-center{
+        type: "button",
+        "data-bs-toggle" => "collapse",
+        "data-bs-target" => "#collapseAssignments",
+        "aria-expanded" => "false",
+        "aria-controls" => "collapseAssignments"
+      }
+        .text-black-75.text-capitalize.fs-3.mb-2.flex-grow-1 Assignments
+        %span.custom-arrow.ms-2.fs-4 
+          ▼
+
+    %div.accordion-collapse.collapse#collapseAssignments{
+      "aria-labelledby" => "headingAssignments",
+      "data-bs-parent" => "#accordionAssignments"
+    }
+      %div.accordion-body.bg-white.rounded-bottom-4
+        .row.row-cols-1.row-cols-md-2.row-cols-lg-3.g-4
+
+          - lead = @assignments.find_by(role: :lead_auditor)
+          .col
+            .card.h-100.border-dark
+              .card-body
+                %h5.card-title.text-uppercase.text-muted.fw-bold Lead Auditor
+                - if lead
+                  %p.mb-1.fw-bolder.font-helvetica= lead.user&.full_name
+                  %p.text-muted.small= lead.user&.email
+                - else
+                  %p.text-muted Not Assigned
+
+          .col
+            .card.h-100.border-dark
+              .card-body
+                %h5.card-title.text-uppercase.text-muted.fw-bold Support Auditors
+                - auditors = @assignments.where(role: :auditor)
+                - if auditors.any?
+                  - auditors.each do |a|
+                    %p.mb-1.fw-bolder.font-helvetica= a.user&.full_name
+                    %p.text-muted.small.mb-2= a.user&.email
+                - else
+                  %p.text-muted Not Assigned
+
+          .col
+            .card.h-100.border-dark
+              .card-body
+                %h5.card-title.text-uppercase.text-muted.fw-bold Auditee
+                - auditee = @assignments.find_by(role: :auditee)
+                - if auditee
+                  %p.mb-1.fw-bolder.font-helvetica= auditee.user&.full_name
+                  %p.text-muted.small= auditee.user&.email
+                - else
+                  %p.text-muted Not Assigned
+
+          .col
+            .card.h-100.border-dark
+              .card-body
+                %h5.card-title.text-uppercase.text-muted.fw-bold Subject Matter Experts
+                - smes = @assignments.where(role: :sme)
+                - if smes.any?
+                  - smes.each do |s|
+                    %p.mb-1.fw-bolder.font-helvetica= s.user&.full_name
+                    %p.text-muted.small.mb-2= s.user&.email
+                - else
+                  %p.text-muted Not Assigned
+
+          .col
+            .card.h-100.border-dark
+              .card-body
+                %h5.card-title.text-uppercase.text-muted.fw-bold QA Manager
+                - qa_manager_id = @assignments.first&.assigned_by
+                - qa_manager = User.find_by(id: qa_manager_id)
+                - if qa_manager
+                  %p.mb-1.fw-bolder.font-helvetica= qa_manager.full_name
+                  %p.text-muted.small= qa_manager.email
+                - else
+                  %p.text-muted Not Assigned

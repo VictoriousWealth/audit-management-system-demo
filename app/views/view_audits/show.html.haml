@@ -1,0 +1,31 @@
+#view_audits.d-flex.align-items-center.flex-column.mb-5
+  %h1.font-helvetica.text-custom-black.fw-bolder.ms-4.mt-5.mb-5.me-2.ps-5.w-100
+    Audit ##{@audit.id.to_s.rjust(4, '0')}
+
+  .container.border.border-1.border-black.rounded-4.ms-2.me-2.p-4
+    %h2.font-helvetica.text-custom-black.mb-3 General Information
+    = render 'general_information'
+
+    %h2.font-helvetica.text-custom-black.mt-5.mb-3 Assignments
+    = render 'assignments'
+
+    %h2.font-helvetica.text-custom-black.mt-5.mb-3 Schedule
+    = render 'schedule'
+
+    %h2.font-helvetica.text-custom-black.mt-5.mb-3 Letters & Reports
+    = render 'letters_and_reports'
+
+    %h2.font-helvetica.text-custom-black.mt-5.mb-3 Supporting Documents
+    = render 'supporting_documents'
+
+    %h2.font-helvetica.text-custom-black.mt-5.mb-3 Summary
+    = render 'summary'
+
+    .container.d-flex.flex-row.mt-5.mb-3.justify-content-between.p-0
+      .container.d-flex.flex-column.w-20.m-0.p-0
+        = link_to "Checklist Scoring", "#", class: "btn btn-sm btn-green text-white w-100 font-helvetica fs-5 opacity-90", target: "_blank"
+        = link_to "Progress", "#", class: "btn btn-sm btn-green text-white w-100 font-helvetica fs-5 opacity-90 mt-3", target: "_blank"
+      .container.d-flex.flex-column.w-25.m-0.p-0.align-items-end.justify-content-end
+        = link_to "Edit Audit", edit_create_edit_audit_path(@audit), class: "btn btn-sm btn-warning w-100 font-helvetica fs-5 mt-3"
+
+

@@ -1,0 +1,38 @@
+.table-scroll-container.min-width-webkit-fill-available
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6.min-width-webkit-fill-available
+    %thead
+      %tr
+        %th.p-2.white-space-nowrap Document
+        %th.p-2.white-space-nowrap Last Updated (DD-MM-YYYY, HH:MM:SS)
+        %th.p-2.white-space-nowrap View
+    %tbody
+      - has_documents = false
+
+      - if @request_letter
+        - has_documents = true
+        %tr
+          %td Audit Request Letter
+          %td= @request_letter.updated_at&.strftime('%d-%m-%Y, %H:%M:%S') || "N/A"
+          %td
+            = link_to "View", audit_audit_request_letters_path(@audit), class: "btn btn-sm btn-outline-primary", target: "_blank"
+
+      - if @closure_letter
+        - has_documents = true
+        %tr
+          %td Audit Closure Letter
+          %td= @closure_letter.updated_at&.strftime('%d-%m-%Y, %H:%M:%S') || "N/A"
+          %td
+            = link_to "View", audit_audit_closure_letter_path(@audit, @closure_letter), class: "btn btn-sm btn-outline-primary", target: "_blank"
+
+      - if @report
+        - has_documents = true
+        %tr
+          %td Audit Report
+          %td= @report.updated_at&.strftime('%d-%m-%Y, %H:%M:%S') || "N/A"
+          %td
+            = link_to "View", audit_report_path(@audit), class: "btn btn-sm btn-outline-primary", target: "_blank"
+
+      - unless has_documents
+        %tr
+          %td.text-muted.colspan-3{ colspan: 3 } No documents available
+ 

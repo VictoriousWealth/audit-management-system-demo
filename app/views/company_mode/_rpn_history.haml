@@ -1,0 +1,28 @@
+.container.custom-tab-container.p-0.border.border-dark{style: "display: inline-table;"}
+  %ul.nav.nav-tabs.mb-0
+    %li.nav-item.w-100
+      %a.nav-link.disabled.text-center.fw-bold{href: '#', tabindex: '-1', aria: { disabled: 'true' }} Vendor RPNs
+
+  .table-scroll-container
+    %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+      %thead
+        %tr
+          %th.p-3 Date
+          %th.p-3 RPN 
+          %th.p-3 Material Criticality
+          %th.p-3 Compliance History
+          %th.p-3 Regulatory Approvals
+          %th.p-3 Supply Chain Complexity
+          %th.p-3 Performance
+          %th.p-3 Contamination Risk
+      %tbody
+        - @vendor_rpns.each do |rpn|
+          %tr
+            %td.p-3= rpn[:date]
+            %td.p-3= rpn[:rpn]
+            %td.p-3= rpn[:material_criticality]
+            %td.p-3= rpn[:compliance_history]
+            %td.p-3= rpn[:regulatory_approvals]
+            %td.p-3= rpn[:complexity]
+            %td.p-3= rpn[:performance]
+            %td.p-3= rpn[:contamination_risk]

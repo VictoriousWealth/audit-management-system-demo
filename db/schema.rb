@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_02_124914) do
+ActiveRecord::Schema[7.0].define(version: 202503309183408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_02_124914) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
+    t.bigint "assigned_by"
     t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
     t.index ["user_id"], name: "index_audit_assignments_on_user_id"
   end
@@ -169,9 +170,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_02_124914) do
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
-    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "street_name"
+    t.string "city"
+    t.string "postcode"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -337,7 +340,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_02_124914) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
     t.index ["audit_id"], name: "index_supporting_documents_on_audit_id"
+    t.index ["user_id"], name: "index_supporting_documents_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -414,6 +419,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_02_124914) do
   add_foreign_key "section_questions", "questionnaire_sections"
   add_foreign_key "selected_responses", "response_choices"
   add_foreign_key "supporting_documents", "audits"
+  add_foreign_key "supporting_documents", "users"
   add_foreign_key "users", "companies"
   add_foreign_key "vendor_rpns", "companies"
 end

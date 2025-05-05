@@ -1,0 +1,76 @@
+.table-scroll-container.min-width-webkit-fill-available
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6.min-width-webkit-fill-available
+    %thead
+      %tr
+        %th.p-2.white-space-nowrap Audit Id
+        %th.p-2.white-space-nowrap Audit Scope
+        %th.p-2.white-space-nowrap Audit Location
+        %th.p-2.white-space-nowrap Vendor
+        %th.p-2.white-space-nowrap Auditee
+        %th.p-2.white-space-nowrap Lead Auditor
+        %th.p-2.white-space-nowrap Support Auditor(s)
+        %th.p-2.white-space-nowrap SME(s)
+        %th.p-2.white-space-nowrap Scheduled Start Date
+        %th.p-2.white-space-nowrap Scheduled End Date
+        %th.p-2.white-space-nowrap RPN
+    %tbody
+      - @scheduled_audits.each do |audit|
+        %tr
+          %td.p-2.white-space-nowrap 
+            = link_to view_audit_path(audit[:id]) do 
+              %i= audit[:id].to_s.rjust(4, '0')
+          %td.p-2.white-space-nowrap= audit[:scope]
+          %td.p-2.white-space-nowrap= audit[:location]
+          %td.p-2.white-space-nowrap= audit[:company_name]
+          %td.p-2.white-space-nowrap= audit[:auditee]
+          %td.p-2.white-space-nowrap= audit[:lead_auditor]
+          
+          / ✅ SUPPORT AUDITOR BUTTON + MODAL
+          %td.p-2.white-space-nowrap
+            - if audit[:support_auditors].present?
+              %button.btn.btn-sm.btn-outline-dark{ data: { bs_toggle: "modal", bs_target: "#supportAuditorsModal-#{audit[:id]}" } }
+                = "#{audit[:support_auditors].size} Auditor(s)"
+
+              / Modal for support auditors
+              .modal.fade{id: "supportAuditorsModal-#{audit[:id]}", tabindex: "-1", aria: { labelledby: "supportAuditorsModalLabel-#{audit[:id]}", hidden: "true" } }
+                .modal-dialog
+                  .modal-content
+                    .modal-header
+                      %h5.modal-title{id: "supportAuditorsModalLabel-#{audit[:id]}"}
+                        Support Auditor(s) for Audit ##{audit[:id].to_s.rjust(4, '0')}
+                      %button.btn-close{ data: { bs_dismiss: "modal" }, aria: { label: "Close" } }
+                    .modal-body
+                      %ul.text-start
+                        - audit[:support_auditors].each do |auditor|
+                          %li= auditor
+                    .modal-footer
+                      %button.btn.btn-secondary{ data: { bs_dismiss: "modal" } } Close
+            - else
+              %span.text-muted N/A
+
+          / ✅ SME BUTTON + MODAL
+          %td.p-2.white-space-nowrap
+            - if audit[:smes].present?
+              %button.btn.btn-sm.btn-outline-dark{ data: { bs_toggle: "modal", bs_target: "#smesModal-#{audit[:id]}" } }
+                = "#{audit[:smes].size} SME(s)"
+
+              / Modal for support auditors
+              .modal.fade{id: "smesModal-#{audit[:id]}", tabindex: "-1", aria: { labelledby: "smesModalLabel-#{audit[:id]}", hidden: "true" } }
+                .modal-dialog
+                  .modal-content
+                    .modal-header
+                      %h5.modal-title{id: "smesModalLabel-#{audit[:id]}"}
+                        SME(s) for Audit ##{audit[:id].to_s.rjust(4, '0')}
+                      %button.btn-close{ data: { bs_dismiss: "modal" }, aria: { label: "Close" } }
+                    .modal-body
+                      %ul.text-start
+                        - audit[:smes].each do |sme|
+                          %li= sme
+                    .modal-footer
+                      %button.btn.btn-secondary{ data: { bs_dismiss: "modal" } } Close
+            - else
+              %span.text-muted N/A
+          
+          %td.p-2.white-space-nowrap= audit[:scheduled_start_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-2.white-space-nowrap= audit[:scheduled_end_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-2.white-space-nowrap= audit[:rpn] || "N/A"

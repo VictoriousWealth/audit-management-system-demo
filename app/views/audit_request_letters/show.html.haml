@@ -1,0 +1,107 @@
+- content_for :title, 'Create Audit Request Letter'
+%meta{name: "csrf-token", content: form_authenticity_token}
+
+.row.justify-content-center
+  .col-sm-10.col-lg-8
+    .card.card-light
+      = simple_form_for @audit_request_letter, url: audit_audit_request_letters_path(@audit), method: :post do |f|
+        .card-header
+          %h2 View Audit Request Letter
+        .card-body
+          .form-group
+
+            %p.mt-3
+              Gene Therapy Innovation and Manufacturing Centre
+              %br 
+              Business Park, Europa Ave
+              %br Tinsley
+              Sheffield, S9 1ZA
+              %br/
+              %br
+              %em gtimc@sheffield.ac.uk
+              %br 0114 222 2238
+
+            %p.mt-4= @content.dig("dates","time_of_creation")
+
+            %p.mt-4
+              =@content.dig("company", "name")
+              %br=@content.dig("company","street_name")
+              =@content.dig("company", "postcode")
+
+            %p.mt-4
+              %strong Subject: Official Audit Report - #{@content.dig("audit","reference").to_s.rjust(6, "0")}
+
+            %p.mt-4
+            Dear #{@content.dig("company", "name")},
+            %br/
+            We are writing to formally request an audit of #{@content.dig("company", "name")} in accordance with our quality assurance and regulatory compliance requirements. The details of the proposed audit are as follows:
+            %br/
+
+            %p.mt-4
+              Assigned Auditor(s): 
+              - @assigned_auditors.each do |auditor|
+                -if auditor == @assigned_auditors.last
+                  = auditor.first_name + " " + auditor.last_name
+                -else
+                  = auditor.first_name + " " + auditor.last_name + ", "
+            %p.mt-4
+              Audit Scope:
+              %br/
+              = @content.dig("audit", "scope")
+            %br/
+            %p.mt-4 Audit Date(s): #{@content.dig("dates", "scheduled_start_date")} - #{@content.dig("dates","scheduled_end_date")}
+            - start = DateTime.parse(@content.dig("dates", "scheduled_start_date"))
+            - finish = DateTime.parse(@content.dig("dates", "scheduled_end_date"))
+            - duration = finish - start
+            - duration = distance_of_time_in_words(start, finish)
+
+            %p.mt-4
+              Duration of Audit: 
+              %strong #{duration}
+            %br/
+
+            %p.mt-4
+              Location of Audit (Street Name): 
+              - company_id = @audit.company_id
+              - location = @content.dig("company", "street_name")
+              = location
+
+            %p.mt-4
+              The Criteria of this Audit:
+              %br/
+              = @content.dig("audit", "criteria")
+        
+            %p.mt-4
+              The purpose of this audit is to assess:
+              %br/
+              = @content.dig("audit", "purpose")
+
+            %p.mt-4
+              The objectives of this audit are to:
+              %br/
+              = @content.dig("audit", "objectives")
+
+            %p.mt-4
+              The objectives of this audit are to:
+              %br/
+              = @content.dig("audit", "boundaries")
+
+            %p.mt-4
+              The audit will include a review of relevant documentation, site walkthroughs, and interviews with key personnel.
+              We kindly request your cooperation in facilitating this process by providing access to necessary records, personnel, and facilities. Please confirm your availability for the proposed dates or suggest alternative dates if required.
+              Should you have any questions or require further clarification, please do not hesitate to contact us at Lead Auditor Contact. We appreciate your time and cooperation in this matter and look forward to working with you.
+            %br/
+            %p.mt-3
+              Best regards,
+              %br
+              %em= @lead_auditor.full_name || "Place Holder"
+              %br Lead Auditor
+              Gene Therapy Innovation and Manufacturing Centre
+              %br= @lead_auditor.email || "gtimc@sheffield.ac.uk"
+
+            .form-group.mt-4.d-flex.justify-content-between
+              = link_to "Go Back to audit", view_audit_path(@audit), class: "btn btn-warning"
+              - if can?(:manage , AuditRequestLetter)
+                = link_to 'Delete Request Letter', audit_audit_request_letters_path(@audit) , method: :delete, data: { confirm: 'Are you sure you want to delete this letter?' }, class: 'btn btn-danger'      
+
+ 

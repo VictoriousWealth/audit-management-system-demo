@@ -3,6 +3,7 @@
 # Table name: audit_assignments
 #
 #  id            :bigint           not null, primary key
+#  assigned_by   :bigint
 #  role          :integer
 #  status        :integer
 #  time_accepted :datetime
@@ -26,6 +27,6 @@ FactoryBot.define do
     role { 1 }
     status { 1 }
     time_accepted { "2025-03-12 14:02:42" }
-    user { nil }
+    user { 1 }
   end
 end

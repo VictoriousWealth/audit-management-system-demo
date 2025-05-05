@@ -3,6 +3,7 @@
 # Table name: audit_assignments
 #
 #  id            :bigint           not null, primary key
+#  assigned_by   :bigint
 #  role          :integer
 #  status        :integer
 #  time_accepted :datetime

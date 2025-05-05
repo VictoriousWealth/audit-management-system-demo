@@ -3,6 +3,7 @@
 # Table name: audit_assignments
 #
 #  id            :bigint           not null, primary key
+#  assigned_by   :bigint
 #  role          :integer
 #  status        :integer
 #  time_accepted :datetime
@@ -36,4 +37,6 @@ class AuditAssignment < ApplicationRecord
   }
   belongs_to :user
   belongs_to :audit
+  belongs_to :assigner, class_name: "User", foreign_key: "assigned_by"
+
 end

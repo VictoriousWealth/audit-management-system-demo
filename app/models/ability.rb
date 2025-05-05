@@ -4,6 +4,28 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+
+    user ||= User.new # guest user (not logged in)
+
+    if user.role == "qa_manager" || user.role == "senior_manager"
+      can :manage, AuditRequestLetter
+    
+    elsif user.role == "auditor"
+      can :read, AuditRequestLetter do |request_letter|
+        AuditAssignment.exists?(user_id: user.id, audit_id: request_letter.audit_id)
+      end
+    
+    elsif user.role == "auditee"
+      can :read, AuditRequestLetter do |request_letter|
+        user.company_id == request_letter.audit&.company_id
+      end
+    end
+
+    # Code is useless
+    # if (user.role == "qa_manager" || user.role == "senior_manager" || user.role == "auditor")
+    #   can :manage, CreateAuditQuestionnaires
+    # end
+
     # Define abilities for the user here. For example:
     #
     #   return unless user.present?

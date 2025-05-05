@@ -12,22 +12,11 @@ class DashboardController < ApplicationController
       redirect_to qa_manager_dashboard_path
     when 'senior_manager'
       redirect_to senior_manager_dashboard_path
+    when 'sme'
+      redirect_to sme_dashboard_path
     else
       redirect_to root_path
     end
-  end
-
-  def auditor
-  end
-
-  def auditee
-  end
-
-  # this method can be removed
-  def qa_manager
-  end
-
-  def senior_manager
   end
 
 end

@@ -1,4 +1,5 @@
 class CreateEditAuditsController < ApplicationController
+  before_action :authenticate_user!
 
   # GET /create_edit_audits/new
   def new
@@ -7,10 +8,10 @@ class CreateEditAuditsController < ApplicationController
 
   # POST /create_edit_audits
   def create
-    # Handle "Close Audit" action - redirect without saving anything
-    if params[:commit] == "Close Audit"
-      redirect_to create_edit_audits_path, notice: "Audit creation cancelled. No data was saved."
-      return 
+    # Handle "Discard Edits" action - redirect without saving anything
+    if params[:commit] == "Discard Edits"
+      redirect_to view_audit_path(@audit), notice: "Audit creation cancelled. No data was saved."
+      return
     end
 
     prepare_options # Load form data for re-rendering if needed
@@ -57,7 +58,7 @@ class CreateEditAuditsController < ApplicationController
 
     unless @audit.save
       flash.now[:alert] = "Something went wrong with saving this audit. Try again later."
-      render :new 
+      render :new
       return
     end
 
@@ -73,7 +74,7 @@ class CreateEditAuditsController < ApplicationController
     unless audit_detail.save
       @audit.destroy # Rollback audit if detail fails
       flash.now[:alert] = "Something went wrong with saving this audit's details. Try again later."
-      render :new 
+      render :new
       return
     end
 
@@ -82,7 +83,7 @@ class CreateEditAuditsController < ApplicationController
     standards = audit_standard[:standard] rescue []
     standards.each do |std|
       AuditStandard.create(
-        standard: std, 
+        standard: std,
         audit_detail_id: audit_detail.id
       )
       audit_detail.audit_standards.reload
@@ -93,36 +94,42 @@ class CreateEditAuditsController < ApplicationController
 
     # Lead Auditor (required)
     if (lead_id = assignment[:lead_auditor]).present?
-      @audit.audit_assignments.create(user_id: lead_id, role: :lead_auditor, status: :assigned)
+      @audit.audit_assignments.create(user_id: lead_id, role: :lead_auditor, status: :assigned, assigned_by: current_user.id)
     else
       @audit.destroy
       flash.now[:alert] = "Something went wrong with saving this audit's assignments. Try again later."
-      render :new 
+      render :new
       return
     end
 
     # Support Auditors (optional)
     if assignment[:support_auditor].present?
       assignment[:support_auditor].reject(&:blank?).each do |id|
-        @audit.audit_assignments.create(user_id: id, role: :auditor, status: :assigned)
+        @audit.audit_assignments.create(user_id: id, role: :auditor, status: :assigned, assigned_by: current_user.id)
       end
     end
 
     # SMEs (optional)
     if assignment[:sme].present?
       assignment[:sme].reject(&:blank?).each do |id|
-        @audit.audit_assignments.create(user_id: id, role: :sme, status: :assigned)
+        @audit.audit_assignments.create(user_id: id, role: :sme, status: :assigned, assigned_by: current_user.id)
       end
     end
 
     # Auditee (required)
     if (auditee_id = assignment[:auditee]).present?
-      @audit.audit_assignments.create(user_id: auditee_id, role: :auditee, status: :assigned)
-    else 
+      @audit.audit_assignments.create(user_id: auditee_id, role: :auditee, status: :assigned, assigned_by: current_user.id)
+    else
       @audit.destroy
       flash.now[:alert] = "Something went wrong with saving this audit's assignments. Try again later."
-      render :new 
+      render :new
       return
+    end
+
+    # === Notify assigned auditors and SMEs ===
+    @audit.audit_assignments.each do |assignment|
+      user = assignment.user
+      AuditMailer.notify_assignment(assignment).deliver_later
     end
 
     redirect_to edit_create_edit_audit_path(@audit), notice: 'Audit created successfully.'
@@ -139,7 +146,7 @@ class CreateEditAuditsController < ApplicationController
     @scheduled_end = @audit.scheduled_end_date
     @actual_start = @audit.actual_start_date
     @actual_end = @audit.actual_end_date
-    
+
     @audit_detail = AuditDetail.find_by(audit_id: params[:id])
     @scope = @audit_detail.scope || nil
     @objectives = @audit_detail.objectives || nil
@@ -158,9 +165,10 @@ class CreateEditAuditsController < ApplicationController
 
   # PATCH/PUT /create_edit_audits/:id
   def update
-    # Handle "Close Audit" without saving changes
-    if params[:commit] == "Close Audit"
-      redirect_to create_edit_audits_path, notice: "No changes were saved. Audit not modified."
+    # Handle "Discard Edits" without saving changes
+    @audit = Audit.find(params[:id])
+    if params[:commit] == "Discard Edits"
+      redirect_to view_audit_path(@audit), notice: "No changes were saved. Audit not modified."
       return
     end
 
@@ -263,7 +271,7 @@ class CreateEditAuditsController < ApplicationController
     standards = audit_standard[:standard] rescue []
     standards.each do |std|
       AuditStandard.create(
-        standard: std, 
+        standard: std,
         audit_detail_id: @audit_detail.id
       )
       @audit_detail.audit_standards.reload
@@ -271,20 +279,34 @@ class CreateEditAuditsController < ApplicationController
 
     # === Update AuditAssignments ===
     @audit.audit_assignments.destroy_all
-    @audit.audit_assignments.create(user_id: assignment[:lead_auditor], role: :lead_auditor, status: :assigned)
-    @audit.audit_assignments.create(user_id: assignment[:auditee], role: :auditee, status: :assigned)
+    @audit.audit_assignments.create(user_id: assignment[:lead_auditor], role: :lead_auditor, status: :assigned, assigned_by: current_user.id)
+    @audit.audit_assignments.create(user_id: assignment[:auditee], role: :auditee, status: :assigned, assigned_by: current_user.id)
 
     if assignment[:support_auditor].present?
       assignment[:support_auditor].reject(&:blank?).each do |id|
-        AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :auditor, status: :assigned)
+        #AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :auditor, status: :assigned)
+        @audit.audit_assignments.create!(audit_id: @audit.id, user_id: id, role: :auditor, status: :assigned, assigned_by: current_user.id)
+
       end
-    end      
+    end
 
     if assignment[:sme].present?
       assignment[:sme].reject(&:blank?).each do |id|
-        AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :sme, status: :assigned)
+        #AuditAssignment.create(audit_id: @audit.id, user_id: id, role: :sme, status: :assigned)
+        @audit.audit_assignments.create!(audit_id: @audit.id, user_id: id, role: :sme, status: :assigned, assigned_by: current_user.id)
+
       end
-    end      
+    end
+
+    @audit.audit_assignments.reload
+
+
+    #------------------------------------------------------------------------------------------------
+    # === Notify assigned auditors and SMEs about update ===
+    @audit.audit_assignments.each do |assignment|
+      user = assignment.user
+      AuditMailer.update_audit(assignment).deliver_later
+    end
 
     redirect_to edit_create_edit_audit_path(@audit.reload), notice: "Audit updated successfully."
   end

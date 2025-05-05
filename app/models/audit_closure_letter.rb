@@ -31,6 +31,8 @@ class AuditClosureLetter < ApplicationRecord
 
   before_create :set_creation_time
 
+  attr_accessor :overall_compliance, :summary_statement, :auditee_acknowledged, :auditor_acknowledged
+
   private
 
   def set_creation_time
