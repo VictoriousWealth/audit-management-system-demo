@@ -32,10 +32,10 @@
               - @schedules.each do |schedule|
                 %tr
                   %td= schedule.task
-                  %td= schedule.expected_start&.strftime('%H:%M %d/%m/%Y') || "N/A"
-                  %td= schedule.expected_end&.strftime('%H:%M %d/%m/%Y') || "N/A"
-                  %td= schedule.actual_start&.strftime('%H:%M %d/%m/%Y') || "N/A"
-                  %td= schedule.actual_end&.strftime('%H:%M %d/%m/%Y') || "N/A"
+                  %td= schedule.expected_start&.strftime('%H:%M %d/%m/%Y') || "TBD"
+                  %td= schedule.expected_end&.strftime('%H:%M %d/%m/%Y') || "TBD"
+                  %td= schedule.actual_start&.strftime('%H:%M %d/%m/%Y') || "TBD"
+                  %td= schedule.actual_end&.strftime('%H:%M %d/%m/%Y') || "TBD"
 
                   - status_text = schedule.status.titleize
                   - status_class = case schedule.status.to_sym
