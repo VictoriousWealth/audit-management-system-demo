@@ -1,8 +1,8 @@
 class ReportsController < ApplicationController
-  before_action :set_audit, :set_audit_detail, only: [:new, :create]
-  before_action :set_audit_detail, only: [:new, :create]
-  before_action :set_assignments, only: [:new, :create]
-  # before_action :set_audit, only: [:new, :create, :show]
+  before_action :set_audit, :set_audit_detail, only: [:new, :create, :show]
+  before_action :set_audit_detail, only: [:new, :create, :show]
+  before_action :set_assignments, only: [:new, :create, :show]
+
   before_action :authenticate_user!
   skip_before_action :verify_authenticity_token, only: [:save_audit_letter] 
 
@@ -34,6 +34,8 @@ class ReportsController < ApplicationController
 
   # GET /audit/audit_id/report/show
   def show
+    @report = @audit.report
+    @audit_findings = @report.audit_findings
   end
 
   private

@@ -102,8 +102,14 @@
                           %td= finding[:description]
                           %td= finding[:risk_level].titleize
                           %td= finding[:category].titleize
-                          %td= finding[:due_date] || 'N/A'
-
+                          - if finding[:due_date].present?
+                            - begin
+                              - due_date = Date.parse(finding[:due_date])
+                              %td= due_date.strftime("%d/%m/%Y")
+                            - rescue ArgumentError
+                              %td N/A
+                          - else
+                            %td N/A
                           %td
                             -# = link_to 'Edit', edit_audit_report_audit_finding_path(@audit, finding[:id]), class: 'btn btn-warning'
                             = link_to 'Edit',audit_path(@audit), class: 'btn btn-warning'

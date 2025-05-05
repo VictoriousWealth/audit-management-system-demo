@@ -87,7 +87,9 @@
 
               #detailed_findings.card-body.collapse.show
 
-                - if session[:audit_findings]
+                - if @audit_findings.empty?
+                  %p No findings were recorded during this audit.
+                - else
                   %table
                     %thead
                       %tr
@@ -97,12 +99,12 @@
                         %th Due Date
 
                     %tbody
-                      - session[:audit_findings].each do |finding|
+                      - @audit_findings.each do |finding|
                         %tr
-                          %td= finding[:description]
-                          %td= finding[:risk_level].titleize
-                          %td= finding[:category].titleize
-                          %td= finding[:due_date] || 'N/A'
+                          %td= finding.description
+                          %td= finding.risk_level.titleize
+                          %td= finding.category.titleize
+                          %td= finding.due_date.present? ? finding.due_date.strftime("%d/%m/%Y") : 'N/A'
                 %br/
           %br/
     
