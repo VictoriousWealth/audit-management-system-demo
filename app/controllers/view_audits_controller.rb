@@ -13,6 +13,6 @@ class ViewAuditsController < ApplicationController
   private
 
   def set_audit
-    @audit = Audit.find(params[:id])
-  end
+    @audit = Audit.includes(audit_detail: :audit_standards).find(params[:id])
+  end  
 end

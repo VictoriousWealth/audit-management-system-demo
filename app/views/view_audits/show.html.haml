@@ -1,1 +1,7 @@
-%h1 View Auidt
+#view_audits
+  %h1.font-helvetica.text-custom-black.fw-bolder.ms-2.nt-5.mb-5 
+    Audit ##{@audit.id.to_s.rjust(4, '0')}
+
+  .container.border.border-1.border-black.rounded-4.ms-2.me-2.p-4
+    %h2.font-helvetica.text-custom-black.mb-3 General Information
+    = render 'general_information'

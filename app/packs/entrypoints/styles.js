@@ -8,3 +8,4 @@ import '../styles/dashboard'
 import '../styles/create_edit_audits';
 import '../styles/create_questionnaire';
 import '../styles/modal';
+import '../styles/view_audits';
