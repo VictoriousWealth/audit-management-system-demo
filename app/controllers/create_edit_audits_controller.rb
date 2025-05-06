@@ -13,7 +13,7 @@ class CreateEditAuditsController < ApplicationController
   def create
     # Handle "Discard Edits" action - redirect without saving anything
     if params[:commit] == "Discard Edits"
-      redirect_to view_audit_path(@audit), notice: "Audit creation cancelled. No data was saved."
+      redirect_to @audit.present? ? view_audit_path(@audit) : root_path, notice: "Audit creation cancelled. No data was saved."
       return
     end
 
@@ -333,16 +333,14 @@ class CreateEditAuditsController < ApplicationController
     if current_user.auditee? || current_user.sme?
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
-  end  
-
-
+  end
+  
   def authorize_creation
     unless current_user.senior_manager? || current_user.qa_manager?
       redirect_to root_path, alert: "You are not authorized to create new audits."
     end
   end
-
-
+  
   def authorize_editing
     audit = Audit.find(params[:id])
   

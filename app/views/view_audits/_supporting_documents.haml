@@ -17,7 +17,7 @@
             - content_preview = doc.content&.strip.to_s.split[0..9].join(' ')
             %td= content_preview.presence || "N/A"
             %td
-              = link_to "View", doc.location || "#", class: "btn btn-sm btn-outline-primary", target: "_blank"
+              = link_to 'View', rails_blob_path(doc.file, disposition: 'attachment'), class: "btn btn-sm btn-outline-primary", target: "_blank"
       - else
         %tr
           %td.text-muted.colspan-5{ colspan: 5 } No supporting documents available
