@@ -2,6 +2,23 @@
   %h1.font-helvetica.text-custom-black.fw-bolder.ms-4.mt-5.mb-5.me-2.ps-5.w-100
     Audit ##{@audit.id.to_s.rjust(4, '0')}
 
+  - is_auditor = current_user.auditor?
+  - assigned_as_sme = @audit.audit_assignments.exists?(user_id: current_user.id, role: :sme)
+  - show_sme_modal = is_auditor && assigned_as_sme
+
+  - if show_sme_modal
+    #smeModal.modal.fade{ tabindex: "-1", "aria-labelledby": "smeModalLabel", "aria-hidden": "true" }
+      .modal-dialog
+        .modal-content
+          .modal-header
+            %h5.modal-title{ id: "smeModalLabel" }
+              SME Access Notice
+            %button.btn-close{ "data-bs-dismiss": "modal", "aria-label": "Close" }
+          .modal-body
+            You are assigned as a Subject Matter Expert (SME) for this audit. Edit access and certain actions may be restricted.
+          .modal-footer
+            %button.btn.btn-secondary{ "data-bs-dismiss": "modal" } Got it!
+
   .container.border.border-1.border-black.rounded-4.ms-2.me-2.p-4
     %h2.font-helvetica.text-custom-black.mb-3 General Information
     = render 'general_information'
@@ -29,3 +46,12 @@
         - assigned_as_sme = @audit.audit_assignments.exists?(user_id: current_user.id, role: :sme)
         - unless current_user.auditee? || assigned_as_sme
           = link_to "Edit Audit", edit_create_edit_audit_path(@audit), class: "btn btn-sm btn-warning w-100 font-helvetica fs-5 mt-3"
+
+:javascript
+  document.addEventListener("DOMContentLoaded", function () {
+    var smeModal = document.getElementById("smeModal");
+    if (smeModal) {
+      var modal = new bootstrap.Modal(smeModal);
+      modal.show();
+    }
+  });
