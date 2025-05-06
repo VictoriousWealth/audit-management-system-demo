@@ -60,7 +60,7 @@ class Audit < ApplicationRecord
   has_many :audit_questionnaires
   has_one :audit_closure_letter
   has_many :corrective_actions
-  has_many :reports
+  has_one :report
   has_one :audit_request_letter
 
   accepts_nested_attributes_for :audit_assignments, allow_destroy: true

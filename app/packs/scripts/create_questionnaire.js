@@ -1,33 +1,36 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Getting the elements needed for the Create Questionnaire page
-    let templateRadBtn = document.getElementById('option-template').children[1];
-    let customRadBtn = document.getElementById('option-custom').children[1];
+    let templateRadBtn = document.getElementById('option-template')?.children[1];
+    let customRadBtn = document.getElementById('option-custom')?.children[1];
     let templateContent = document.getElementById('template-content');
     let customContent = document.getElementById('custom-content');
-    let questionnaireDropdown = document.getElementById('template-content').children[1];
+    let questionnaireDropdown = document.getElementById('template-content')?.children[1];
     let accordionContainer = document.getElementById('section-accordion-container');
 
-    if (templateRadBtn) {
+    // Safely check if the elements exist before using them
+    if (templateRadBtn && templateContent && customContent) {
         // Toggling template questionnaire content
         templateRadBtn.addEventListener('change', function() {
             if (templateRadBtn.checked) {
                 templateContent.style.display = 'block';
                 customContent.style.display = 'none';
             }
-        })
-    }
-    
-    if (customRadBtn) {
-         // Toggling custom questionnaire content
-        customRadBtn.addEventListener('change', function() {
-            if (customRadBtn.checked) {
-                templateContent.style.display = 'none';
-                customContent.style.display = 'block';
-            }
-        })
+        });
+
+        // Toggling custom questionnaire content
+        if (customRadBtn) {
+            customRadBtn.addEventListener('change', function() {
+                if (customRadBtn.checked) {
+                    templateContent.style.display = 'none';
+                    customContent.style.display = 'block';
+                }
+            });
+        }
+    } else {
+        // console.error('Missing one of the required elements: templateRadBtn, templateContent, customContent');
     }
 
-    if (questionnaireDropdown || questionnaireDropdown != " ") {
+    if (questionnaireDropdown) {
         // Getting the selected template questionnaire questions and sections
         questionnaireDropdown.addEventListener('change', function() {
             let selectedValue = questionnaireDropdown.value;
@@ -36,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Clearing content in the accordion
                 accordionContainer.innerHTML = "";
             }
-    
+
             // Fetching data from the controller to update the page layout
             fetch('/update_questionnaire_layout', {
                 method: 'POST',
@@ -52,10 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error("Error:", data.error);
                     return;
                 }
-    
+
                 // Clearing content in the accordion
                 accordionContainer.innerHTML = "";
-    
+
                 data.sections.forEach((section, index) => {
                     // Updating the accordion content with the questionnaire information
                     let accordionItem = document.createElement("div");

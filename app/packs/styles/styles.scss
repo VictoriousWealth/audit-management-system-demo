@@ -64,47 +64,69 @@ body, ul {
     }
 }
 
+.form-actions > .update-btn {
+    background-color: #328166;
+    color: white;
 
-// Not needed (TBC)
-// .table-container {
-//     margin: 20px;
-//     text-align: center;
-// }
+    &:hover {
+        background-color: #235a47;
+    }
+}
 
-// Not needed (TBC)
-// .data-table {
-//     width: 80%;
-//     margin: 0 auto;
-//     border-collapse: collapse;
-//     border: 1px solid #ccc;
-    
-//     th, td {
-//         padding: 12px;
-//         border: 1px solid #ccc;
-//         text-align: center;
-//     }
-    
-//     th {
-//         background-color: #f4f4f4;
-//         font-weight: bold;
-//     }
-// }
 
-// needs to change -- RESOLVED (TBC)
+.form-group > .green-btn {
+    border-color:  #328166;
+    background-color: #328166;
+    color: white;
+}
+  
+.green-btn:hover {
+    background-color: #235a47;
+}
+
+.mySidenav a, .special-a a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.sidenav > .main-menu {
+    color: #444444;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 500;
+    transition: 0.3s;
+    display: block;
+
+
+}
+
+
+body>.navbar {
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0.1rem 0.4rem  rgba(0, 0, 0, 0.3);
+    margin-bottom: 2rem;
+}
+
+
 @media (max-width: 768px) {
     body>.navbar {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    // Not needed (TBC)
-    // .navbar-nav {
-    //     flex-direction: column;
-    //     gap: 10px;
-    // }
 }
 
-// needs to change -- RESOLVED (TBC)
+.navbar > .navbar-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto;
+}
+
 .navbar-icons {
     display: flex;
     align-items: center;
@@ -122,85 +144,46 @@ body, ul {
     }
 }
 
-// needs to change i think
 .green-btn {
     border-color:  #328166;
     background-color: #328166;
 }
   
-// needs to change i think
 .green-btn:hover {
     background-color: #235a47;
 }
 
-// needs to change -- RESOLVED (TBC)
 .mySidenav a, .special-a a {
     color: inherit;
     text-decoration: none;
 }
 
-body>.navbar {
-    background-color: #ffffff;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #333;
-    color: #e90f0f;
-    
-    >.container {
-        display: flex;
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        justify-content: space-between;
-        align-items: center;
-        
-        >.navbar-brand {
-            color: rgb(255, 0, 0);
-            text-decoration: none;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        
+
+.leroy-link {
+    display: inline-block;
+    color: #328166;
+    font-weight: 500;
+    margin: 0.5rem 0;
+  
+    &:hover {
+      color: #235a47;
+      text-decoration: none;
     }
 }
-
+  
 
 .logo {
-    width: 100px;
+    width: 5rem;
     height: auto;
 }
 
 .logo2 {
-    width: 200px;
+    width: 12rem;
     height: auto;
 }
 
-// Not needed (TBC)
-// .navbar-nav {
-//     display: flex;
-//     gap: 15px;
-    
-//     li {
-//         display: inline;
-//     }
-    
-//     a {
-//         color: rgb(254, 0, 0);
-//         text-decoration: none;
-//         padding: 8px 12px;
-//         transition: background 0.3s;
-        
-//         &:hover {
-//             background: rgba(255, 255, 255, 0.2);
-//             border-radius: 4px;
-//         }
-//     }
-// }
-
 .menu-icon {
-    width: 30px;
+    width: 3rem;
     height: auto;
     cursor: pointer;
 }
@@ -210,10 +193,14 @@ body>.navbar {
     padding: 30px 70px 30px 50px;
     border-radius: 20px;
     width: 300px;
-    border: 1.2px solid rgb(74, 73, 73);
+    border: 0.1rem solid rgb(74, 73, 73);
     text-align: center;
-    margin: 50px auto;
-    box-shadow: 10px #333;
+    margin: 5rem auto;
+}
+
+.login-container > h2 {
+    color: #444444;
+    margin-top: 1rem;
 }
 
 .profile-container p {
@@ -235,7 +222,10 @@ body>.navbar {
     position: relative;
     bottom: 0;
     left: 0;
-    padding: 10px 0;
+    margin-top: 1rem;
+    padding-top: 1.2rem;
+    box-shadow: 0 -0.1rem 0.4rem rgba(0, 0, 0, 0.3);
+
 }
 
 .bottom_button, link-btn {
@@ -295,7 +285,7 @@ body>.navbar {
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     right: 0; 
     background-color:  white; 
@@ -376,12 +366,12 @@ body>.navbar {
 
 .link_bn{
     background-color: #328166;
-    color: inherit;
+    color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 0.4rem;
     cursor: pointer;
-    padding: 10px 20px;
-    margin-top: 10px;
+    padding: 0.6rem 1rem;
+    margin-top: 1rem;
     transition: background 0.3s;
     text-decoration: none;
 
@@ -394,6 +384,311 @@ body>.navbar {
         color: white;
         text-decoration: none;
     }
+}
+
+//The stuff for uploading supporting documents
+
+.upload-supporting-documents > main {
+    width: 100%;
+    display: flexbox;
+}
+
+.upload-supporting-documents > h1 {
+    margin-top: 1rem;
+    margin-bottom: 1.2rem;
+    margin-left: 7rem;
+    color: #444444;;
+
+
+}
+
+.rectangle-3 {
+    width: 80%;
+    min-height: 50rem;  
+    background: #FFFFFF;
+    border: 0.12rem solid rgb(178, 177, 177);
+    border-radius: 2rem;
+    margin: 0 auto;
+    padding-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.rectangle-3 > h2 {
+    margin-left: 2rem;
+    color: #444444;
+    margin-bottom: 1rem;
+}
+
+.general-information-table {
+    text-align: center;
+    margin: 0 auto;
+    max-width: fit-content;
+    margin-left: 2rem;
+    margin-right: 2rem;
+
+}
+
+.general-information-table > th, td, thead, tbody, table {
+    width: 80rem;
+    height: 3rem;
+    border: 1px solid #C0C0C0;
+}
+
+.general-information-table > thead {
+    background-color: lightgrey;
+}
+
+.documents-part {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.documents-part > h2 {
+    margin-left: 2rem;
+    color: #444444;
+}
+
+.input-documents {
+    height: 3rem;
+    background: transparent;
+    border: 0.12rem solid rgb(178, 177, 177);
+    border-radius: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    padding-left: 2rem;
+    padding-top: 0.5rem;
+    width: 92%;
+    color: #444444;
+
+}
+
+.attachments-part {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;  
+}
+
+.attachments-part > p {
+    margin-left: 2rem;
+    font-size: 2rem;
+    color: #328166;
+}
+
+.rectangle-attachments {
+    border: 0.12rem solid rgb(178, 177, 177);
+    border-radius: 2rem;
+    padding-left: 1rem;
+    padding-bottom: 2rem;
+    padding-top: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+}
+
+.rectangle-attachments > #document-title {
+    width: 70%;
+    height: 2rem;
+    background-color: #F7F6F6;
+    border: 1px solid rgb(178, 177, 177);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    border-radius: 0.3rem;
+    padding-left: 0.5rem;
+
+}
+
+.rectangle-attachments > #additional-notes {
+    width: 90%;
+    height: 5rem;
+    background-color: #F7F6F6;
+    border: 1px solid rgb(178, 177, 177);
+    padding-left: 0.5rem;
+    font-size: 1rem;
+    border-radius: 0.3rem;
+
+}
+
+.add-button {
+    background-color: #328166;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    width: 8rem;
+    padding: 10px;
+    justify-content: center;
+    margin-top: 15px;
+    display: block; 
+    margin-left: 0rem; 
+    margin-right: auto;
+    
+    &:hover {
+      background-color: #235a47;
+    }
+}
+
+.view-button {
+    background-color: #328166;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    width: 8rem;
+    padding: 10px;
+    margin-top: 15px;
+    margin-left: auto;  
+    display: block;  
+    margin-right: 2rem;
+    &:hover {
+        background-color: #235a47;
+    }
+}
+
+.remove-preview {
+    color: #7A7A7A;  
+    cursor: pointer;
+    margin-left: 1rem;
+    text-decoration: none;
+
+}
+  
+.remove-preview:hover {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.file-preview {
+    color: #7A7A7A;
+}
+
+
+//----------------------------------------------------------------
+
+//Supporting documents page
+
+main.supporting_documents > h1 {
+    margin-top: 1rem;
+    margin-bottom: 1.2rem;
+    margin-left: 7rem;
+    color: #444444;
+}
+
+
+
+.table_container  > table {
+    border-collapse: collapse;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    max-width: fit-content;
+    padding-left: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-top: 1rem;
+
+}
+
+.button_container {
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: 2rem;
+    padding-top: 1.5rem;
+
+}
+  
+
+.table_container  {
+    max-width: fit-content;
+    width: 80%;
+    min-height: 50rem;  
+    background: #FFFFFF;
+    border: 0.12rem solid rgb(178, 177, 177);
+    border-radius: 2rem;
+    margin: 0 auto;
+    padding-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.table_container > h2  {
+    margin-left: 2rem;
+    color: #444444;
+}
+
+.table_container > th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+  
+.table_container > table > tr {
+    background-color: #C0C0C0;
+}
+
+.table_container > table > thead > tr {
+    background-color: #C0C0C0; 
+    color: #000000;
+}
+
+.table_container > table > thead > tr > th {
+    text-align: center;
+}
+
+main.supporting_documents >.view-link, .download-link {
+    background-color: #328166;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+  
+main.supporting_documents > .view-link:hover, .download-link:hover {
+    background-color: #235a47;
+}
+  
+
+//-----------------------------------------------------------------------
+//View document page
+
+main.view-supporting-documents  {
+    margin: auto;
+    justify-content: center;
+}
+
+main.view-supporting-documents > h1 {
+    padding-top: 1rem;
+    padding-left: 2rem;
+    color: #444444;
+
+}
+
+main.view-supporting-documents > .main-container {
+    width: 80%;
+    background: #FFFFFF;
+    border: 0.12rem solid rgb(178, 177, 177);
+    border-radius: 2rem;
+    margin: 0 auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 2rem;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+    color: #444444;
+}
+
+main.view-supporting-documents > .main-container > h2 {
+    padding-bottom: 0.6rem;
+}
+
+main.view-supporting-documents > .main-container > .back-link  {
+    color: #328166;
+
+    &:hover {
+        color: #235a47;
+        text-decoration: none;
+    }
+
+
 }
 
 //Notifications page ---------------------------------------------------------------------------------------
@@ -512,3 +807,28 @@ body>.navbar {
     background-color: #C0C0C0;
 }
 
+
+
+.d-contents {
+    display: contents !important;
+}
+
+.btn-green{
+    background-color: #328166 !important;
+}
+
+.btn-light-green{
+    background-color: #629C44 !important;
+}
+
+.w-20 {
+    width: 20%;
+}
+
+.opacity-90 {
+    opacity: 0.9 !important;
+}
+
+.bg-alice-blue {
+    background-color: aliceblue;
+}

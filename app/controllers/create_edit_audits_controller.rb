@@ -1,5 +1,9 @@
 class CreateEditAuditsController < ApplicationController
-
+  before_action :authenticate_user!
+  before_action :block_sme_and_auditee, only: [:new, :create, :edit, :update]
+  before_action :authorize_creation, only: [:new, :create]
+  before_action :authorize_editing, only: [:edit, :update]
+  
   # GET /create_edit_audits/new
   def new
     prepare_options # Load dropdown options and other shared variables for the form
@@ -7,9 +11,9 @@ class CreateEditAuditsController < ApplicationController
 
   # POST /create_edit_audits
   def create
-    # Handle "Close Audit" action - redirect without saving anything
-    if params[:commit] == "Close Audit"
-      redirect_to create_edit_audits_path, notice: "Audit creation cancelled. No data was saved."
+    # Handle "Discard Edits" action - redirect without saving anything
+    if params[:commit] == "Discard Edits"
+      redirect_to @audit.present? ? view_audit_path(@audit) : root_path, notice: "Audit creation cancelled. No data was saved."
       return
     end
 
@@ -164,9 +168,10 @@ class CreateEditAuditsController < ApplicationController
 
   # PATCH/PUT /create_edit_audits/:id
   def update
-    # Handle "Close Audit" without saving changes
-    if params[:commit] == "Close Audit"
-      redirect_to create_edit_audits_path, notice: "No changes were saved. Audit not modified."
+    # Handle "Discard Edits" without saving changes
+    @audit = Audit.find(params[:id])
+    if params[:commit] == "Discard Edits"
+      redirect_to view_audit_path(@audit), notice: "No changes were saved. Audit not modified."
       return
     end
 
@@ -324,4 +329,32 @@ class CreateEditAuditsController < ApplicationController
     @audit_details = AuditDetail.all
   end
 
+  def block_sme_and_auditee
+    if current_user.auditee? || current_user.sme?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
+  end
+  
+  def authorize_creation
+    unless current_user.senior_manager? || current_user.qa_manager?
+      redirect_to root_path, alert: "You are not authorized to create new audits."
+    end
+  end
+  
+  def authorize_editing
+    audit = Audit.find(params[:id])
+  
+    return if current_user.senior_manager?
+  
+    if current_user.qa_manager?
+      return if audit.audit_assignments.where(assigned_by: current_user.id).exists?
+    end
+  
+    if current_user.auditor?
+      return if audit.audit_assignments.where(user_id: current_user.id, role: [:lead_auditor, :auditor]).exists?
+    end
+  
+    redirect_to root_path, alert: "You are not authorized to edit this audit."
+  end
+  
 end

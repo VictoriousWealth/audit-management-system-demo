@@ -12,6 +12,7 @@ class SeniorDashboardController < ApplicationController
 
     audit_fidnings()
     corrective_actions()
+    documents()
     internal_vs_external()
     risk_map()
   end
@@ -28,7 +29,7 @@ class SeniorDashboardController < ApplicationController
   end
   
 
-  def documents()
+  def documents
     @documents = []
     Document.all.each do |d|
       @documents << {

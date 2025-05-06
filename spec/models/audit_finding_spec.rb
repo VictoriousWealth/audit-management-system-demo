@@ -9,7 +9,7 @@
 #  risk_level  :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  report_id   :bigint           not null
+#  report_id   :bigint
 #
 # Indexes
 #

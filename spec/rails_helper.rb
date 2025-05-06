@@ -8,7 +8,15 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'rails-controller-testing'
+require 'capybara/rspec'
+require 'factory_bot_rails'
+require 'database_cleaner/active_record'
+require 'rails-controller-testing'
+
 # Add additional requires below this line. Rails is not loaded until this point!
+Rails::Controller::Testing.install
+
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -40,10 +48,13 @@ RSpec.configure do |config|
   config.include Capybara::DSL
   # Let's us do login_as(user)
   config.include Warden::Test::Helpers
-  config.include Rails.application.routes.url_helpers
+  # config.include Rails.application.routes.url_helpers
   config.include Devise::Test::ControllerHelpers, type: :controller
 
   config.include ApplicationHelper, type: :feature
+  config.include FactoryBot::Syntax::Methods
+
+  config.include Rails::Controller::Testing::TemplateAssertions, type: :controller
 
 
   # Ensure our database is definitely empty before running the suite
@@ -127,3 +138,4 @@ Capybara.automatic_label_click = true
 def sleep_for_js(sleep_time: 0.5)
   sleep sleep_time
 end
+

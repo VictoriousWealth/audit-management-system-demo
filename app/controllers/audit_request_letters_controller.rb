@@ -13,8 +13,6 @@ class AuditRequestLettersController < ApplicationController
     
   # POST /audit/audit_id/audit-request-letter
   def create
-    @today_date = Date.today.strftime("%d/%m/%Y")
-
     @audit_request_letter = AuditRequestLetter.find_or_initialize_by(audit: @audit)
     @audit_request_letter.user = current_user
 
