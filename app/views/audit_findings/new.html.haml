@@ -1,0 +1,20 @@
+- content_for :title, 'Add New Audit finding'
+%meta{name: "csrf-token", content: form_authenticity_token}
+
+.row.justify-content-center
+  .col-sm-10.col-lg-8
+    .card.card-light
+      = simple_form_for @audit_finding, url: audit_report_audit_findings_path(@audit), method: :post do |f|
+
+
+        .card-header
+          %h2 Add New Audit Finding
+        .card-body
+          .form-group
+            = f.input :description, as: :text, label: "Description", required: true
+            = f.input :category, collection: ["Minor", "Major", "Critical"], prompt: "Select Category", label: "Category", required: true
+            = f.input :risk_level, collection: ["Low", "Medium", "High"], prompt: "Select Risk Level", label: "Risk Level", required: true
+            = f.input :due_date, as: :string, label: "Due Date", input_html: { type: "date" }, required: true
+            %br/
+            = f.button :submit, "Save", class: "btn btn-primary"
+

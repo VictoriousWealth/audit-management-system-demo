@@ -398,7 +398,8 @@ end
   end
 
   # === Report ===
-  report = audit.reports.create!(
+
+  report = audit.create_report!(
     status: %i[generated sent].sample,
     time_of_creation: actual_end,
     time_of_verification: actual_end + 1.day,
