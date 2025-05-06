@@ -24,7 +24,7 @@
 #
 FactoryBot.define do
   factory :audit_closure_letter do
-    content { "MyString" }
+    content { { company: {name: "Test Company"}, notes: { summary_statement: "Test summary", overall_compliance: "Compliant" } }.to_json }
     time_of_creation { "2025-03-12 17:03:48" }
     time_of_verification { "2025-03-12 17:03:48" }
     time_of_distribution { "2025-03-12 17:03:48" }
