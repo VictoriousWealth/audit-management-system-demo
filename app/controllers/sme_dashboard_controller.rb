@@ -1,18 +1,15 @@
 class SmeDashboardController < ApplicationController
   before_action :authenticate_user!
 
-  def auditor
+  def sme
     scheduled_audits()
     in_progress_audits()
     completed_audits()
 
-    pie_chart_data()
-    bar_chart_data()
-    compliance_score_graph_over_time()
-
     calendar_events()
     audit_fidnings()
     corrective_actions()
+    documents()
   end
 
   private

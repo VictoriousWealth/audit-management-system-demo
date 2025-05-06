@@ -13,6 +13,7 @@ class QaDashboardController < ApplicationController
     calendar_events()
     audit_fidnings()
     corrective_actions()
+    documents()
     internal_vs_external()
   end
 
@@ -26,7 +27,6 @@ class QaDashboardController < ApplicationController
       external_average: external_avg
     }
   end
-  
 
   def documents()
     @documents = []

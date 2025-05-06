@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.0].define(version: 2025_03_29_183408) do
-=======
-ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
->>>>>>> c55918cb304ae240cf21c6d32100603b7e43846c
+ActiveRecord::Schema[7.0].define(version: 202503309183408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,11 +19,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.integer "status"
     t.datetime "time_accepted"
     t.bigint "user_id", null: false
-    t.bigint "audit_assignments_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
-    t.index ["audit_assignments_id"], name: "index_audit_assignments_on_audit_assignments_id"
+    t.bigint "assigned_by"
     t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
     t.index ["user_id"], name: "index_audit_assignments_on_user_id"
   end
@@ -317,7 +312,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
+    t.bigint "user_id", null: false
     t.index ["audit_id"], name: "index_supporting_documents_on_audit_id"
+    t.index ["user_id"], name: "index_supporting_documents_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -345,9 +342,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-<<<<<<< HEAD
-  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
-=======
   create_table "vendor_rpns", force: :cascade do |t|
     t.bigint "company_id", null: false
     t.datetime "time_of_creation", default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -362,7 +356,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
     t.index ["company_id"], name: "index_vendor_rpns_on_company_id"
   end
 
->>>>>>> c55918cb304ae240cf21c6d32100603b7e43846c
   add_foreign_key "audit_assignments", "audits"
   add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"
@@ -396,6 +389,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_30_143454) do
   add_foreign_key "section_questions", "questionnaire_sections"
   add_foreign_key "selected_responses", "response_choices"
   add_foreign_key "supporting_documents", "audits"
+  add_foreign_key "supporting_documents", "users"
   add_foreign_key "users", "companies"
   add_foreign_key "vendor_rpns", "companies"
 end
