@@ -31,7 +31,7 @@ RSpec.describe AuditClosureLettersController, type: :controller do
 
   describe "GET #show" do
     it "returns success and assigns the closure letter" do
-      get :show, params: { id: audit_closure_letter.id }
+      get :show, params: { audit_id: audit.id, id: audit_closure_letter.id }
       expect(response).to have_http_status(:success)
       expect(assigns(:audit_closure_letter)).to eq(audit_closure_letter)
     end
@@ -61,9 +61,10 @@ RSpec.describe AuditClosureLettersController, type: :controller do
     end
 
     context "with invalid parameters" do
-      it "does not create a letter and renders new" do
-        post :create, params: { audit_id: audit.id, audit_closure_letter: { } }
-        expect(response).to render_template(:new)
+      it "raises ParameterMissing error" do
+        expect {
+          post :create, params: { audit_id: audit.id }
+        }.to raise_error(ActionController::ParameterMissing)
       end
     end
   end
@@ -71,7 +72,7 @@ RSpec.describe AuditClosureLettersController, type: :controller do
   describe "DELETE #destroy" do
     it "deletes the closure letter and redirects" do
       audit_closure_letter
-      delete :destroy, params: { audit_id: audit.id }
+      delete :destroy, params: { audit_id: audit.id, id: audit_closure_letter.id }
       expect(response).to redirect_to(audit_closure_letters_path(audit))
     end
   end
