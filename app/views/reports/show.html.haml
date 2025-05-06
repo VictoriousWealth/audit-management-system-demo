@@ -1,0 +1,112 @@
+- content_for :title, 'Create Audit Report'
+%meta{name: "csrf-token", content: form_authenticity_token}
+
+.row.justify-content-center
+  .col-sm-10.col-lg-8
+    %h2 Create Audit Report: Ref #{@audit.id.to_s.rjust(6, "0")}
+    .card.card-light
+      = simple_form_for @report, url: audit_report_path(@audit), method: :post do |f|
+        .card-body
+          .form-group
+            -# Card for Audit Details
+            .card.card-light
+              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#audit_details' }, aria: { controls: 'audit_details', expanded: 'true' }}
+                %h4 Audit Details
+              #audit_details.card-body.collapse.show
+                %dl.row
+                  %dt.col-sm-3
+                    Reference Number:
+                  %dd.col-sm-9
+                    #{@audit.id}
+                  %dt.col-sm-3
+                    Audit Start Date
+                  %dd.col-sm-9
+                    #{@start_date}
+
+                %dl.row
+                  %dt.col-sm-3
+                    Audit Location:
+                  %dd.col-sm-9
+                    #{@location}
+                  %dt.col-sm-3
+                    Audit Scope:
+                  %dd.col-sm-9
+                    #{@audit_scope}
+            %br/
+            -# Card for Auditee details
+            .card.card-light
+              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#auditee_details' }, aria: { controls: 'auditee_details', expanded: 'true' }}
+                %h4 Auditee Details
+
+              #auditee_details.card-body.collapse.show
+                %dl.row
+                  %dt.col-sm-3
+                    Company:
+                  %dd.col-sm-9
+                    #{@company_name}
+                  %dt.col-sm-3
+                    Auditee Name:
+                  %dd.col-sm-9
+                    #{@auditee.first_name} #{@auditee.last_name}
+                  %dt.col-sm-3
+                    Contacts:
+                  %dd.col-sm-9
+                    #{@contact}
+            %br/
+            -# Card for Auditors details
+            .card.card-light
+              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#auditors_details' }, aria: { controls: 'auditors_details', expanded: 'true' }}
+                %h4 Auditors Details
+
+              #auditors_details.card-body.collapse.show
+                %dl.row
+                  %dt.col-sm-3
+                    Lead Auditor:
+                  %dd.col-sm-9
+                    #{@lead_auditor.full_name}
+                %dl.row
+                  %dt.col-sm-3
+                    Assigned Auditor(s):
+                  %dd.col-sm-9
+                    - @assigned_auditors.each do |auditor|
+                      = auditor.full_name
+                      %br/
+                %dl.row
+                  %dt.col-sm-3
+                    Subject Matter Expert(s):
+                  %dd.col-sm-9
+                    - @smes.each do |sme|
+                      = sme.full_name
+                      %br/
+            %br/
+
+            -# Card for Detailed Findings
+            .card.card-light
+              %a.card-header.text-decoration-none{role: :button, data: { bs_toggle: :collapse, bs_target: '#detailed_findings' }, aria: { controls: 'detailed_findings', expanded: 'true' }}
+                %h4 Detailed Findings
+
+              #detailed_findings.card-body.collapse.show
+
+                - if @audit_findings.empty?
+                  %p No findings were recorded during this audit.
+                - else
+                  %table
+                    %thead
+                      %tr
+                        %th Description
+                        %th Risk Level
+                        %th Category
+                        %th Due Date
+
+                    %tbody
+                      - @audit_findings.each do |finding|
+                        %tr
+                          %td= finding.description
+                          %td= finding.risk_level.titleize
+                          %td= finding.category.titleize
+                          %td= finding.due_date.present? ? finding.due_date.strftime("%d/%m/%Y") : 'N/A'
+                %br/
+          %br/
+    
+
+

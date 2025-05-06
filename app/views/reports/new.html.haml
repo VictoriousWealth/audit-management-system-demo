@@ -1,5 +1,4 @@
 - content_for :title, 'Create Audit Report'
-- append_javascript_pack_tag('findings')
 %meta{name: "csrf-token", content: form_authenticity_token}
 
 .row.justify-content-center
@@ -87,14 +86,41 @@
                 %h4 Detailed Findings
 
               #detailed_findings.card-body.collapse.show
-                %table#items-table.table
-                  %thead
-                    %tr
-                      %th Name
-                      %th Description
-                  %tbody
-                    - @assigned_auditors.each do |item|
+
+                - if session[:audit_findings]
+                  %table.table.table-bordered.table-striped
+                    %thead
                       %tr
-                        %td= item.first_name
-                        %td= item.last_name
+                        %th Description
+                        %th Risk Level
+                        %th Category
+                        %th Due Date
+                        %th 
+
+                    %tbody
+                      - session[:audit_findings].each do |finding|
+                        %tr
+                          %td= finding[:description]
+                          %td= finding[:risk_level].titleize
+                          %td= finding[:category].titleize
+                          - if finding[:due_date].present?
+                            - begin
+                              - due_date = Date.parse(finding[:due_date])
+                              %td= due_date.strftime("%d/%m/%Y")
+                            - rescue ArgumentError
+                              %td N/A
+                          - else
+                            %td N/A
+                          %td
+                            -# = link_to 'Edit', edit_audit_report_audit_finding_path(@audit, finding[:id]), class: 'btn btn-warning'
+                            = link_to 'Edit',audit_path(@audit), class: 'btn btn-warning'
+                          %td
+                            = link_to 'Delete', audit_report_audit_finding_path(@audit, description: finding[:description], id: finding[:description]), method: :delete, data: { confirm: "Are you sure you want to delete the finding?" }, class: 'btn btn-danger'
+                %br/
+                = link_to 'Add New Finding',new_audit_report_audit_finding_path(@audit),class: 'btn btn-primary'
+          %br/
+          = f.submit "Save Report", class: "btn btn-primary"
+          %br/
+    
+
 

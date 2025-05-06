@@ -1,8 +1,8 @@
 class ReportsController < ApplicationController
-  before_action :set_audit, :set_audit_detail, only: [:new, :create]
-  before_action :set_audit_detail, only: [:new, :create]
-  before_action :set_assignments, only: [:new, :create]
-  # before_action :set_audit, only: [:new, :create, :show]
+  before_action :set_audit, :set_audit_detail, only: [:new, :create, :show]
+  before_action :set_audit_detail, only: [:new, :create, :show]
+  before_action :set_assignments, only: [:new, :create, :show]
+
   before_action :authenticate_user!
   skip_before_action :verify_authenticity_token, only: [:save_audit_letter] 
 
@@ -10,19 +10,32 @@ class ReportsController < ApplicationController
   # authorize_resource
 
   def new
+    @audit = Audit.find(params[:audit_id])
     @report = Report.find_or_initialize_by(audit: @audit)
-    @today_date = Date.today.strftime("%d/%m/%Y")
+    @pending_findings = session[:audit_findings] || []
   end
-
-  # GET /audit/audit_id/report/new
+  
   def create
+    @audit = Audit.find(params[:audit_id])
     @report = Report.find_or_initialize_by(audit: @audit)
-    @today_date = Date.today.strftime("%d/%m/%Y")
+
     @report.user = current_user
+    if @report.save
+      (session[:audit_findings] || []).each do |f|
+        puts "Creating finding: #{f.inspect}"
+        @report.audit_findings.create(f)
+      end
+      session[:audit_findings] = nil
+      redirect_to audit_path(@audit), notice: "Report created with findings"
+    else
+      render :show, notice: "Report not created"
+    end
   end
 
   # GET /audit/audit_id/report/show
   def show
+    @report = @audit.report
+    @audit_findings = @report.audit_findings
   end
 
   private
@@ -60,6 +73,13 @@ class ReportsController < ApplicationController
 
       # Get the SMEs
       @smes = audit_assignments.where(role: "sme").map(&:user)
+    end
+
+    def report_params
+      params.require(:report).permit(
+        :audit_id,
+        :user_id,
+      )
     end
 
 end

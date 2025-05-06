@@ -67,7 +67,11 @@ Rails.application.routes.draw do
       get 'preview', on: :member
       post 'verify', on: :member
     end
-    resource :report, only: [:new, :create, :show, :destroy]
+    resource :report, only: [:new, :create, :show, :destroy] do
+      resources :audit_findings, only: [:new,:create, :destroy] do
+        # delete 'destroy', to: 'audit_findings#destroy', on: :collection
+      end
+    end
   end
 
 

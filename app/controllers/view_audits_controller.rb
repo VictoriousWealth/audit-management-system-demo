@@ -6,7 +6,7 @@ class ViewAuditsController < ApplicationController
     @schedules = @audit.audit_schedules.includes(:user).order(:created_at)
     @request_letter = @audit.audit_request_letter
     @closure_letter = @audit.audit_closure_letter
-    @report = @audit.reports.order(created_at: :desc).first
+    @report = @audit.report
     @supporting_documents = @audit.supporting_documents.includes(:user).order(created_at: :desc)
   end
 
