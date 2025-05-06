@@ -1,0 +1,39 @@
+.table-scroll-container.min-width-webkit-fill-available
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6.min-width-webkit-fill-available
+    %thead
+      %tr
+        %th.p-2.white-space-nowrap Audit Id
+        %th.p-2.white-space-nowrap Auditee
+        %th.p-2.white-space-nowrap Vendor/Supplier
+        %th.p-2.white-space-nowrap Audit Type
+        %th.p-2.white-space-nowrap Audit Scope
+        %th.p-2.white-space-nowrap Actual Start Date
+        %th.p-2.white-space-nowrap Actual End Date
+        %th.p-2.white-space-nowrap Status
+    %tbody
+      %tr
+        %td= @audit.id.to_s.rjust(4, '0')
+        %td= @assignments.find_by(role: :auditee)&.user&.full_name
+        %td= @audit&.company&.name
+        %td.text-capitalize= @audit&.audit_type
+        %td= @audit&.audit_detail&.scope
+        %td= @audit&.actual_start_date ? @audit.actual_start_date.strftime('%H:%M %d/%m/%Y') : "N/A"
+        %td= @audit&.actual_end_date ? @audit.actual_end_date.strftime('%H:%M %d/%m/%Y') : "N/A"
+
+        - status_text = @audit.status.titleize
+        - status_class = case @audit.status.to_sym
+          - when :not_started
+            - 'text-danger'        # Red
+          - when :in_progress
+            - 'text-warning'       # Yellow
+          - when :pending_review
+            - 'text-primary'       # Blue
+          - when :completed
+            - 'text-success'       # Green
+          - when :cancelled
+            - 'text-purple'        # Purple (custom class if needed)
+          - else
+            -'text-muted'
+
+        %td{ class: "#{status_class} text-capitalize fw-semibold" }= status_text
+

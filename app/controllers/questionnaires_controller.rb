@@ -1,7 +1,14 @@
 class QuestionnairesController < ApplicationController
   # Methods to run before executing any other methods
-  before_action :get_questionnaires, only: [:new, :create, :edit, :add_question_bank_question]
   before_action :authenticate_user!
+  before_action :authorize_questionnaire_access, :get_questionnaires, only: [:new, :create, :edit, :add_question_bank_question]
+
+  def authorize_questionnaire_access
+    allowed_roles = ["qa_manager", "senior_manager", "auditor"]
+    unless allowed_roles.include?(current_user.role)
+      redirect_to root_path, alert: "You are not authorized to access that page."
+    end
+  end  
 
   # Retrieving data for rendering the page
   def new
@@ -62,7 +69,7 @@ class QuestionnairesController < ApplicationController
       end
     end
 
-    render "edit_question", layout: "application"
+    render "edit_question", layout: false
   end
 
   # Editing a custom question
@@ -78,7 +85,7 @@ class QuestionnairesController < ApplicationController
     # Creating the question
     @question = QuestionBank.create(question_text: @question_text)
 
-    render "edit_new_question", layout: "application"
+    render "edit_new_question", layout: false
   end
 
   # Updating the page layout when a template questionnaire is selected
@@ -98,7 +105,7 @@ class QuestionnairesController < ApplicationController
     @section_with_question_ids = SectionQuestion.where(questionnaire_section_id: @question_section.id)
     @section = @section_with_question_ids.first
 
-    render "edit_section", layout: "application"
+    render "edit_section", layout: false
   end
 
   # Adding a custom question
@@ -113,7 +120,7 @@ class QuestionnairesController < ApplicationController
     # Creating the question
     @question = QuestionBank.new
 
-    render "add_question", layout: "application"
+    render "add_question", layout: false
   end
 
   # Adding a question from an existing questionnaire

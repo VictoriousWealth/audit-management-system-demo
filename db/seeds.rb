@@ -37,7 +37,7 @@ companies = 30.times.map do
     postcode: Faker::Address.postcode
   )
 
-  rand(2..5).times do
+  rand(2..15).times do
     company.vendor_rpns.create!(
       material_criticality: rand(1..3),
       supplier_compliance_history: rand(1..3),
@@ -440,6 +440,15 @@ User.where(email: 'bob@sheffield.ac.uk').first_or_create(
   password_confirmation: 'Password1234'
 )
 
+#Sme
+User.where(email: 'mark@sheffield.ac.uk').first_or_create(
+  first_name: 'Mark',
+  last_name: 'Gordon',
+  role: 4,
+  password: 'Password1234',
+  password_confirmation: 'Password1234'
+)
+
 #Auditee
 company = Company.first
 User.where(email: 'alex@sheffield.ac.uk').first_or_create(
@@ -449,16 +458,16 @@ User.where(email: 'alex@sheffield.ac.uk').first_or_create(
   company: company,
   password: 'Password1234',
   password_confirmation: 'Password1234'
-)
+  )
 
-#QA
-User.where(email: 'nina@sheffield.ac.uk').first_or_create(
-  first_name: 'Nina',
-  last_name: 'Simone',
-  role: 2,
-  password: 'Password1234',
-  password_confirmation: 'Password1234'
-)
+  #QA
+  User.where(email: 'nina@sheffield.ac.uk').first_or_create(
+    first_name: 'Nina',
+    last_name: 'Simone',
+    role: 2,
+    password: 'Password1234',
+    password_confirmation: 'Password1234'
+    )
 
 #Senior Manager
 User.where(email: 'jane@sheffield.ac.uk').first_or_create(

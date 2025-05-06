@@ -27,11 +27,15 @@
 
 
 
+  - if current_user.role == "auditee"
+    %div#profile_button
+      = link_to company_mode_path do
+        %button.bottom_button.bg-warning.text-black{ type: 'button' } Go Company Mode
+  
 
   %div#profile_button
     = link_to edit_user_registration_path do
       %button.bottom_button{ type: 'button' } Edit Profile
-
 
   %div#profile_button
     = link_to destroy_user_session_path, method: :delete do

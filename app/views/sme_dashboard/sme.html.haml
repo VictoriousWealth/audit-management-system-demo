@@ -1,0 +1,19 @@
+#qa-dashboard.d-flex.flex-column.min-width-webkit-fill-available
+  .container.d-flex.flex-row.overflow-auto.p-0.pb-2.pt-2.m-0.min-width-webkit-fill-available.max-width-470
+    .container.p-0.d-inline-grid.min-width-webkit-fill-available.m-1.place-self-anchor-center{id: 'Audit', style: "max-height: 529px; height: 529px;"}
+      = render partial: 'audits'
+    
+  .container.d-flex.flex-row.overflow-auto.p-2.m-2.min-width-webkit-fill-available
+    .container.min-width-600.p-0.me-4{id: 'Audit-calendar'}
+      = render partial: 'audit_calendar'
+
+    .container.min-width-600.overflow-auto.me-4.ms-4.p-0.d-inline-grid{id: 'recurring-compliance-issues', style: "max-height: 529px; height: 529px;"}
+      = render partial: 'recurring_compliance_issues'
+
+  .container.d-flex.flex-row.overflow-x-auto.p-2.m-2.min-width-webkit-fill-available
+    .container.min-width-420.overflow-auto.me-4{id: 'Actions-CAPAs', style: "padding: 0px; display: inline-grid; max-height: 529px; height: 529px;"}
+      = render partial: 'actions_capas'
+    
+    .container.min-width-440.overflow-auto.me-4.p-0.d-inline-grid{id: 'document-quick-access', style: " max-height: 529px; height: 529px;"}
+      = render partial: 'document_quick_access'
+  

@@ -10,7 +10,7 @@ RSpec.feature "Forgot Password", type: :feature do
     #Make a user (other one not working for some reason)
     user = create(:user, email: "Auditee@User.com", password: "password")
     visit new_user_password_path
-    expect(page).to have_content("Forgot password?")
+    expect(page).to have_content("Forgot Password?")
 
     # Fill in the data
     fill_in "Email", with: "Auditee@User.com"
@@ -59,7 +59,7 @@ RSpec.feature "Forgot Password", type: :feature do
     # Generate password reset token
     token = user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token)
-    expect(page).to have_content("Change your password")
+    expect(page).to have_content("Reset your password")
 
     # Enter new password
     fill_in "New password", with: "newpassword"
@@ -84,7 +84,7 @@ RSpec.feature "Forgot Password", type: :feature do
     # Generate password reset token
     token = user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token)
-    expect(page).to have_content("Change your password")
+    expect(page).to have_content("Reset your password")
 
     # Fill in non matching passwords
     fill_in "New password", with: "newpassword"

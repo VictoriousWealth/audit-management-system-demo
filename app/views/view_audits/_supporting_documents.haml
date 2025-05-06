@@ -1,0 +1,23 @@
+.table-scroll-container.min-width-webkit-fill-available
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6.min-width-webkit-fill-available
+    %thead
+      %tr
+        %th.p-2.white-space-nowrap Document
+        %th.p-2.white-space-nowrap Time of Upload (DD-MM-YYYY, HH:MM:SS)
+        %th.p-2.white-space-nowrap Uploaded By
+        %th.p-2.white-space-nowrap Extract
+        %th.p-2.white-space-nowrap View
+    %tbody
+      - if @supporting_documents.present?
+        - @supporting_documents.each do |doc|
+          %tr
+            %td= doc.name
+            %td= doc.uploaded_at&.strftime('%d-%m-%Y, %H:%M:%S') || "N/A"
+            %td= doc.user&.full_name || "Unknown"
+            - content_preview = doc.content&.strip.to_s.split[0..9].join(' ')
+            %td= content_preview.presence || "N/A"
+            %td
+              = link_to 'View', rails_blob_path(doc.file, disposition: 'attachment'), class: "btn btn-sm btn-outline-primary", target: "_blank"
+      - else
+        %tr
+          %td.text-muted.colspan-5{ colspan: 5 } No supporting documents available
