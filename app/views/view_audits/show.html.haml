@@ -26,7 +26,6 @@
         = link_to "Checklist Scoring", "#", class: "btn btn-sm btn-green text-white w-100 font-helvetica fs-5 opacity-90", target: "_blank"
         = link_to "Progress", "#", class: "btn btn-sm btn-green text-white w-100 font-helvetica fs-5 opacity-90 mt-3", target: "_blank"
       .container.d-flex.flex-column.w-25.m-0.p-0.align-items-end.justify-content-end
-        - unless current_user.auditee? || current_user.sme?
+        - assigned_as_sme = @audit.audit_assignments.exists?(user_id: current_user.id, role: :sme)
+        - unless current_user.auditee? || assigned_as_sme
           = link_to "Edit Audit", edit_create_edit_audit_path(@audit), class: "btn btn-sm btn-warning w-100 font-helvetica fs-5 mt-3"
-
-
