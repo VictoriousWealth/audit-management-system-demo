@@ -1,5 +1,6 @@
 import Rails from "@rails/ujs";
-import "bootstrap"
+import * as bootstrap from 'bootstrap'
+window.bootstrap = bootstrap 
 import './styles'
 import "../scripts/nav_bar";
 
