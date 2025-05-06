@@ -11,6 +11,7 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'factory_bot_rails'
 require 'database_cleaner/active_record'
+require 'rails-controller-testing'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -50,6 +51,9 @@ RSpec.configure do |config|
 
   config.include ApplicationHelper, type: :feature
   config.include FactoryBot::Syntax::Methods
+
+  config.include Rails::Controller::Testing::TemplateAssertions, type: :controller
+
 
   # Ensure our database is definitely empty before running the suite
   # (e.g. if a process got killed and things weren't cleaned up)
