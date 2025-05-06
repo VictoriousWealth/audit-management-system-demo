@@ -88,13 +88,14 @@
               #detailed_findings.card-body.collapse.show
 
                 - if session[:audit_findings]
-                  %table
+                  %table.table.table-bordered.table-striped
                     %thead
                       %tr
                         %th Description
                         %th Risk Level
                         %th Category
                         %th Due Date
+                        %th 
 
                     %tbody
                       - session[:audit_findings].each do |finding|
