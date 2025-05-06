@@ -8,6 +8,10 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'capybara/rspec'
+require 'factory_bot_rails'
+require 'database_cleaner/active_record'
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 
@@ -41,11 +45,11 @@ RSpec.configure do |config|
   config.include Capybara::DSL
   # Let's us do login_as(user)
   config.include Warden::Test::Helpers
-  config.include Rails.application.routes.url_helpers
+  # config.include Rails.application.routes.url_helpers
   config.include Devise::Test::ControllerHelpers, type: :controller
 
   config.include ApplicationHelper, type: :feature
-
+  config.include FactoryBot::Syntax::Methods
 
   # Ensure our database is definitely empty before running the suite
   # (e.g. if a process got killed and things weren't cleaned up)
