@@ -146,6 +146,14 @@ class QuestionnairesController < ApplicationController
     render json: { sections: @sections }
   end
 
+  # Method for the purpose of testing the 
+  # build_questionnaire_sections private method
+  def show
+    @sections = build_questionnaire_sections(params[:name])
+
+    render json: { sections: @sections }
+  end
+
   private
 
     # Retrieving all custom questionnaires
@@ -160,14 +168,14 @@ class QuestionnairesController < ApplicationController
     def build_questionnaire_sections(questionnaire_name)
       # Getting the selected questionnaire's data
       selected_questionnaire = CustomQuestionnaire.where(name: questionnaire_name).first
-      questionnaire_id = selected_questionnaire.id
-      # Joining SectionQuestions and QuestionBank on question_bank_id
-      section_questions = QuestionBank
-        .joins("LEFT OUTER JOIN section_questions ON section_questions.question_bank_id = question_banks.id")
-        .select("question_banks.*, section_questions.questionnaire_section_id")
-      questionnaire_sections = QuestionnaireSection.where(custom_questionnaire_id: questionnaire_id)
-
       if (selected_questionnaire) # checking if null
+        questionnaire_id = selected_questionnaire.id
+        # Joining SectionQuestions and QuestionBank on question_bank_id
+        section_questions = QuestionBank
+          .joins("LEFT OUTER JOIN section_questions ON section_questions.question_bank_id = question_banks.id")
+          .select("question_banks.*, section_questions.questionnaire_section_id")
+        questionnaire_sections = QuestionnaireSection.where(custom_questionnaire_id: questionnaire_id)
+        
         # Mapping over the sections with indexes
         sections_data = questionnaire_sections.each_with_index.map do |questionnaire_section, index| 
           # Selecting only the section's questions that have the questionnaire section's id
@@ -193,10 +201,5 @@ class QuestionnairesController < ApplicationController
       else
         return []
       end
-    end
-
-    # Only allowing a list of trusted parameters through
-    def questionnaire_params
-      params.permit(:custom_questionnaire).permit(:name)
     end
 end
