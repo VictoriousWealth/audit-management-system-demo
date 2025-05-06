@@ -459,7 +459,7 @@ User.where(email: 'alex@sheffield.ac.uk').first_or_create(
   password: 'Password1234',
   password_confirmation: 'Password1234'
   )
-  
+
   #QA
   User.where(email: 'nina@sheffield.ac.uk').first_or_create(
     first_name: 'Nina',
