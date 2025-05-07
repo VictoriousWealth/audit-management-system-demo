@@ -36,6 +36,6 @@
         .input-group.mb-4
           %select.form-select{id: "audit-select", name: "audit_id"}
             %option{value: ""} Select an Audit
-            - Audit.all.each do |audit|
+            - @audits.each do |audit|
               %option{value: audit.id}= "Audit ##{audit.id.to_s.rjust(6, '0')}"
           = button_tag "Start Closure Letter", type: :submit, class: "btn btn-success", disabled: true, id: "start-letter-btn"

@@ -3,7 +3,20 @@ class AuditClosureLettersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @audit_closure_letters = AuditClosureLetter.includes(:audit, :user).all
+    if current_user.senior_manager?
+      @audits = Audit.all
+      @audit_closure_letters = AuditClosureLetter.includes(:audit, :user)
+    elsif current_user.qa_manager?
+      @audits = Audit.joins(:audit_assignments)
+                     .where(audit_assignments: { assigned_by: current_user.id })
+                     .distinct
+      @audit_closure_letters = AuditClosureLetter.joins(audit: :audit_assignments)
+                                .includes(:audit, :user)
+                                .where(audit_assignments: { assigned_by: current_user.id })
+                                .distinct
+    else
+      redirect_to root_path, alert: "Access denied." and return
+    end
   end
 
   def show
