@@ -135,7 +135,7 @@ class CreateEditAuditsController < ApplicationController
       AuditMailer.notify_assignment(assignment).deliver_later
     end
 
-    redirect_to edit_create_edit_audit_path(@audit), notice: 'Audit created successfully.'
+    redirect_to view_audit_path(@audit), notice: 'Audit created successfully.'
   end
 
   # GET /create_edit_audits/:id/edit
@@ -311,7 +311,7 @@ class CreateEditAuditsController < ApplicationController
       AuditMailer.update_audit(assignment).deliver_later
     end
 
-    redirect_to edit_create_edit_audit_path(@audit.reload), notice: "Audit updated successfully."
+    redirect_to view_audit_path(@audit.reload), notice: "Audit updated successfully."
   end
 
   private
