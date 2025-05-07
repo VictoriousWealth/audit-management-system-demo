@@ -47,10 +47,12 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
     t.integer "status"
     t.datetime "time_accepted"
     t.bigint "user_id", null: false
+    t.bigint "audit_assignments_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
     t.bigint "assigned_by"
+    t.index ["audit_assignments_id"], name: "index_audit_assignments_on_audit_assignments_id"
     t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
     t.index ["user_id"], name: "index_audit_assignments_on_user_id"
   end
@@ -86,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
     t.datetime "due_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "report_id", null: false
+    t.bigint "report_id"
     t.index ["report_id"], name: "index_audit_findings_on_report_id"
   end
 
@@ -386,6 +388,7 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "audit_assignments", "audit_assignments", column: "audit_assignments_id"
   add_foreign_key "audit_assignments", "audits"
   add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"

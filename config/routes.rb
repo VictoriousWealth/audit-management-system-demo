@@ -67,7 +67,11 @@ Rails.application.routes.draw do
       get 'preview', on: :member
       post 'verify', on: :member
     end
-    resource :report, only: [:new, :create, :show, :destroy]
+    resource :report, only: [:new, :create, :show, :destroy] do
+      resources :audit_findings, only: [:new,:create, :destroy] do
+        # delete 'destroy', to: 'audit_findings#destroy', on: :collection
+      end
+    end
   end
 
 
@@ -102,6 +106,8 @@ Rails.application.routes.draw do
   post 'questionnaire/_add_question_bank_question', to: 'questionnaires#add_question_bank_question', as: 'add_question_bank_question'
   # Updating the questionnaire questions for the question bank
   post '/get_questionnaire_questions', to: 'questionnaires#get_questionnaire_questions', as: 'get_questionnaire_questions'
+  # Showing the build_questionnaire_sections result for testing purposes
+  post '/show', to: 'questionnaires#show', as: 'show_questionnaire_layout'
 
   resources :audit_closure_letters, only: [:index]
 end
