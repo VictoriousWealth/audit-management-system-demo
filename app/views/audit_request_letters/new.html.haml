@@ -108,7 +108,7 @@
               %br= @lead_auditor&.email || "gtimc@sheffield.ac.uk"
 
             .form-group.mt-4.d-flex.justify-content-between
-              = link_to "Cancel", audit_path(@audit), class: "btn btn-danger"
+              = link_to "Cancel", view_audit_path(@audit), class: "btn btn-danger"
               %hidden 
               = f.submit "Preview", class: "btn btn-success", id: "previewBtn"
               
