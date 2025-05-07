@@ -43,7 +43,7 @@ RSpec.describe AuditRequestLetter, type: :model do
     let!(:company) { FactoryBot.create(:company) }
     let!(:user) { FactoryBot.create(:report_user) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
-    # let!(:audit_request_letter) { FactoryBot.create(:audit_request_letter, audit: audit, user: user) }
+    
     it "should validate_presence_of #{(:user_id)}" do
       audit_request_letter = AuditRequestLetter.new(user_id: nil)
       expect(audit_request_letter).not_to be_valid
