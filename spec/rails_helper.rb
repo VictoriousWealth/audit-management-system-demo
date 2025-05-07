@@ -8,11 +8,14 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'rails-controller-testing'
 require 'capybara/rspec'
 require 'factory_bot_rails'
 require 'database_cleaner/active_record'
+require 'rails-controller-testing'
 
 # Add additional requires below this line. Rails is not loaded until this point!
+Rails::Controller::Testing.install
 
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -50,6 +53,9 @@ RSpec.configure do |config|
 
   config.include ApplicationHelper, type: :feature
   config.include FactoryBot::Syntax::Methods
+
+  config.include Rails::Controller::Testing::TemplateAssertions, type: :controller
+
 
   # Ensure our database is definitely empty before running the suite
   # (e.g. if a process got killed and things weren't cleaned up)

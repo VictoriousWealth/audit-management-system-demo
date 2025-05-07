@@ -6,7 +6,7 @@
             .question-modal-form-container
                 = simple_form_for @question, url: edit_new_question_path, html: { data: { action: "submit->modals#saveQuestionEdit" }, modal_section_value: @section.section_order } do |f|
                     .question-form#question-form
-                        = f.input :question_text, class: 'title-input', id: 'question-text'
+                        = f.input :question_text, class: 'title-input', id: 'question-text', input_html: { value: @question_text}
                         = f.submit "Save", class: 'questionnaire-btn align-bottom align-right'
                 = link_to "Remove", "#", class: 'remove-button align-bottom align-left', data: { controller: "modals", action: "modals#removeQuestion", modal_section_value: @section.section_order }
                 = link_to "x", "#", class: 'cancel-button align-top align-right', data: { controller: "modals", action: "modals#close" }
