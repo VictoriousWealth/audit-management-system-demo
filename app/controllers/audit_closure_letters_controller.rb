@@ -96,7 +96,7 @@ class AuditClosureLettersController < ApplicationController
 
   def set_audit
     @audit = Audit.includes(
-      :company, {reports: :audit_findings}, :corrective_actions
+      :company, {report: :audit_findings}, :corrective_actions
     ).find(params[:audit_id])
   end
   
