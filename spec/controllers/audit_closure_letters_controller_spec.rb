@@ -67,6 +67,17 @@ RSpec.describe AuditClosureLettersController, type: :controller do
         }.to raise_error(ActionController::ParameterMissing)
       end
     end
+
+    context "when save fails" do
+      before do
+        allow_any_instance_of(AuditClosureLetter).to receive(:save).and_return(false)
+      end
+    
+      it "renders new template" do
+        post :create, params: { audit_id: audit.id, audit_closure_letter: { overall_compliance: "something" } }
+        expect(response).to render_template(:new)
+      end
+    end
   end
 
   describe "DELETE #destroy" do
@@ -75,5 +86,16 @@ RSpec.describe AuditClosureLettersController, type: :controller do
       delete :destroy, params: { audit_id: audit.id, id: audit_closure_letter.id }
       expect(response).to redirect_to(audit_closure_letters_path(audit))
     end
+
+    context "when destroy fails" do
+      it "redirects with an alert" do
+        audit_closure_letter
+        allow_any_instance_of(AuditClosureLetter).to receive(:destroy).and_return(false)
+
+        delete :destroy, params: { audit_id: audit.id, id: audit_closure_letter.id }
+        expect(response).to redirect_to(audit_closure_letters_path(audit))
+        expect(flash[:alert]).to eq("Failed to delete the closure letter.")
+      end
+    end      
   end
 end

@@ -17,7 +17,7 @@ class AuditClosureLettersController < ApplicationController
     @lead_auditor = audit_assignments.find_by(role: :lead_auditor)&.user
     @assigned_auditors = audit_assignments.where(role: :auditor).map(&:user)
   
-    @findings = AuditFinding.joins(:report).where(reports: {audit_id: @audit.id}).includes(report: :user)
+    @findings = AuditFinding.joins(:report).where(report: {audit_id: @audit.id}).includes(report: :user)
     @corrective_actions = @audit.corrective_actions
   end
   
@@ -31,7 +31,7 @@ class AuditClosureLettersController < ApplicationController
     @lead_auditor = audit_assignments.find_by(role: :lead_auditor)&.user 
     @assigned_auditors = audit_assignments.where(role: :auditor).map(&:user) 
 
-    @findings = AuditFinding.joins(:report).where(reports: {audit_id: @audit.id}).includes(report: :user)
+    @findings = AuditFinding.joins(:report).where(report: {audit_id: @audit.id}).includes(report: :user)
 
     @corrective_actions = @audit.corrective_actions # CAPAs yeahhhhh!!!!
   end
@@ -44,7 +44,7 @@ class AuditClosureLettersController < ApplicationController
     @auditee = audit_assignments.find_by(role: :auditee)&.user
     @lead_auditor = audit_assignments.find_by(role: :lead_auditor)&.user
     @assigned_auditors = audit_assignments.where(role: :auditor).map(&:user)
-    @findings = AuditFinding.joins(:report).where(reports: {audit_id: @audit.id}).includes(report: :user)
+    @findings = AuditFinding.joins(:report).where(report: {audit_id: @audit.id}).includes(report: :user)
     @corrective_actions = @audit.corrective_actions
   
     @audit_closure_letter = @audit.build_audit_closure_letter(audit_closure_letter_params)
