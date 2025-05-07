@@ -15,7 +15,7 @@
           %td= @request_letter.updated_at&.strftime('%d-%m-%Y, %H:%M:%S') || "N/A"
           %td
             = link_to "View", audit_audit_request_letters_path(@audit), class: "btn btn-sm btn-outline-primary", target: "_blank"
-
+      
       - if @closure_letter
         - has_documents = true
         %tr

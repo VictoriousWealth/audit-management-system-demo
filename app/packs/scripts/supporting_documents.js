@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const addButton = document.getElementById("submit-button");
-    const form = document.getElementById("upload-the-document");
-    const fileInput = document.getElementById("document-upload");
-    const attachmentSection = document.querySelector(".rectangle-attachments");
-
+    const addButton = document.getElementById("submit-button") || null;
+    const form = document.getElementById("upload-the-document")|| null;
+    const fileInput = document.getElementById("document-upload")|| null;
+    const attachmentSection = document.querySelector(".rectangle-attachments") || null;
+  if (addButton && form && fileInput && attachmentSection) {
     // This is a listener for displaying the file's details
     fileInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
@@ -47,4 +47,5 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Please fill in the required fields.");
       }
     });
+  }
   });
