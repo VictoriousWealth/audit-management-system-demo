@@ -28,8 +28,7 @@ FactoryBot.define do
     time_of_creation { "2025-03-12 17:18:14" }
     time_of_verification { "2025-03-12 17:18:14" }
     time_of_distribution { "2025-03-12 17:18:14" }
-    audit { nil }
-    user { nil }
-    audit_finding { nil }
+    association :audit
+    association :user
   end
 end

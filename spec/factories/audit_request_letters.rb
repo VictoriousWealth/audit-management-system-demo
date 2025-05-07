@@ -24,8 +24,8 @@
 #
 FactoryBot.define do
   factory :audit_request_letter do
-    Audit { nil }
-    user { nil }
+    association :audit
+    association :user
     content { "MyString" }
     time_of_creation { "2025-03-26 20:10:11" }
     time_of_verification { "2025-03-26 20:10:11" }
