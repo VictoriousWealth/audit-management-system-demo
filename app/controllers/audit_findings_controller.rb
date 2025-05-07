@@ -10,12 +10,8 @@ class AuditFindingsController < ApplicationController
 
   def create
     session[:audit_findings] ||= []
-    id = session[:audit_findings].size + 1
     # Check if the session already has findings
-
-
     session[:audit_findings] << {
-      id:          id,
       description: params[:audit_finding][:description],
       risk_level:  params[:audit_finding][:risk_level].downcase,
       category:    params[:audit_finding][:category].downcase,

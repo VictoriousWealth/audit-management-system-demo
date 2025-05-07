@@ -26,7 +26,7 @@ class ReportsController < ApplicationController
         @report.audit_findings.create(f)
       end
       session[:audit_findings] = nil
-      redirect_to audit_path(@audit), notice: "Report created with findings"
+      redirect_to view_audit_path(@audit), notice: "Report created with findings"
     else
       render :show, notice: "Report not created"
     end

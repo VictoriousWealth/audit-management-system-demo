@@ -31,6 +31,19 @@
 
     %h2.font-helvetica.text-custom-black.mt-5.mb-3 Letters & Reports
     = render 'letters_and_reports'
+    
+    .container.d-flex.flex-row.p-0
+      .container.d-flex.flex-column.p-0
+        - if (current_user.qa_manager? || current_user.senior_manager?) && @request_letter.nil?
+          = link_to "Create Request Letter", new_audit_audit_request_letters_path(@audit), class: "btn btn-sm btn-green m-3 ms-0 ps-2 pe-2 fs-5 text-white opacity-90 font-helvetica mb-0"
+        - if (current_user.qa_manager? || current_user.senior_manager?) && @report.nil?
+          = link_to "Create Audit Report", new_audit_report_path(@audit), class: "btn btn-sm btn-green m-3 ms-0 ps-2 pe-2 fs-5 text-white opacity-90 font-helvetica mb-0"
+        - if (current_user.qa_manager? || current_user.senior_manager?) && @closure_letter.nil?
+          = link_to "Create Closure Letter", new_audit_audit_closure_letter_path(@audit), class: "btn btn-sm btn-green m-3 ms-0 ps-2 pe-2 fs-5 text-white opacity-90 font-helvetica mb-0"
+      .container.d-flex.flex-column.p-0
+      .container.d-flex.flex-column.p-0
+      .container.d-flex.flex-column.p-0
+
 
     %h2.font-helvetica.text-custom-black.mt-5.mb-3 Supporting Documents
     = render 'supporting_documents'
