@@ -215,7 +215,7 @@ export default class extends Controller {
     showEditNewQuestion(e) {
         // Preventing refresh
         e.preventDefault();
-
+        console.log("here");
         // Opening the modal and preventing page scroll
         document.body.classList.add("modal-open");
 
@@ -448,11 +448,11 @@ export default class extends Controller {
 
         // Getting elements for updating the main page
         const modal = document.getElementsByClassName("modal")[0];
-        const listIndex = modal.dataset.modalsListIndexValue;
-        const listParent = document.getElementById(`question-list-${listIndex}`);
-        const newIndex = listParent.children.length;
         const sectionName = document.querySelector(".questionnaire-subtitle").textContent;
         const questionnaireSectionId = modal.dataset.modalQuestionnaireSectionId;
+        const sectionOrder = modal.dataset.modalSectionValue - 1;
+        const listParent = document.getElementById(`question-list-${sectionOrder}`);
+        let newIndex = listParent.children.length;
 
         // Updating the main page with the selected questions
         checkedBoxes.forEach((checkedItem) => {
@@ -470,7 +470,8 @@ export default class extends Controller {
             </div>
             `;
 
-            listParent.appendChild(entry);
+            listParent.appendChild(entry); // adding the entry to the list
+            newIndex++; // incrementing the index
         })
 
         // Closing the modal
