@@ -77,14 +77,18 @@ class QuestionnairesController < ApplicationController
     @question_text = params[:question_text] # the question's text content
     question_order_id = params[:id] # the index of the question in the section
     questionnaire_section_id = params[:questionnaire_section_id] # the question's section id
-    
+
+    puts @question_text
+    puts question_order_id
+    puts questionnaire_section_id
     # Getting the question's section
     @section = QuestionnaireSection.where(id: questionnaire_section_id).first
+    # puts @section.name
     # The question's order in the ordered list, accounting for 1-indexing of HTML ordered list items
     @new_question_id = question_order_id.to_i + 1
+    puts @new_question_id
     # Creating the question
-    @question = QuestionBank.create(question_text: @question_text)
-
+    @question = QuestionBank.new
     render "edit_new_question", layout: false
   end
 

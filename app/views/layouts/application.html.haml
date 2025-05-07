@@ -57,7 +57,7 @@
 
         %a.dropdown-btn{ href: "#" } Questionnaires
         %div.dropdown-container
-          %a{ href: "#" } Create Questionnaire
+          %a{ href: "/questionnaire/new" } Create Questionnaire
           %a{ href: "#" } Preview Questionnaire
           %a{ href: "#" } Send Email
           %a{ href: "#" } Questionnaire Response
@@ -102,6 +102,7 @@
     %main.flex-grow-1
       .container-fluid
         = yield
+      = turbo_frame_tag "modal"
 
     .footer
       %p &copy; GTIMC 2025
