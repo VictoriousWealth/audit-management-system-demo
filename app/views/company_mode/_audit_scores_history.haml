@@ -10,7 +10,8 @@
           %th.p-3 Date
           %th.p-3 Score
       %tbody
-        - @audit_scores.each do |entry|
-          %tr
-            %td.p-3= entry[:date] || "N/A"
-            %td.p-3= entry[:score] || "N/A"
+        -if @audit_scores.present?
+          - @audit_scores.each do |entry|
+            %tr
+              %td.p-3= entry[:date] || "N/A"
+              %td.p-3= entry[:score] || "N/A"
