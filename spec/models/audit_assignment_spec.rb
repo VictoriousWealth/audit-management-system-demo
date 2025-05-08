@@ -12,6 +12,11 @@
 #  audit_id      :bigint           not null
 #  user_id       :bigint           not null
 #
+# Foreign Keys
+#
+#  fk_rails_...  (audit_id => audits.id)
+#  fk_rails_...  (user_id => users.id)
+#
 require 'rails_helper'
 
 RSpec.describe AuditAssignment, type: :model do

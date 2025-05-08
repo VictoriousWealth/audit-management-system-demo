@@ -545,6 +545,7 @@ export default class extends Controller {
                     data.push(sectionItem);
                 });
 
+                console.log(data)
                 
                 fetch('/questionnaire', {
                     method: 'POST',
