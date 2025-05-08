@@ -28,15 +28,21 @@ class QaDashboardController < ApplicationController
     }
   end
 
-  def documents()
-    @documents = []
-    Document.all.each do |d|
-      @documents << {
-        id: d.id,
-        title: d.name,
-        content: d.content,
-      }
-    end
+  def documents
+    @documents = SupportingDocument
+      .joins(audit: :audit_assignments)
+      .where(audit_assignments: {
+        assigned_by: current_user.id
+      })
+      .distinct
+      .map do |d|
+        {
+          id: d.id,
+          title: d.name,
+          content: d.content,
+          file: d.file
+        }
+      end
   end
 
   def corrective_actions
