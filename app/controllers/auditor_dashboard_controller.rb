@@ -17,16 +17,24 @@ class AuditorDashboardController < ApplicationController
   end
 
   private
-  def documents() # to ensure that only documents related to the user can be accessed and any other no, but hard to do with current setup
-    @documents = []
-    Document.all.each do |d|
-      @documents << {
-        id: d.id,
-        title: d.name,
-        content: d.content,
-      }
-    end
+  def documents
+    @documents = SupportingDocument
+      .joins(audit: :audit_assignments)
+      .where(audit_assignments: {
+        user_id: current_user.id,
+        role: [AuditAssignment.roles[:auditor], AuditAssignment.roles[:lead_auditor]]
+      })
+      .distinct
+      .map do |d|
+        {
+          id: d.id,
+          title: d.name,
+          content: d.content,
+          file: d.file
+        }
+      end
   end
+  
 
   def corrective_actions
     @corrective_actions = []

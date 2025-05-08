@@ -9,15 +9,12 @@
         %tr
           %th.p-3 Document id
           %th.p-3 Document title
-          %th.p-3 Document first few words
+          %th.p-3 Additional notes
       %tbody
         - if @documents.present?
           - @documents.each do |document|
             %tr
-              %td.p-3= document[:document_id]
-              %td.p-3= document[:title]
-              %td.p-3= truncate(document[:content], length: 60)
+              %td.p-3= link_to document[:id].to_s.rjust(4, '0'), rails_blob_path(document[:file], disposition: 'attachment'), class: "", target: "_blank"
 
-  -# %div.text-center.mt-3
-    = link_to new_document_path do
-      %i.fa.fa-plus-circle.fa-2x{ style: 'color: green' }
+              %td.p-3= document[:title]
+              %td.p-3= truncate(document[:content], length: 50)
