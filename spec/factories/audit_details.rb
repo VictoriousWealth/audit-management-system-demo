@@ -19,11 +19,21 @@
 #
 #  fk_rails_...  (audit_id => audits.id)
 #
+
 FactoryBot.define do
   factory :audit_detail do
-    scope { "The scope of test audit" }
-    purpose { "Purpose of test audit" }
-    objectives { "Objectives of test audit" }
-    boundaries { "Boundaries of test audit" }
+    association :audit
+
+    scope { "The scope of the test audit" }
+    purpose { "The purpose of the test audit" }
+    objectives { "The objectives of the test audit" }
+    boundaries { "The boundaries of the test audit" }
+
+    # Optional: create with associated audit_standards
+    trait :with_standards do
+      after(:create) do |audit_detail|
+        create_list(:audit_standard, 3, audit_detail: audit_detail)
+      end
+    end
   end
 end

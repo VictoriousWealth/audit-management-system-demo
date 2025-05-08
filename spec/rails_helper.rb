@@ -50,6 +50,9 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   # config.include Rails.application.routes.url_helpers
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  
+  
 
   config.include ApplicationHelper, type: :feature
   config.include FactoryBot::Syntax::Methods

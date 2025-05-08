@@ -16,13 +16,14 @@
           %th.p-3 Performance
           %th.p-3 Contamination Risk
       %tbody
-        - @vendor_rpns.each do |rpn|
-          %tr
-            %td.p-3= rpn[:date]
-            %td.p-3= rpn[:rpn]
-            %td.p-3= rpn[:material_criticality]
-            %td.p-3= rpn[:compliance_history]
-            %td.p-3= rpn[:regulatory_approvals]
-            %td.p-3= rpn[:complexity]
-            %td.p-3= rpn[:performance]
-            %td.p-3= rpn[:contamination_risk]
+        - if @vendor_rpns.present?
+          - @vendor_rpns.each do |rpn|
+            %tr
+              %td.p-3= rpn[:date]
+              %td.p-3= rpn[:rpn]
+              %td.p-3= rpn[:material_criticality]
+              %td.p-3= rpn[:compliance_history]
+              %td.p-3= rpn[:regulatory_approvals]
+              %td.p-3= rpn[:complexity]
+              %td.p-3= rpn[:performance]
+              %td.p-3= rpn[:contamination_risk]

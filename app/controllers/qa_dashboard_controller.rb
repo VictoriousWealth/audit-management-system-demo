@@ -11,7 +11,7 @@ class QaDashboardController < ApplicationController
     compliance_score_graph_over_time()
 
     calendar_events()
-    audit_fidnings()
+    audit_findings()
     corrective_actions()
     documents()
     internal_vs_external()
@@ -100,7 +100,7 @@ class QaDashboardController < ApplicationController
           full_description: f.description,
           category: category
         }
-      end
+      end 
   end
 
   def calendar_events
