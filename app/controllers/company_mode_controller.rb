@@ -58,16 +58,21 @@ class CompanyModeController < ApplicationController
   end
   
 
-  def documents() #TODO: to ensure that only documents related to the user can be accessed and any other no, but hard to do with current setup
-    @documents = []
-    Document.all.each do |d|
-      @documents << {
+  def documents
+    auditee_ids = User.where(company_id: current_user.company_id, role: User.roles[:auditee]).pluck(:id)
+  
+    audit_ids = AuditAssignment.where(user_id: auditee_ids, role: AuditAssignment.roles[:auditee])
+                               .pluck(:audit_id).uniq
+  
+    @documents = SupportingDocument.where(audit_id: audit_ids).map do |d|
+      {
         id: d.id,
         title: d.name,
         content: d.content,
+        file: d.file
       }
     end
-  end
+  end  
 
   def corrective_actions
     @corrective_actions = []
