@@ -1,34 +1,41 @@
+# This line includes the Rails test helper, which sets up the test environment
 require "rails_helper"
 
-describe "Creating a new audit request letter" do
-  let!(:auditor) {FactoryBot.create(:user4)}
-  let!(:lead_auditor) {FactoryBot.create(:user5)}
+RSpec.describe "Creating a new audit request letter", type: :feature do
+  include Devise::Test::IntegrationHelpers
+
+  puts "------------sdfsdiofjosjpdfsd"
+  Rails.application.config.hosts = [
+  IPAddr.new("0.0.0.0/0"),        # All IPv4 addresses.
+  IPAddr.new("::/0"),             # All IPv6 addresses.
+  "localhost",                    # The localhost reserved domain.
+  ENV["RAILS_DEVELOPMENT_HOSTS"]  # Additional comma-separated hosts for development.
+]
+puts "------------------sdfsdiofjosjpdfsd"
 
 
-  let!(:company) { FactoryBot.create(:company, id: 1) }
-  puts "Companies created: #{Company.count}"
 
+  # let!(:company) { FactoryBot.create(:company, id: 1) }
 
-  let!(:user) { FactoryBot.create(:user) }
-  puts "Users created: #{User.count}"
+  let!(:auditor) {FactoryBot.create(:user, :auditor)}
+  let!(:lead_auditor) {FactoryBot.create(:user, :auditor)}
+  let!(:qa_man) { FactoryBot.create(:user, :qa_manager) }
 
-  let!(:audit) { FactoryBot.create(:audit, company: company, user: user) }
-  puts "Audits created: #{Audit.count}"
+  let!(:audit) { FactoryBot.create(:audit, :with_detail_and_standards, :basic_team) }
   
 
-  let!(:audit_detail) { FactoryBot.create(:audit_detail, audit: audit) }
-  puts "Audit details created: #{AuditDetail.count}"
+  # let!(:audit_detail) { FactoryBot.create(:audit_detail, :with_standards ,audit: audit) }
 
-  let!(:audit_assignment){FactoryBot.create(:audit_assignment, user: auditor, audit: audit, role: 1)}
-  let!(:audit_assignment) {FactoryBot.create(:audit_assignment, user: lead_auditor, audit: audit, role: 0)}
-
-  let!(:audit_standard) { FactoryBot.create(:audit_standard, audit_detail: audit_detail) }
-  puts "Audit standards created: #{AuditStandard.count}"
+  # let!(:audit_standard) { FactoryBot.create(:audit_standard, audit_detail: audit_detail) }
+  # puts "Audit standards created: #{AuditStandard.count}"
   before do
-    login_as user
+    login_as qa_man
   end
   specify "User can see the prefilled data" do
+
     visit new_audit_audit_request_letters_path(audit)
+    puts page.body
+    save_and_open_page
     puts "Audit request letter page visited - running test 1"
 
     expect(page).to have_content("Audit Request Letter")

@@ -26,7 +26,7 @@ RSpec.describe AuditFinding, type: :model do
 
   describe 'associations' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:report_user) }
+    let!(:user) { FactoryBot.create(:user, :qa_manager) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     let!(:report) { FactoryBot.create(:report, audit: audit, user: user) }
 
@@ -38,7 +38,7 @@ RSpec.describe AuditFinding, type: :model do
 
   describe 'enums' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:report_user) }
+    let!(:user) { FactoryBot.create(:user, :qa_manager) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     let!(:report) { FactoryBot.create(:report, audit: audit, user: user) }
 
@@ -54,7 +54,7 @@ RSpec.describe AuditFinding, type: :model do
 
   describe 'attributes' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:report_user) }
+    let!(:user) { FactoryBot.create(:user, :qa_manager) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     let!(:report) { FactoryBot.create(:report, audit: audit, user: user) }
     let!(:finding) { FactoryBot.create(:audit_finding, report: report) }
