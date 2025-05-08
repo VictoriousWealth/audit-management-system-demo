@@ -22,7 +22,7 @@
 
 FactoryBot.define do
   factory :audit_detail do
-    association :audit
+    # association :audit
 
     scope { "The scope of the test audit" }
     purpose { "The purpose of the test audit" }
