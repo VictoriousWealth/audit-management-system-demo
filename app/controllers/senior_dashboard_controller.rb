@@ -31,11 +31,12 @@ class SeniorDashboardController < ApplicationController
 
   def documents
     @documents = []
-    Document.all.each do |d|
+    SupportingDocument.all.each do |d|
       @documents << {
         id: d.id,
         title: d.name,
         content: d.content,
+        file: d.file
       }
     end
   end
