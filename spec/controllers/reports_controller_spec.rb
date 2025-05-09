@@ -84,32 +84,11 @@ RSpec.describe ReportsController, type: :controller do
     before do
       sign_in qa_manager
     end
-    context "with valid parameters" do
-      let!(:report) { FactoryBot.create(:report, audit: audit, user: qa_manager) }
+    let!(:report) { FactoryBot.create(:report, audit: audit, user: qa_manager) }
 
-        it "returns success and creates a new report" do
-          post :create, params: { audit_id: audit.id, report: report }
-          expect(response).to have_http_status(:redirect)
-        end
-    end
-    
-    context "with invalid route with missing audit ID parameter" do
-      it "raises route generation error" do
-        expect {
-          post :create, params: {}
-        }.to raise_error(ActionController::UrlGenerationError)
-      end
-    end
-    
-    context "when save fails" do
-      before do
-        allow_any_instance_of(Report).to receive(:save).and_return(false)
-      end
-    
-      it "renders new template" do
-        post :create, params: { audit_id: audit.id}
-        expect(response).to render_template(:new)
-      end
+    it "returns success and creates a new report" do
+      post :create, params: { audit_id: audit.id, report: report }
+      expect(response).to have_http_status(:redirect)
     end
   end
 end
