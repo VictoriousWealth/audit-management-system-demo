@@ -2,20 +2,6 @@
 require "rails_helper"
 
 RSpec.describe "Creating a new audit request letter", type: :feature do
-  include Devise::Test::IntegrationHelpers
-
-  puts "------------sdfsdiofjosjpdfsd"
-  Rails.application.config.hosts = [
-  IPAddr.new("0.0.0.0/0"),        # All IPv4 addresses.
-  IPAddr.new("::/0"),             # All IPv6 addresses.
-  "localhost",                    # The localhost reserved domain.
-  ENV["RAILS_DEVELOPMENT_HOSTS"]  # Additional comma-separated hosts for development.
-]
-puts "------------------sdfsdiofjosjpdfsd"
-
-
-
-  # let!(:company) { FactoryBot.create(:company, id: 1) }
 
   let!(:auditor) {FactoryBot.create(:user, :auditor)}
   let!(:lead_auditor) {FactoryBot.create(:user, :auditor)}
@@ -31,19 +17,19 @@ puts "------------------sdfsdiofjosjpdfsd"
   before do
     login_as qa_man
   end
+  puts "Running test in environment: #{Rails.env}"
+
   specify "User can see the prefilled data" do
 
     visit new_audit_audit_request_letters_path(audit)
-    puts page.body
-    save_and_open_page
     puts "Audit request letter page visited - running test 1"
 
     expect(page).to have_content("Audit Request Letter")
-    expect(page).to have_field("audit_scope", with: "The scope of test audit")
-    expect(page).to have_field("audit_criteria", with:"Standard 1")
-    expect(page).to have_field("audit_purpose", with: "Purpose of test audit")
-    expect(page).to have_field("audit_objectives", with: "Objectives of test audit") 
-    expect(page).to have_field("audit_boundaries", with: "Boundaries of test audit") 
+    expect(page).to have_field("audit_scope", with: "The scope of the test audit")
+    expect(page).to have_field("audit_criteria", with:"ISO 9001, ISO 9001, ISO 9001") 
+    expect(page).to have_field("audit_purpose", with: "The purpose of the test audit")
+    expect(page).to have_field("audit_objectives", with: "The objectives of the test audit") 
+    expect(page).to have_field("audit_boundaries", with: "The boundaries of the test audit") 
   end
   specify "User can enter new data" do
     visit new_audit_audit_request_letters_path(audit)
