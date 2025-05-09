@@ -27,7 +27,7 @@ require 'rails_helper'
 RSpec.describe AuditRequestLetter, type: :model do
   describe 'associations' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:user, :qa_manager) }
+    let!(:user) { FactoryBot.create(:report_user) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     let!(:audit_request_letter) { FactoryBot.create(:audit_request_letter, audit: audit, user: user) }
 
@@ -41,7 +41,7 @@ RSpec.describe AuditRequestLetter, type: :model do
 
   describe 'validations' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:user, :qa_manager) }
+    let!(:user) { FactoryBot.create(:report_user) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     
     it "should validate_presence_of #{(:user_id)}" do
@@ -57,7 +57,7 @@ RSpec.describe AuditRequestLetter, type: :model do
 
   describe 'callbacks' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:user, :qa_manager) }
+    let!(:user) { FactoryBot.create(:report_user) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     let!(:audit_request_letter) { FactoryBot.create(:audit_request_letter, audit: audit, user: user) }
     it 'sets time_of_creation before create if not already set' do
@@ -87,7 +87,7 @@ RSpec.describe AuditRequestLetter, type: :model do
 
   describe 'database columns' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:user, :qa_manager) }
+    let!(:user) { FactoryBot.create(:report_user) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     let!(:audit_request_letter) { FactoryBot.create(:audit_request_letter, audit: audit, user: user) }
 

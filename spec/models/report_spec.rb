@@ -28,7 +28,7 @@ RSpec.describe Report, type: :model do
 
   describe 'associations' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:user, :qa_manager) }
+    let!(:user) { FactoryBot.create(:report_user) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     let!(:report) { FactoryBot.create(:report, audit: audit, user: user) }
 
@@ -53,7 +53,7 @@ RSpec.describe Report, type: :model do
 
   describe 'enums' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:user, :qa_manager) }
+    let!(:user) { FactoryBot.create(:report_user) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     # let!(:report) { FactoryBot.create(:report, audit: audit, user: user) }
     
@@ -78,7 +78,7 @@ RSpec.describe Report, type: :model do
 
   describe 'database columns' do
     let!(:company) { FactoryBot.create(:company) }
-    let!(:user) { FactoryBot.create(:user, :qa_manager) }
+    let!(:user) { FactoryBot.create(:report_user) }
     let!(:audit) { FactoryBot.create(:audit, company: company) }
     let!(:report) { FactoryBot.create(:report, audit: audit, user: user, status: :in_progress) }
     it "should have column status" do
