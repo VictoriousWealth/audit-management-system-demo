@@ -1,5 +1,10 @@
 require 'rails_helper'
 
+# Rspec for testing the user notifications related to audit assignments and acknowledgments.
+#
+# These tests cover Auditors, QA managers and their interactions with the notifications system,
+# particularly concerning assigned audits and acknowledgment visibility.
+#
 RSpec.feature "Getting assigned an audit", type: :feature do
 
   let(:user2) { create(:user2) } # QA

@@ -1,13 +1,18 @@
 require 'rails_helper'
 
+# Feature spec for testing devise's user authentication
+#
+# Tests cover:
+# - Correctly logging
+# - Incorrect login attempts
+# - Logging out
+# - Redirection to specific dashboards based on the user's role
+#
 RSpec.feature "User Authentication", type: :feature do
   let(:user) { create(:user) }
   let(:user2) { create(:user) }
   let(:user3) { create(:user) }
   let(:user4) { create(:user) }
-
-
-
 
   scenario "User logs in with correct details" do
     visit new_user_session_path

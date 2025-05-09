@@ -25,6 +25,9 @@
 
 require 'rails_helper'
 
+# This spec tests the file attachment functionality of supporting documents
+# The test verifies that a file can be attached to a SupportingDocument instance.
+#
 RSpec.describe SupportingDocument, type: :model do
 
   describe "file attachment" do

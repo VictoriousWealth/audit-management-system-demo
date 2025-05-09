@@ -1,8 +1,12 @@
+#Helper methods for the app
 module ApplicationHelper
-  #Helps you find the correct dashboard for each user
+
+  # Returns the right dashboard path for the given user based on their role.
+  #
+  # @param user [User] the user who's role is used to determine the dashboard path
+  # @return [String] the URL path to the correct dashboard for the user
   def dashboard_path_for(user)
     helpers = Rails.application.routes.url_helpers
-
     case user.role
     when 'auditee'
       auditee_dashboard_path
@@ -41,5 +45,5 @@ module ApplicationHelper
   def in_company_mode?
     controller_name == 'company_mode' && action_name == 'company_mode'
   end
-  
+
 end

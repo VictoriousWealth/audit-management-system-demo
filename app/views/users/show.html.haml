@@ -1,21 +1,19 @@
+-# User's profile page
 %div.profile-container
   = image_pack_tag 'images/profile icon.png', height: 100
 
   %h2 Profile
-
   %p
     %b Name
   %p= "#{@user.first_name} #{@user.last_name}"
-
   %p
     %b Role
   %p= @user.role.humanize.capitalize
-
   %p
     %b Email
   %p= @user.email
 
-  -# Show their company if they ar an auditee
+  -# Show their company if they are an auditee
   - if current_user.role == "auditee"
     %p
       %b Company
@@ -26,13 +24,11 @@
     %p= Company.find_by(id: @user.company_id)&.address || 'No company address entered'
 
 
-
   - if current_user.role == "auditee"
     %div#profile_button
       = link_to company_mode_path do
         %button.bottom_button.bg-warning.text-black{ type: 'button' } Go Company Mode
   
-
   %div#profile_button
     = link_to edit_user_registration_path do
       %button.bottom_button{ type: 'button' } Edit Profile

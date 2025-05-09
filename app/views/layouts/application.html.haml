@@ -21,6 +21,7 @@
 
   %body
     - if user_signed_in?
+      -# Show nav bar content if user is logged in
       %nav.navbar
         .container.d-contents.ms-0.me-0
           .special-a
@@ -45,7 +46,7 @@
                 = image_pack_tag 'images/MenuLines.png', height: 40
 
 
-      -# The drop down menu for the navighation of the stie
+      -# The drop down menu for the navigation of the site
       #mySidenav.sidenav
         %a.closebtn{ href: "javascript:void(0)", onclick: "closeNav()" } &times;
 
@@ -61,7 +62,6 @@
           %a{ href: "#" } Preview Questionnaire
           %a{ href: "#" } Send Email
           %a{ href: "#" } Questionnaire Response
-
 
         %a.dropdown-btn{ href: "#" } Audits
         %div.dropdown-container
@@ -82,11 +82,11 @@
           %a{ href: "#" } Documents
 
         - if current_user.role == "qa_manager"
+          -# Only the qa can create users so it only shows for them
           = link_to 'Add New User', new_admin_user_path
 
-
-
     - else 
+      -# Show no content if the user is not logged in
       %nav.navbar
         .container.d-contents.ms-0.me-0
           .special-a
@@ -102,7 +102,7 @@
     %main.flex-grow-1
       .container-fluid
         = yield
-      = turbo_frame_tag "modal"
+      = turbo_frame_tag "modal" 
 
     .footer
       %p &copy; GTIMC 2025

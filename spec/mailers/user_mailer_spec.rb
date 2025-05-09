@@ -1,5 +1,10 @@
 require "rails_helper"
 
+# This spec tests the functionality of the UserMailer class
+# - welcome_email: Notifies a new user about their account creation
+#
+# The tests verify that the email has the right content
+#
 RSpec.describe UserMailer, type: :mailer do
   describe "welcome_email" do
     let(:user) { create(:user, email: "test@example.com") }

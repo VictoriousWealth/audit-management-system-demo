@@ -1,3 +1,4 @@
+-# View for uploading a new supporting document
 %main.upload-supporting-documents
   %h1 Upload Supporting Document for #Audit #{@audit.id}
 
@@ -6,7 +7,6 @@
       %h2 Upload Document
 
     = form_with(model: @supporting_document, local: true, html: { id: "upload-the-document" }) do |form|
-      
       = form.hidden_field :audit_id, value: @audit.id
 
       %div.input-documents

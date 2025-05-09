@@ -34,6 +34,7 @@ class SupportingDocument < ApplicationRecord
 
   private
 
+  #Sets the uploaded time of a documnet
   def set_uploaded_at
     self.uploaded_at = Time.current
   end

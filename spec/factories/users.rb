@@ -1,11 +1,12 @@
 # spec/factories/users.rb
+#Creating users of each role type for testing
 FactoryBot.define do
   factory :user do
     sequence(:email) { |n| "user#{n}@example.com" }
     password { "Password123" }
     first_name { "Test" }
     last_name  { "User" }
-    role { :auditor }  # default role
+    role { :auditor }
 
     trait :auditor do
       role { :auditor }
@@ -25,7 +26,7 @@ FactoryBot.define do
 
     trait :auditee do
       role { :auditee }
-      association :company  
+      association :company
     end
   end
 end
