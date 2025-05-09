@@ -50,9 +50,9 @@ class AuditorDashboardController < ApplicationController
       next unless relevant
   
       # Determine progress based on status enum
-      progress = case c.status
-                 when 0 then 33  # pending
-                 when 1 then 66  # in_progress
+      progress = case c.status.to_sym
+                 when :pending then 33  # pending
+                 when :in_progress then 66  # in_progress
                  else 100        # completed
                  end
   
@@ -86,9 +86,9 @@ class AuditorDashboardController < ApplicationController
       end
       next unless relevant
   
-      category = case finding.category
-                 when 0 then "critical"
-                 when 1 then "major"
+      category = case finding.category.to_sym
+                 when :critical then "critical"
+                 when :major then "major"
                  else "minor"
                  end
   
