@@ -1,42 +1,35 @@
+# This line includes the Rails test helper, which sets up the test environment
 require "rails_helper"
 
-describe "Creating a new audit request letter" do
-  let!(:auditor) {FactoryBot.create(:user4)}
-  let!(:lead_auditor) {FactoryBot.create(:user5)}
+RSpec.describe "Creating a new audit request letter", type: :feature do
 
+  let!(:auditor) {FactoryBot.create(:user, :auditor)}
+  let!(:lead_auditor) {FactoryBot.create(:user, :auditor)}
+  let!(:qa_man) { FactoryBot.create(:user, :qa_manager) }
 
-  let!(:company) { FactoryBot.create(:company, id: 1) }
-  puts "Companies created: #{Company.count}"
-
-
-  let!(:user) { FactoryBot.create(:user) }
-  puts "Users created: #{User.count}"
-
-  let!(:audit) { FactoryBot.create(:audit, company: company, user: user) }
-  puts "Audits created: #{Audit.count}"
+  let!(:audit) { FactoryBot.create(:audit, :with_detail_and_standards, :basic_team) }
   
 
-  let!(:audit_detail) { FactoryBot.create(:audit_detail, audit: audit) }
-  puts "Audit details created: #{AuditDetail.count}"
+  # let!(:audit_detail) { FactoryBot.create(:audit_detail, :with_standards ,audit: audit) }
 
-  let!(:audit_assignment){FactoryBot.create(:audit_assignment, user: auditor, audit: audit, role: 1)}
-  let!(:audit_assignment) {FactoryBot.create(:audit_assignment, user: lead_auditor, audit: audit, role: 0)}
-
-  let!(:audit_standard) { FactoryBot.create(:audit_standard, audit_detail: audit_detail) }
-  puts "Audit standards created: #{AuditStandard.count}"
+  # let!(:audit_standard) { FactoryBot.create(:audit_standard, audit_detail: audit_detail) }
+  # puts "Audit standards created: #{AuditStandard.count}"
   before do
-    login_as user
+    login_as qa_man
   end
+  puts "Running test in environment: #{Rails.env}"
+
   specify "User can see the prefilled data" do
+
     visit new_audit_audit_request_letters_path(audit)
     puts "Audit request letter page visited - running test 1"
 
     expect(page).to have_content("Audit Request Letter")
-    expect(page).to have_field("audit_scope", with: "The scope of test audit")
-    expect(page).to have_field("audit_criteria", with:"Standard 1")
-    expect(page).to have_field("audit_purpose", with: "Purpose of test audit")
-    expect(page).to have_field("audit_objectives", with: "Objectives of test audit") 
-    expect(page).to have_field("audit_boundaries", with: "Boundaries of test audit") 
+    expect(page).to have_field("audit_scope", with: "The scope of the test audit")
+    expect(page).to have_field("audit_criteria", with:"ISO 9001, ISO 9001, ISO 9001") 
+    expect(page).to have_field("audit_purpose", with: "The purpose of the test audit")
+    expect(page).to have_field("audit_objectives", with: "The objectives of the test audit") 
+    expect(page).to have_field("audit_boundaries", with: "The boundaries of the test audit") 
   end
   specify "User can enter new data" do
     visit new_audit_audit_request_letters_path(audit)
