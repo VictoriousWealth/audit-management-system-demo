@@ -10,7 +10,6 @@ class DashboardDecorator < ApplicationDecorator
   #     end
   #   end
 
-<<<<<<< HEAD
   def index
     
   end
@@ -21,6 +20,4 @@ class DashboardDecorator < ApplicationDecorator
   end  
   
 
-=======
->>>>>>> origin
 end

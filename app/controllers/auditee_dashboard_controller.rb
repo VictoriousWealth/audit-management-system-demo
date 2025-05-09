@@ -47,9 +47,9 @@ class AuditeeDashboardController < ApplicationController
       next unless relevant
   
       # Determine progress based on status enum
-      progress = case c.status
-                 when 0 then 33  # pending
-                 when 1 then 66  # in_progress
+      progress = case c.status.to_sym
+                 when :pending then 33  # pending
+                 when :in_progress then 66  # in_progress
                  else 100        # completed
                  end
   
@@ -71,7 +71,7 @@ class AuditeeDashboardController < ApplicationController
   
 
   def audit_fidnings
-    @audit_fidnings = []
+    @audit_findings = []
   
     AuditFinding.includes(report: { audit: :audit_assignments }).find_each do |finding|
       audit = finding.report&.audit
@@ -83,15 +83,15 @@ class AuditeeDashboardController < ApplicationController
       end
       next unless relevant
   
-      category = case finding.category
-                 when 0 then "critical"
-                 when 1 then "major"
+      category = case finding.category.to_sym
+                 when :critical then "critical"
+                 when :major then "major"
                  else "minor"
                  end
   
       short_description = finding.description.length > 15 ? "#{finding.description[0...12]}..." : finding.description
   
-      @audit_fidnings << {
+      @audit_findings << {
         id: finding.id,
         audit_type: audit.audit_type,
         truncated_description: short_description,
