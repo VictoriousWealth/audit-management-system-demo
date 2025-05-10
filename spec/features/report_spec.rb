@@ -6,7 +6,6 @@ require 'rails_helper'
 # - User can see create new audit findings
 # - User can see the audit findings
 # - User can see the audit findings in the report
-# - User can enter new data
 
 RSpec.feature "Create Report", type: :feature do
   let!(:auditor) {FactoryBot.create(:user4)}
@@ -30,7 +29,6 @@ RSpec.feature "Create Report", type: :feature do
 
   scenario "User can see the audit information without subject matter experts" do
     visit new_audit_report_path(audit)
-    save_and_open_page
     puts "Audit page visited - running test 1"
 
     expect(page).to have_content("Audit Details")
@@ -50,15 +48,14 @@ RSpec.feature "Create Report", type: :feature do
 
     expect(page).to have_content("Detailed Findings")
   end
-  
+
   let!(:sme) { FactoryBot.create(:user6) }
   let!(:audit_assignment4) {FactoryBot.create(:audit_assignment, user: sme, audit: audit, role: 2, assigner: qa_manager)}
 
   scenario "User can see the audit information with subject matter experts" do
 
     visit new_audit_report_path(audit)
-    save_and_open_page
-    puts "Audit page visited - running test 1"
+    puts "Audit page visited - running test 2"
 
     expect(page).to have_content("Audit Details")
     expect(page).to have_content("Audit Scope")
@@ -79,5 +76,25 @@ RSpec.feature "Create Report", type: :feature do
     expect(page).to have_content("SME User")
 
     expect(page).to have_content("Detailed Findings")
+  end
+
+  scenario "User can create new audit findings" do
+    visit new_audit_report_path(audit)
+    puts "Audit page visited - running test 3"
+
+    click_link "Add New Finding"
+
+    fill_in "Description", with: "New Finding"
+    select "Critical", from: "Category"
+    select "High", from: "Risk Level"
+    fill_in "Due Date", with: "2025-05-10"
+
+    click_button "Save"
+
+    expect(page).to have_content("Finding added (not saved yet)")
+    expect(page).to have_content("New Finding")
+    expect(page).to have_content("Critical")
+    expect(page).to have_content("High")
+    expect(page).to have_content("10/05/2025")
   end
 end
