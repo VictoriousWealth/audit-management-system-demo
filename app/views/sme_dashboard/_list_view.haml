@@ -8,7 +8,7 @@
         %th.p-3 Category
     %tbody
       - if @audit_findings.present?
-        - @audit_fidnings.each do |f|
+        - @audit_findings.each do |f|
           %tr
             %td.p-3= f[:id].to_s.rjust(4, '0')
             %td.p-3= f[:audit_type]
