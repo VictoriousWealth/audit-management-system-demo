@@ -114,4 +114,104 @@ RSpec.feature "Create Report", type: :feature do
 
     expect(page).to have_content("Report created with findings")
   end
+
+  scenario "User can see the audit findings after creation" do
+    visit new_audit_report_path(audit)
+    puts "Audit page visited - running test 5"
+
+    click_link "Add New Finding"
+
+    fill_in "Description", with: "New Finding"
+    select "Critical", from: "Category"
+    select "High", from: "Risk Level"
+    fill_in "Due Date", with: "2025-05-10"
+
+    click_button "Save"
+
+    click_button "Save Report"
+
+    visit audit_report_path(audit)
+
+    expect(page).to have_content("New Finding")
+    expect(page).to have_content("Critical")
+    expect(page).to have_content("High")
+    expect(page).to have_content("10/05/2025")
+  end
+
+  scenario "User can add multiple findings" do
+    visit new_audit_report_path(audit)
+    puts "Audit page visited - running test 6"
+
+    click_link "Add New Finding"
+
+    fill_in "Description", with: "New Finding"
+    select "Critical", from: "Category"
+    select "High", from: "Risk Level"
+    fill_in "Due Date", with: "2025-05-10"
+
+    click_button "Save"
+
+    expect(page).to have_content("Finding added (not saved yet)")
+    expect(page).to have_content("New Finding")
+    expect(page).to have_content("Critical")
+    expect(page).to have_content("High")
+    expect(page).to have_content("10/05/2025")
+
+    click_link "Add New Finding"
+
+    fill_in "Description", with: "New Finding 2"
+    select "Major", from: "Category"
+    select "Medium", from: "Risk Level"
+    fill_in "Due Date", with: "2025-06-10"
+
+    click_button "Save"
+
+    expect(page).to have_content("Finding added (not saved yet)")
+    expect(page).to have_content("New Finding 2")
+    expect(page).to have_content("Major")
+    expect(page).to have_content("Medium")
+    expect(page).to have_content("10/06/2025")
+
+  end
+
+  scenario "User can see multiple findings after creating" do
+    visit new_audit_report_path(audit)
+    puts "Audit page visited - running test 7"
+
+    click_link "Add New Finding"
+
+    fill_in "Description", with: "New Finding"
+    select "Critical", from: "Category"
+    select "High", from: "Risk Level"
+    fill_in "Due Date", with: "2025-05-10"
+
+    click_button "Save"
+
+    click_link "Add New Finding"
+
+    fill_in "Description", with: "New Finding 2"
+    select "Major", from: "Category"
+    select "Medium", from: "Risk Level"
+    fill_in "Due Date", with: "2025-06-10"
+
+    click_button "Save"
+
+    click_button "Save Report"
+
+
+    expect(page).to have_content("Report created with findings")
+
+    visit audit_report_path(audit)
+
+    expect(page).to have_content("New Finding")
+    expect(page).to have_content("Critical")
+    expect(page).to have_content("High")
+    expect(page).to have_content("10/05/2025")
+
+    expect(page).to have_content("New Finding 2")
+    expect(page).to have_content("Major")
+    expect(page).to have_content("Medium")
+    expect(page).to have_content("10/06/2025")
+
+  end
 end
