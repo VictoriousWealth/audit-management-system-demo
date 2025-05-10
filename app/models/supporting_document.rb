@@ -31,7 +31,11 @@ class SupportingDocument < ApplicationRecord
 
   # Should set the uploaded time when one is made
   before_create :set_uploaded_at
-
+  validates :name, presence: true
+  validates :audit_id, presence: true
+  validates :user_id, presence: true
+  validates :file, presence: true
+  
   private
 
   #Sets the uploaded time of a documnet
