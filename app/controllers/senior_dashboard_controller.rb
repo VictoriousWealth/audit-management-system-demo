@@ -10,7 +10,7 @@ class SeniorDashboardController < ApplicationController
     bar_chart_data()
     compliance_score_graph_over_time()
 
-    audit_fidnings()
+    audit_findings()
     corrective_actions()
     documents()
     internal_vs_external()
@@ -68,8 +68,8 @@ class SeniorDashboardController < ApplicationController
     end
   end
 
-  def audit_fidnings
-    @audit_fidnings = AuditFinding.where.not(category: "minor").map do |c|
+  def audit_findings
+    @audit_findings = AuditFinding.where.not(category: "minor").map do |c|
       short_description = c.description.length > 15 ? "#{c.description[0...12]}..." : c.description
   
       {
