@@ -1,5 +1,14 @@
 require "rails_helper"
 
+# Feature spec for testing the creation of a new audit request letter
+# 
+# This spec covers the following scenarios:
+# - User can see the prefilled data
+# - User can enter new data
+# - User can see the new data
+# - User can see the new data in the audit request letter
+# - User can verify the audit request letter
+
 describe "Creating a new audit request letter" do
   let!(:auditor) {FactoryBot.create(:user4)}
   let!(:lead_auditor) {FactoryBot.create(:user5)}

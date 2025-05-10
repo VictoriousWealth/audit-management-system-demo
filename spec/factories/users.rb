@@ -87,4 +87,13 @@ FactoryBot.define do
     password { "Password" }
     role { 0 }
   end
+
+    #User to test Report
+    factory :user6, class: 'User' do
+      first_name { "SME" }
+      last_name { "User" }
+      email { "SME@User.com"}
+      password { "Password" }
+      role { 0 }
+    end
 end
