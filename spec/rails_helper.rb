@@ -138,6 +138,9 @@ Capybara.configure do |config|
 end
 
 Capybara.automatic_label_click = true
+Capybara.app_host = "http://localhost"
+Capybara.server_host = "localhost"
+Capybara.always_include_port = true
 
 def sleep_for_js(sleep_time: 0.5)
   sleep sleep_time
