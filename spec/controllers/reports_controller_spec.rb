@@ -60,10 +60,8 @@ RSpec.describe ReportsController, type: :controller do
 
     it 'returns success and creates a new instance of Report' do
       get :new, params: { audit_id: audit.id }
-      puts response.body
       expect(response).to have_http_status(:success)
       expect(assigns(:report)).to be_a_new(Report)
-
     end
   end
 
