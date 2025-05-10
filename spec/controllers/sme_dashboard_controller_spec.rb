@@ -163,7 +163,7 @@ RSpec.describe SmeDashboardController, type: :controller do
 
       get :sme
 
-      findings = assigns(:audit_fidnings)
+      findings = assigns(:audit_findings)
       expect(findings).to include(
         hash_including(
           id: finding.id,
@@ -184,7 +184,7 @@ RSpec.describe SmeDashboardController, type: :controller do
 
       get :sme
 
-      findings = assigns(:audit_fidnings)
+      findings = assigns(:audit_findings)
       expect(findings).to include(
         hash_including(
           id: finding.id,
@@ -205,7 +205,7 @@ RSpec.describe SmeDashboardController, type: :controller do
 
       get :sme
 
-      findings = assigns(:audit_fidnings)
+      findings = assigns(:audit_findings)
       expect(findings).to include(
         hash_including(
           id: finding.id,
