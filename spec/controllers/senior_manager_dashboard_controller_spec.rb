@@ -162,7 +162,7 @@ RSpec.describe SeniorDashboardController, type: :controller do
 
       get :senior_manager
 
-      findings = assigns(:audit_fidnings)
+      findings = assigns(:audit_findings)
       expect(findings).to include(
         hash_including(
           id: finding.id,
@@ -183,7 +183,7 @@ RSpec.describe SeniorDashboardController, type: :controller do
 
       get :senior_manager
 
-      findings = assigns(:audit_fidnings)
+      findings = assigns(:audit_findings)
       expect(findings).to include(
         hash_including(
           id: finding.id,
@@ -204,7 +204,7 @@ RSpec.describe SeniorDashboardController, type: :controller do
 
       get :senior_manager
 
-      findings = assigns(:audit_fidnings)
+      findings = assigns(:audit_findings)
       expect(findings).not_to include(
         hash_including(
           id: finding.id,
