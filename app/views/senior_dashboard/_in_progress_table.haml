@@ -1,31 +1,31 @@
-.table-scroll-container
-  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6
+.table-scroll-container.min-width-webkit-fill-available
+  %table.table.table-striped.table-bordered-black.mb-0.text-center.align-middle.fs-6.min-width-webkit-fill-available
     %thead
       %tr
-        %th.p-3 Audit Id
-        %th.p-3 Audit Type
-        %th.p-3 Vendor
-        %th.p-3 Auditee
-        %th.p-3 Lead Auditor
-        %th.p-3 Support Auditor(s)
-        %th.p-3 SME(s)
-        %th.p-3 Scheduled Start Date
-        %th.p-3 Scheduled End Date
-        %th.p-3 Actual Start Date
-        %th.p-3 Progress
-        %th.p-3 RPN
+        %th.p-2.white-space-nowrap  Audit Id
+        %th.p-2.white-space-nowrap Audit Type
+        %th.p-2.white-space-nowrap Vendor
+        %th.p-2.white-space-nowrap Auditee
+        %th.p-2.white-space-nowrap Lead Auditor
+        %th.p-2.white-space-nowrap Support Auditor(s)
+        %th.p-2.white-space-nowrap SME(s)
+        %th.p-2.white-space-nowrap Scheduled Start Date
+        %th.p-2.white-space-nowrap Scheduled End Date
+        %th.p-2.white-space-nowrap Actual Start Date
+        %th.p-2.white-space-nowrap Progress
+        %th.p-2.white-space-nowrap RPN
     %tbody
       - @in_progress_audits.each do |audit|
         %tr
-          %td.p-3
+          %td.p-2.white-space-nowrap
             = link_to view_audit_path(audit[:id]) do 
               %i= audit[:id].to_s.rjust(4, '0')
-          %td.p-3= audit[:audit_type]
-          %td.p-3= audit[:company_name]
-          %td.p-3= audit[:auditee]
-          %td.p-3= audit[:lead_auditor]
+          %td.p-2.white-space-nowrap= audit[:audit_type]
+          %td.p-2.white-space-nowrap= audit[:company_name]
+          %td.p-2.white-space-nowrap= audit[:auditee]
+          %td.p-2.white-space-nowrap= audit[:lead_auditor]
 
-          / ✅ SUPPORT AUDITOR BUTTON + MODAL
+          / SUPPORT AUDITOR BUTTON + MODAL
           %td.p-2.white-space-nowrap
             - if audit[:support_auditors].present?
               %button.btn.btn-sm.btn-outline-dark{ data: { bs_toggle: "modal", bs_target: "#supportAuditorsModal-#{audit[:id]}" } }
@@ -48,7 +48,7 @@
             - else
               %span.text-muted N/A
 
-          / ✅ SME BUTTON + MODAL
+          / SME BUTTON + MODAL
           %td.p-2.white-space-nowrap
             - if audit[:smes].present?
               %button.btn.btn-sm.btn-outline-dark{ data: { bs_toggle: "modal", bs_target: "#smesModal-#{audit[:id]}" } }
@@ -71,12 +71,12 @@
             - else
               %span.text-muted N/A
           
-          %td.p-3= audit[:scheduled_start_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
-          %td.p-3= audit[:scheduled_end_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
-          %td.p-3= audit[:actual_start_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
-          %td.p-3
+          %td.p-2.white-space-nowrap= audit[:scheduled_start_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-2.white-space-nowrap= audit[:scheduled_end_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-2.white-space-nowrap= audit[:actual_start_date]&.strftime('%M:%H %d/%m/%Y') || "N/A"
+          %td.p-2.white-space-nowrap
             - progress = audit[:progress] || 0  #TODO: change to questionanire progress
             .progress
               .progress-bar{style: "width: #{progress}%"}
                 %span.visually-hidden= "#{progress}%"
-          %td.p-3= audit[:rpn]
+          %td.p-2.white-space-nowrap= audit[:rpn]
