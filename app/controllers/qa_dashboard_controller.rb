@@ -85,9 +85,9 @@ class QaDashboardController < ApplicationController
       .includes(report: :audit)
       .where(report_id: report_ids)
       .map do |f|
-        category = case f.category
-                   when 0 then "critical"
-                   when 1 then "major"
+        category = case f.category.to_sym
+                   when :critical then "critical"
+                   when :major then "major"
                    else "minor"
                    end
   
