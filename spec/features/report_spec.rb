@@ -97,4 +97,21 @@ RSpec.feature "Create Report", type: :feature do
     expect(page).to have_content("High")
     expect(page).to have_content("10/05/2025")
   end
+  scenario "User can save the report" do
+    visit new_audit_report_path(audit)
+    puts "Audit page visited - running test 4"
+
+    click_link "Add New Finding"
+
+    fill_in "Description", with: "New Finding"
+    select "Critical", from: "Category"
+    select "High", from: "Risk Level"
+    fill_in "Due Date", with: "2025-05-10"
+
+    click_button "Save"
+
+    click_button "Save Report"
+
+    expect(page).to have_content("Report created with findings")
+  end
 end
