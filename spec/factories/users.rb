@@ -1,32 +1,90 @@
-# spec/factories/users.rb
-#Creating users of each role type for testing
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :bigint           not null, primary key
+#  current_sign_in_at     :datetime
+#  current_sign_in_ip     :string
+#  email                  :string
+#  encrypted_password     :string           default(""), not null
+#  failed_attempts        :integer
+#  first_name             :string
+#  last_name              :string
+#  last_sign_in_at        :datetime
+#  last_sign_in_ip        :string
+#  locked_at              :datetime
+#  remember_created_at    :datetime
+#  reset_password_sent_at :datetime
+#  reset_password_token   :string
+#  role                   :integer
+#  sign_in_count          :integer          default(0), not null
+#  unlock_token           :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  company_id             :bigint
+#
+# Indexes
+#
+#  index_users_on_company_id            (company_id)
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (company_id => companies.id)
+#
 FactoryBot.define do
+
+  #Auditee
   factory :user do
-    sequence(:email) { |n| "user#{n}@example.com" }
-    password { "Password123" }
-    first_name { "Test" }
-    last_name  { "User" }
-    role { :auditor }
+    first_name { "Auditee" }
+    last_name { "User" }
+    email { "Auditee@User.com" }
+    password { "Password" }
+    role { 1 }
+  end
 
-    trait :auditor do
-      role { :auditor }
-    end
+  #QA manager
+  factory :user2, class: 'User' do
+    first_name { "QA" }
+    last_name { "User" }
+    email { "QA@User.com" }
+    password { "Password" }
+    role { 2 }
+  end
 
-    trait :qa_manager do
-      role { :qa_manager }
-    end
+  #Senior manager
+  factory :user3, class: 'User' do
+    first_name { "Senior" }
+    last_name { "User" }
+    email { "Senior@User.com" }
+    password { "Password" }
+    role { 3 }
+  end
 
-    trait :senior_manager do
-      role { :senior_manager }
-    end
+  #Auditor
+  factory :user4, class: 'User' do
+    first_name { "Auditor" }
+    last_name { "User" }
+    email { "Auditor@User.com" }
+    password { "Password" }
+    role { 0 }
+  end
+  #Auditor 2
+  factory :user5, class: 'User' do
+    first_name { "Auditor" }
+    last_name { "Two" }
+    email {"AuditorTwo@User.com"}
+    password { "Password" }
+    role { 0 }
+  end
 
-    trait :sme do
-      role { :sme }
-    end
-
-    trait :auditee do
-      role { :auditee }
-      association :company
-    end
+  #User to test Report
+  factory :report_user, class: 'User' do
+    first_name { "Report" }
+    last_name { "User" }
+    email { "Report@User.com"}
+    password { "Password" }
+    role { 0 }
   end
 end
