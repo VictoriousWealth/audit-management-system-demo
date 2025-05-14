@@ -99,8 +99,21 @@ RSpec.describe AuditRequestLettersController, type: :controller do
   describe 'GET #show' do
     it 'redirects if letter is missing' do
       get :show, params: { audit_id: audit.id }
+          
+      expect(response).to have_http_status(:found)
       expect(response).to redirect_to(new_audit_audit_request_letters_path(audit))
       expect(flash[:alert]).to eq("Audit Request Letter not found.")
+    end
+
+    context 'when the letter exists' do
+    let!(:audit_request_letter) { FactoryBot.create(:audit_request_letter, audit: audit) }
+
+      it 'renders the letter' do
+        get :show, params: { audit_id: audit_request_letter.audit.id }
+        
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:audit_request_letter)).to eq(audit_request_letter)
+      end
     end
   end
 
@@ -109,6 +122,7 @@ RSpec.describe AuditRequestLettersController, type: :controller do
       create(:audit_request_letter, audit: audit)
       post :verify, params: { audit_id: audit.id }
 
+      expect(response).to have_http_status(:found)
       expect(response).to redirect_to(audit_audit_request_letters_path(audit))
       expect(flash[:notice]).to eq("Audit Request Letter verified successfully.")
     end
@@ -116,6 +130,7 @@ RSpec.describe AuditRequestLettersController, type: :controller do
     it 'redirects if no letter exists' do
       post :verify, params: { audit_id: audit.id }
 
+      expect(response).to have_http_status(:found)
       expect(response).to redirect_to(new_audit_audit_request_letters_path(audit))
       expect(flash[:alert]).to eq("Audit Request Letter not found.")
     end
@@ -126,6 +141,7 @@ RSpec.describe AuditRequestLettersController, type: :controller do
       create(:audit_request_letter, audit: audit)
       delete :destroy, params: { audit_id: audit.id }
 
+      expect(response).to have_http_status(:see_other)
       expect(response).to redirect_to(new_audit_audit_request_letters_path(audit))
       expect(flash[:notice]).to eq("Audit Request Letter was successfully destroyed.")
     end
