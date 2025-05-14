@@ -43,10 +43,10 @@ class QaDashboardController < ApplicationController
     @corrective_actions = []
     CorrectiveAction.all.each do |c|
       progress = 0
-      case c.status
-      when 0 # pending
+      case c.status.to_sym
+      when :pending # pending
         progress = 33
-      when 1 # in_progress
+      when :in_progress # in_progress
         progress = 66
       else # completed
         progress = 100
@@ -57,7 +57,8 @@ class QaDashboardController < ApplicationController
         id: c.id,
         truncated_description: short_description,
         full_description: c.action_description,
-        vendor: Company.find_by(id: User.find_by(id: AuditAssignment.find_by(audit_id: c.audit_id).where(role: :auditee)&.user_id)&.company_id).first&.name,
+        # vendor: Company.find_by(id: User.find_by(id: AuditAssignment.find_by(audit_id: c.audit_id).where(role: :auditee)&.user_id)&.company_id).first&.name,
+        vendor: Company.find_by(id: User.find_by(id: AuditAssignment.where(audit_id: c.audit_id, role: :auditee).first&.user_id)&.company_id)&.name,
         progress: progress, 
       }
     end
@@ -66,9 +67,9 @@ class QaDashboardController < ApplicationController
   def audit_fidnings
     @audit_fidnings = []
     AuditFinding.all.each do |c|
-      category = case c.category
-                when 0 then "critical"
-                when 1 then "major"
+      category = case c.category.to_sym
+                when :critical then "critical"
+                when :major then "major"
                 else "minor"
                 end
 
