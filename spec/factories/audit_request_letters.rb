@@ -26,7 +26,7 @@ FactoryBot.define do
   factory :audit_request_letter do
     association :audit
     association :user
-    content { "MyString" }
+    content { { company: {name: "Test Company"}, audit: { scope: "Test Scope", purpose: "Test Purpose", objectives: "Test Objectives", location: "Test Location", criteria: "Test Criteria", boundaries: "Test Boundaries"} }.to_json }
     time_of_creation { "2025-03-26 20:10:11" }
     time_of_verification { "2025-03-26 20:10:11" }
     time_of_distribution { "2025-03-26 20:10:11" }
