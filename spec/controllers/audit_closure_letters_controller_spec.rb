@@ -3,18 +3,49 @@ require 'rails_helper'
 RSpec.describe AuditClosureLettersController, type: :controller do
 
   # creating test values 
-  let(:user) { create(:user) }
-  let(:company) { create(:company) }
-  let(:audit) { create(:audit, company: company) }
-  let(:audit_closure_letter) { create(:audit_closure_letter, audit: audit, user: user) }
+  let!(:qa_manager) { User.create!(email: "qa@test.com", password: "password123", role: :qa_manager) }
+  let!(:lead_auditor) { User.create!(email: "lead@test.com", password: "password123", role: :auditor) }
+  let!(:support_auditor) { User.create!(email: "support@test.com", password: "password123", role: :auditor) }
+  let!(:company) { Company.create!(name: "Test Co", city: "City", postcode: "S1 2FF", street_name: "Street") }
+  let!(:audit) { create(:audit, company: company) }
+  let!(:audit_closure_letter) { create(:audit_closure_letter, audit: audit, user: qa_manager) }
+
+  let!(:assignment_lead) {
+    audit.audit_assignments.create!(
+      user: lead_auditor,
+      role: :lead_auditor,
+      assigned_by: qa_manager.id,
+      status: :assigned
+    )
+  }
+
+  let!(:assignment_support) {
+    audit.audit_assignments.create!(
+      user: support_auditor,
+      role: :auditor,
+      assigned_by: qa_manager.id,
+      status: :assigned
+    )
+  }
+
+  let(:valid_params) do
+    {
+      audit_id: audit.id,
+      audit_closure_letter: {
+        overall_compliance: "Compliant",
+        summary_statement: "Summary text",
+        auditee_acknowledged: "1",
+        auditor_acknowledged: "1"
+      }
+    }
+  end
 
   before do
-    sign_in user
+    sign_in qa_manager
   end
 
   describe "GET #index" do
     it "returns success and assigns closure letters" do
-      audit_closure_letter
       get :index
       expect(response).to have_http_status(:success)
       expect(assigns(:audit_closure_letters)).to include(audit_closure_letter)
@@ -39,17 +70,8 @@ RSpec.describe AuditClosureLettersController, type: :controller do
 
   describe "POST #create" do
     context "with valid parameters" do
-      let(:valid_params) do
-        {
-          audit_id: audit.id,
-          audit_closure_letter: {
-            overall_compliance: "Compliant",
-            summary_statement: "Summary text",
-            auditee_acknowledged: "1",
-            auditor_acknowledged: "1"
-          }
-        }
-      end
+
+      before { audit_closure_letter.destroy }
 
       it "creates a new closure letter and redirects" do
         expect {
@@ -72,6 +94,8 @@ RSpec.describe AuditClosureLettersController, type: :controller do
       before do
         allow_any_instance_of(AuditClosureLetter).to receive(:save).and_return(false)
       end
+
+      before { audit_closure_letter.destroy }
     
       it "renders new template" do
         post :create, params: { audit_id: audit.id, audit_closure_letter: { overall_compliance: "something" } }
