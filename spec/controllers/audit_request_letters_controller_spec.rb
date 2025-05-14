@@ -53,22 +53,6 @@ RSpec.describe AuditRequestLettersController, type: :controller do
     sign_in qa_manager
   end
 
-  # describe "Get #new" do
-  #   it "renders the new template and return success" do
-  #     get :new, params: { audit_id: audit.id }
-  #     expect(response).to have_http_status(:success)
-  #     expect(assigns(:audit_request_letter)).to be_a_new(AuditRequestLetter)
-  #   end
-  # end
-
-  # describe "GET #show" do
-  #   it "returns success and assigns the closure letter" do
-  #     get :show, params: { audit_id: audit.id}
-  #     expect(response).to have_http_status(:success)
-  #     expect(assigns(:audit_request_letter)).to eq(audit_request_letter)
-  #   end
-  # end
-
   describe 'GET #new' do
     it 'returns success and initializes AuditRequestLetter' do
       get :new, params: { audit_id: audit.id }
