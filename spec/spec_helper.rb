@@ -1,3 +1,4 @@
+require 'logger' 
 require 'devise'
 require "simplecov"
 

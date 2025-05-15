@@ -1,4 +1,5 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+require 'logger' 
 require 'simplecov'
 SimpleCov.start 'rails'
 
@@ -50,6 +51,9 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   # config.include Rails.application.routes.url_helpers
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  
+  
 
   config.include ApplicationHelper, type: :feature
   config.include FactoryBot::Syntax::Methods
@@ -134,6 +138,9 @@ Capybara.configure do |config|
 end
 
 Capybara.automatic_label_click = true
+Capybara.app_host = "http://localhost"
+Capybara.server_host = "localhost"
+Capybara.always_include_port = true
 
 def sleep_for_js(sleep_time: 0.5)
   sleep sleep_time

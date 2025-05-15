@@ -1,5 +1,13 @@
 require 'rails_helper'
 
+# Feature spec for testing user profile and edit profile functionality
+#
+# The tests cover:
+# - Accessing the profile page and displaying user's details
+# - Making sure that company details are displayed only for auditees
+# - Testing the profile is updated with valid and invalid data
+# - Making sure the back button works
+#
 RSpec.feature "User Profile", type: :feature do
 
   let(:user) { create(:user) }

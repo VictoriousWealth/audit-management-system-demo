@@ -62,6 +62,7 @@ class User < ApplicationRecord
 
   has_many :audit_request_letters
 
+  #Combines the user's first and last name to get their full name
   def full_name
     "#{first_name} #{last_name}"
   end

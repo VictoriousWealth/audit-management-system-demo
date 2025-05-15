@@ -1,0 +1,38 @@
+Controllers 
+ - admin/users_controller.rb - This file is the controller for the creation of new users
+ - application_controller.rb - This is the controller for the application
+ - dashboard_controller.rb - The controller for dashboard redirection logic
+ - notifications_controller.rb - The controller for notifications
+ - pages_controller.rb - The controller for the site's pages
+ - supporting_documents_controlller.rb - Controller for supporting documents
+
+Helpers
+ - application_helper.rb - Has useful functions for the whole application
+
+Mailers
+ - audit_mailer.rb - Mailer for audit assignment and update notifications
+ - user_mailer.rb - Mailer for a user's welcome email
+
+Models
+ - supporting_document.rb - Model of the supporting documents table
+ - user.rb - The model of the users table
+
+Packs
+ - scripts/supporting_documents.js - The javascript for the supporting documents form functionality
+ - scripts/nav_bar.js - The javascript for the navigation bar functionality 
+ - styles/styles.scss - The scss for most of the site's styling
+
+Views
+ - admin/new.html.haml - The create user page view
+ - audit_mailer/notify_assignment.html.haml - The body of the audit assignment notification email
+ - audit_mailer/update_audit.html.haml - The body of the audit assignment update notification email
+ - devise - folder containing devise's views 
+ - layouts/application.html.haml - View for the layout of the application
+ - notications/index.html.haml - The notifications page view
+ - pages/home.html.haml - The view for the landing page of non signed in users
+ - supporting_documents/new.html.haml - The view for uploading new supporting documents
+ - supporting_documents/show.html.haml - The view for seeing a specific supporting document
+ - user_mailer/welcome_email.html.erb - The body of a user welcome email
+ - users/show.html.haml - The view for the user's profile page
+
+

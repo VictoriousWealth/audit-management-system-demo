@@ -1,7 +1,9 @@
 .notifications-page
+    -# Notifications page
     %h1 Notifications
     %div.notifications-container
         %h2 Assignments
+        -# Table for audit assignmetns
         %table.assignments-table
             %thead
                 %tr
@@ -10,25 +12,23 @@
                     %th From 
                     %th Acknowledge 
             %tbody
-                - @unacknowledged_assignments.each do |assignment|
+                - if @unacknowledged_assignments.present?
+                    - @unacknowledged_assignments.each do |assignment|
+                        %tr
+                            %td=assignment.updated_at.strftime("%d-%m-%Y, %H:%M:%S")
+                            %td= "You have a pending assignment for Audit ##{assignment.audit_id}"
+                            %td= "#{assignment.assigner.full_name}"
+                            %td
+                                = link_to accept_notification_path(assignment), method: :patch, class: "ack-button" do
+                                    %i.bi.bi-check
+                - else
                     %tr
-                        %td=assignment.updated_at.strftime("%d-%m-%Y, %H:%M:%S")
-                        %td= "You have a pending assignment for Audit ##{assignment.audit_id}"
-                        %td= "#{assignment.assigner.full_name}"
-                        %td
-                            = link_to accept_notification_path(assignment), method: :patch, class: "ack-button" do
-                                %i.bi.bi-check
+                    %td.text-muted.colspan-5{ colspan: 5 } No assignments to acknowledge
+                  
 
-                -# This is just for an empty table row
-                %tr
-                    %td 
-                    %td 
-                    %td 
-                    %td 
-
-      
         - if current_user.role == "qa_manager"
             %h2 Acknowledgments 
+            -# The table for qa managers containing acknowledged audits
             %table.notifications-table
                 %thead
                     %tr
@@ -37,17 +37,15 @@
                         %th From 
                         %th View Notification 
                 %tbody
-                    - @acknowledged_assignments.each do |assignment|
+                    - if @acknowledged_assignments.present?
+                        - @acknowledged_assignments.each do |assignment|
+                            %tr
+                                %td=assignment.time_accepted.strftime("%d-%m-%Y, %H:%M:%S")
+                                %td= "Audit ##{assignment.audit_id} has been acknowledged."
+                                %td= "#{assignment.user.first_name} #{assignment.user.last_name}"
+                                %td Should be link to page when view audit done
+                    - else
                         %tr
-                            %td=assignment.time_accepted.strftime("%d-%m-%Y, %H:%M:%S")
-                            %td= "Audit ##{assignment.audit_id} has been acknowledged."
-                            %td= "#{assignment.user.first_name} #{assignment.user.last_name}"
-                            %td Should be link to page when view audit done
-                        -# This is just for an empty table row
-                    %tr
-                        %td 
-                        %td 
-                        %td 
-                        %td 
+                        %td.text-muted.colspan-5{ colspan: 5 } No acknowledged assignments
 
-          
+   

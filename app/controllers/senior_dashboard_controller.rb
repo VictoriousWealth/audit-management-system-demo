@@ -10,7 +10,7 @@ class SeniorDashboardController < ApplicationController
     bar_chart_data()
     compliance_score_graph_over_time()
 
-    audit_fidnings()
+    audit_findings()
     corrective_actions()
     documents()
     internal_vs_external()
@@ -31,11 +31,12 @@ class SeniorDashboardController < ApplicationController
 
   def documents
     @documents = []
-    Document.all.each do |d|
+    SupportingDocument.all.each do |d|
       @documents << {
         id: d.id,
         title: d.name,
         content: d.content,
+        file: d.file
       }
     end
   end
@@ -44,28 +45,31 @@ class SeniorDashboardController < ApplicationController
     @corrective_actions = []
     CorrectiveAction.all.each do |c|
       progress = 0
-      case c.status
-      when 0 # pending
+      case c.status.to_sym
+      when :pending
         progress = 33
-      when 1 # in_progress
+      when :in_progress
         progress = 66
-      else # completed
+      else 
         progress = 100
       end
       short_description = c.action_description.length > 15 ? "#{c.action_description[0...12]}..." : c.action_description
-      
+  
+      # Get the company name of the auditee directly from the assignment
+      company_name = c.audit.audit_assignments.find_by(role: :auditee)&.user&.company&.name
+
       @corrective_actions << {
         id: c.id,
         truncated_description: short_description,
         full_description: c.action_description,
-        vendor: Company.find_by(id: User.find_by(id: AuditAssignment.find_by(audit_id: c.audit_id).where(role: :auditee)&.user_id)&.company_id).first&.name,
+        vendor: company_name,
         progress: progress, 
       }
     end
   end
 
-  def audit_fidnings
-    @audit_fidnings = AuditFinding.where.not(category: "minor").map do |c|
+  def audit_findings
+    @audit_findings = AuditFinding.where.not(category: "minor").map do |c|
       short_description = c.description.length > 15 ? "#{c.description[0...12]}..." : c.description
   
       {
@@ -95,7 +99,7 @@ class SeniorDashboardController < ApplicationController
                   .where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "External",
@@ -104,7 +108,7 @@ class SeniorDashboardController < ApplicationController
                   .where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "All Audits",
@@ -112,7 +116,7 @@ class SeniorDashboardController < ApplicationController
         data: Audit.where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
   end
@@ -128,7 +132,7 @@ class SeniorDashboardController < ApplicationController
                   .where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "External",
@@ -137,7 +141,7 @@ class SeniorDashboardController < ApplicationController
                   .where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "All Audits",
@@ -145,7 +149,7 @@ class SeniorDashboardController < ApplicationController
         data: Audit.where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
   end
@@ -161,7 +165,7 @@ class SeniorDashboardController < ApplicationController
                   .where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "External",
@@ -170,7 +174,7 @@ class SeniorDashboardController < ApplicationController
                   .where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "All Audits",
@@ -178,7 +182,7 @@ class SeniorDashboardController < ApplicationController
         data: Audit.where.not(score: nil)
                   .where.not(actual_end_date: nil)
                   .where(actual_end_date: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month)
-                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+                  .map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
   end
@@ -188,18 +192,18 @@ class SeniorDashboardController < ApplicationController
       {
         name: "Internal",
         color: "#42CA68",
-        data: Audit.where(audit_type: "internal").where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: Audit.where(audit_type: "internal").where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       
       },
       {
         name: "External",
         color: "#F39C12",
-        data: Audit.where(audit_type: "external").where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: Audit.where(audit_type: "external").where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       },
       {
         name: "All Audits",
         color: "#3498DB",
-        data: Audit.where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y"), audit.score] }
+        data: Audit.where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date).map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
       }
     ]
   end
@@ -354,35 +358,39 @@ class SeniorDashboardController < ApplicationController
   end
 
   def risk_map
+    # Define RPN and audit risk categories used for matrix axes
     rpn_categories = ["Low RPN", "Medium RPN", "High RPN"]
     audit_risks = ["Low Risk", "Medium Risk", "High Risk"]
   
+    # Initialize a 3x3 matrix (nested hash) with zero counts
     @heatmap_matrix = rpn_categories.each_with_object({}) do |rpn_cat, hash|
       hash[rpn_cat] = audit_risks.index_with { 0 }
     end
   
+    # Iterate over each company to classify based on their latest audit and vendor RPN
     Company.includes(:audits, :vendor_rpns).each do |company|
       latest_audit = company.audits.order(created_at: :desc).first
       latest_rpn = company.vendor_rpns.order(created_at: :desc).first
       next unless latest_audit && latest_rpn
   
+      # Derive risk categories from latest RPN and audit finding severity
       rpn_score = latest_rpn.calculate_rpn
       rpn_category = rpn_risk_category(rpn_score)
       risk = risk_level(latest_audit)
   
+      # Increment matrix cell count
       @heatmap_matrix[rpn_category][risk] += 1
     end
+  
+    # Used in chart scaling (e.g. heatmap intensity)
     @max_heat_value = @heatmap_matrix.values.map(&:values).flatten.max
   end
   
-  
-  
-  # Place this helper method somewhere reusable
   def rpn_risk_category(rpn)
     case rpn
-    when 6..9 then "Low RPN"
-    when 10..13 then "Medium RPN"
-    else "High RPN"
+    when 6..9     then "Low RPN"      # Acceptable range
+    when 10..13   then "Medium RPN"   # Requires monitoring
+    else              "High RPN"      # Immediate attention
     end
   end  
 end

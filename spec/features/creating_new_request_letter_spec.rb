@@ -1,5 +1,14 @@
 require "rails_helper"
 
+# Feature spec for testing the creation of a new audit request letter
+# 
+# This spec covers the following scenarios:
+# - User can see the prefilled data
+# - User can enter new data
+# - User can see the new data
+# - User can see the new data in the audit request letter
+# - User can verify the audit request letter
+
 describe "Creating a new audit request letter" do
   let!(:auditor) {FactoryBot.create(:user4)}
   let!(:lead_auditor) {FactoryBot.create(:user5)}
@@ -9,23 +18,23 @@ describe "Creating a new audit request letter" do
   puts "Companies created: #{Company.count}"
 
 
-  let!(:user) { FactoryBot.create(:user) }
+  let!(:qa_manager) { FactoryBot.create(:user2) }
   puts "Users created: #{User.count}"
 
-  let!(:audit) { FactoryBot.create(:audit, company: company, user: user) }
+  let!(:audit) { FactoryBot.create(:audit, company: company, user: qa_manager) }
   puts "Audits created: #{Audit.count}"
   
 
   let!(:audit_detail) { FactoryBot.create(:audit_detail, audit: audit) }
   puts "Audit details created: #{AuditDetail.count}"
 
-  let!(:audit_assignment){FactoryBot.create(:audit_assignment, user: auditor, audit: audit, role: 1)}
-  let!(:audit_assignment) {FactoryBot.create(:audit_assignment, user: lead_auditor, audit: audit, role: 0)}
+  let!(:audit_assignment){FactoryBot.create(:audit_assignment, user: auditor, audit: audit, role: 1, assigner: qa_manager)}
+  let!(:audit_assignment) {FactoryBot.create(:audit_assignment, user: lead_auditor, audit: audit, role: 0,assigner: qa_manager)}
 
   let!(:audit_standard) { FactoryBot.create(:audit_standard, audit_detail: audit_detail) }
   puts "Audit standards created: #{AuditStandard.count}"
   before do
-    login_as user
+    login_as qa_manager
   end
   specify "User can see the prefilled data" do
     visit new_audit_audit_request_letters_path(audit)

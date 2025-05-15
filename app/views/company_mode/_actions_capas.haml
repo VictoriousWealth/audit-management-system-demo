@@ -13,15 +13,16 @@
             %th.p-3 Vendor
             %th.p-3 Progress
         %tbody
-          - @corrective_actions.each do |action|
-            %tr
-              %td.p-3 
-                = link_to "#" do 
-                  %i= action[:id].to_s.rjust(4, '0')
-              %td.p-3{ title: action[:full_description] }= action[:truncated_description]
-              %td.p-3= action[:vendor]
-              %td.p-3
-                - progress = action[:progress] || 0  #TODO: change to questionanire progress
-                .progress
-                  .progress-bar{style: "width: #{progress}%"}
-                    %span.visually-hidden= "#{progress}%"
+          -if @corrective_actions.present?
+            - @corrective_actions.each do |action|
+              %tr
+                %td.p-3 
+                  = link_to "#" do 
+                    %i= action[:id].to_s.rjust(4, '0')
+                %td.p-3{ title: action[:full_description] }= action[:truncated_description]
+                %td.p-3= action[:vendor]
+                %td.p-3
+                  - progress = action[:progress] || 0  #TODO: change to questionanire progress
+                  .progress
+                    .progress-bar{style: "width: #{progress}%"}
+                      %span.visually-hidden= "#{progress}%"

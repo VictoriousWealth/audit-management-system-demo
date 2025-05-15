@@ -1,7 +1,13 @@
-# Ive used scenario instead of describe and specify (as seen in the training)
-
 require 'rails_helper'
 
+# Feature spec for testing the forgot password by devise
+#
+# Covers all of password including:
+# - Requesting a reset
+# - Empty input
+# - Resetting the password successfully
+# - Mismatched password confirmation
+#
 RSpec.feature "Forgot Password", type: :feature do
   let(:user) { create(:user) }
 

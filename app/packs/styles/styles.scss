@@ -31,7 +31,7 @@ body, ul {
 }
 
 // needs to change -- RESOLVED (TBC)
-.login-container input, .login-container select, .leroy-form input, .leroy-form select,  .profile-container input, .profile-container select {
+.login-container input, .login-container select,  .profile-container input, .profile-container select {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
@@ -156,21 +156,7 @@ body>.navbar {
 .mySidenav a, .special-a a {
     color: inherit;
     text-decoration: none;
-}
-
-
-.leroy-link {
-    display: inline-block;
-    color: #328166;
-    font-weight: 500;
-    margin: 0.5rem 0;
-  
-    &:hover {
-      color: #235a47;
-      text-decoration: none;
-    }
-}
-  
+} 
 
 .logo {
     width: 5rem;

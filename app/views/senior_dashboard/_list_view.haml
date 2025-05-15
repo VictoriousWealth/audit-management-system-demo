@@ -7,9 +7,10 @@
         %th.p-3 Description
         %th.p-3 Category
     %tbody
-      - @audit_fidnings.each do |f|
-        %tr
-          %td.p-3= f[:id].to_s.rjust(4, '0')
-          %td.p-3= f[:audit_type]
-          %td.p-3{ title: f[:full_description] }= f[:truncated_description]
-          %td.p-3= f[:category]
+      - if @audit_findings.present?
+        - @audit_findings.each do |f|
+          %tr
+            %td.p-3= f[:id].to_s.rjust(4, '0')
+            %td.p-3= f[:audit_type]
+            %td.p-3{ title: f[:full_description] }= f[:truncated_description]
+            %td.p-3= f[:category]

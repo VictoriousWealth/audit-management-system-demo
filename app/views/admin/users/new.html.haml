@@ -1,28 +1,41 @@
+//Used when creating a new user
 .login-container
   = image_pack_tag "images/GTIMC Logo.png", alt: "Logo", class: "logo2"
   %h2 Create a user
+
+  // Start form for creating a new user 
   = form_with model: @user, url: admin_users_path, local: true do |f|
     .form-group
       = f.label :first_name, "First Name"
       = f.text_field :first_name, placeholder: "Enter first name", required: true
+
     .form-group
       = f.label :last_name, "Last Name"
       = f.text_field :last_name, placeholder: "Enter last name", required: true
+
     .form-group
       = f.label :email, "Email"
       = f.email_field :email, placeholder: "Enter email", required: true
+
     .form-group
       = f.label :password, "Password"
       = f.password_field :password, required: true
+
     .form-group
       = f.label :password_confirmation, "Confirm Password"
       = f.password_field :password_confirmation, required: true
+
     .form-group
       = f.label :role, "Role"
+      // Dropdown menu for selecting a user role
       = f.select :role, options_for_select([['Select a role', ''], ['QA Manager', 'qa_manager'], ['Auditor', 'auditor'], ['Auditee', 'auditee'], ['Senior Manager', 'senior_manager'], ['SME', 'sme']]), {}, { required: true, id: 'role_select' }
+
+    // Company field hidden until role is auditee
     .form-group#company_field{ style: "display: none;" }
       = f.label :company, "Company"
       = f.text_field :company, placeholder: "Enter company name", id: "company_name"
+
+    // Address fields hidden until new company is entered
     .form-group#address_field{ style: "display: none;" }
       = f.label :address_street, "Street Name"
       = f.text_field :address_street, placeholder: "Enter street name ..."
@@ -30,7 +43,6 @@
       = f.text_field :address_city, placeholder: "Enter city name ..."
       = f.label :address_postcode, "Postcode"
       = f.text_field :address_postcode, placeholder: "Enter postcode ..."
-
 
     .form-group
       = f.submit "Create User", class: "btn btn-primary green-btn"
@@ -42,17 +54,20 @@
     var addressField = document.getElementById("address_field");
     var companyNameInput = document.getElementById("company_name");
 
+    // List of existing company names passed from server
     var existingCompanies = #{raw @companies.to_json};
 
+    // Helper function to check if a company name is new
     function isNewCompany(name) {
       const input = name.trim().toLowerCase();
       return !existingCompanies.some(c => typeof c === "string" && c.toLowerCase() === input);
     }
 
-    // Show/hide company field based on role
+    // Show/hide company and address fields based on selected role
     roleSelect.addEventListener("change", function() {
       if (this.value === "auditee") {
         companyField.style.display = "block";
+        // Show address fields only if company is new
         if (isNewCompany(companyNameInput.value)) {
           addressField.style.display = "block";
         }
@@ -62,7 +77,7 @@
       }
     });
 
-    // Show address fields only if company doesn't exist
+    // Show/hide address fields while typing company name
     companyNameInput.addEventListener("input", function() {
       if (isNewCompany(this.value)) {
         addressField.style.display = "block";
@@ -71,7 +86,7 @@
       }
     });
 
-    // Prevent submission if address fields are incomplete
+    // Stops form submission if required address fields are missing
     const form = document.querySelector("form");
     form.addEventListener("submit", function(e) {
       if (roleSelect.value === "auditee" && isNewCompany(companyNameInput.value)) {

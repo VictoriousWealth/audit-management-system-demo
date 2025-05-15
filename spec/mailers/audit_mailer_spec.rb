@@ -1,5 +1,11 @@
 require "rails_helper"
 
+# This spec tests the functionality of the AuditMailer class
+# - notify_assignment: Notifies a user about their assignment to an audit
+# - update_audit: Notifies a user when there is an update to their assigned audit
+#
+# The tests verify that each email has the right content
+#
 RSpec.describe AuditMailer, type: :mailer do
 
   describe "notify_assignment" do

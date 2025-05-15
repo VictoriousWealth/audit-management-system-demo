@@ -1,6 +1,14 @@
 # spec/features/supporting_documents_spec.rb
 require 'rails_helper'
 
+# Feature spec for testing the supporting documents functionality
+#
+#These tests cover:
+# - Viewing the correct supporting documents data
+# - Going to the page for adding new documents
+# - Checking the document upload page renders correctly and handles validation errors
+# - Ensuring that a document can be uploaded successfully with previews and data saving.
+#
 RSpec.feature "SupportingDocuments", type: :feature do
 
 

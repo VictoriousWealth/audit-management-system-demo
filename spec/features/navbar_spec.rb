@@ -1,5 +1,12 @@
 require 'rails_helper'
 
+# Feature spec for testing the navigation bar
+#
+# The tests cover:
+# - Displaying the right links for a logged-in user
+# - Making sure logged out users don't see nav bar content
+# - Making sure only the QA managers can see the Add New User link
+#
 RSpec.feature "Navigation Bar", type: :feature do
   let(:user) { create(:user) }
   let(:user2) { create(:user2) }

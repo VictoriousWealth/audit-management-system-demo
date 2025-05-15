@@ -1,5 +1,13 @@
 require 'rails_helper'
 
+# Feature spec for testing the user making process.
+#
+#The tests cover:
+# - Making a new user with valid data
+# - Ensuring that users with existing emails can't be created
+# - Handling the visibility of the company fields based on user roles.
+# - Checking emails, errors and success
+#
 RSpec.feature "Making a user", type: :feature do
 
   let(:user2) { create(:user2) }
