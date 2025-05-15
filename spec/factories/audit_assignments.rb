@@ -12,6 +12,11 @@
 #  audit_id      :bigint           not null
 #  user_id       :bigint           not null
 #
+# Foreign Keys
+#
+#  fk_rails_...  (audit_id => audits.id)
+#  fk_rails_...  (user_id => users.id)
+#
 FactoryBot.define do
   factory :audit_assignment do
     role { 1 }

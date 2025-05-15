@@ -17,7 +17,7 @@ AuditFinding.destroy_all
 Report.destroy_all
 Audit.destroy_all
 VendorRpn.destroy_all
-User.destroy_all
+# User.destroy_all
 Company.destroy_all
 
 
