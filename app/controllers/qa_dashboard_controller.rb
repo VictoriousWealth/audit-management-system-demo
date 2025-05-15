@@ -52,9 +52,9 @@ class QaDashboardController < ApplicationController
       .includes(audit: { audit_assignments: :user })
       .where(audit_id: audit_ids)
       .map do |c|
-        progress = case c.status
-                   when 0 then 33
-                   when 1 then 66
+        progress = case c.status.to_sym
+                   when :pending then 33
+                   when :in_progress then 66
                    else 100
                    end
   
