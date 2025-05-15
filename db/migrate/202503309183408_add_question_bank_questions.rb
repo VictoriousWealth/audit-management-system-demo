@@ -38,7 +38,7 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
     updated_questions = []
 
     questions.each_with_index do |q, i|
-      updated_question = { id: i + 1, question_text: q[:question_text], category: q[:category], created_at: Time.now, updated_at: Time.now }
+      updated_question = { question_text: q[:question_text], category: q[:category], created_at: Time.now, updated_at: Time.now }
       updated_questions.push(updated_question)
     end
 
@@ -53,7 +53,7 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
     User.create(email: "jdoe@sheffield.ac.uk")
     
     # Creating a custom questionnaire if it doesn't already exist
-    custom_questionnaire = { name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire", time_of_creation: Time.now, created_at: Time.now, updated_at: Time.now, user: User.last }
+    custom_questionnaire = { name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire", time_of_creation: Time.now, created_at: Time.now, updated_at: Time.now, user_id: user.id }
     if (CustomQuestionnaire.find_by(name: custom_questionnaire[:name]).nil?)
       CustomQuestionnaire.create!(custom_questionnaire)
     end

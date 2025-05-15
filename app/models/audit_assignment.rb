@@ -12,6 +12,11 @@
 #  audit_id      :bigint           not null
 #  user_id       :bigint           not null
 #
+# Foreign Keys
+#
+#  fk_rails_...  (audit_id => audits.id)
+#  fk_rails_...  (user_id => users.id)
+#
 class AuditAssignment < ApplicationRecord
   enum role: {
     lead_auditor: 0,
