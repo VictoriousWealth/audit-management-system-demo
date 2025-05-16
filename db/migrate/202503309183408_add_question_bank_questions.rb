@@ -50,10 +50,10 @@ class AddQuestionBankQuestions < ActiveRecord::Migration[7.0]
     end
     
     # Finding or creating a user
-    User.create(email: "jdoe@sheffield.ac.uk")
+    user = User.where(email: "jdoe@sheffield.ac.uk").first_or_create
     
     # Creating a custom questionnaire if it doesn't already exist
-    custom_questionnaire = { name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire", time_of_creation: Time.now, created_at: Time.now, updated_at: Time.now, user: User.last }
+    custom_questionnaire = { name: "YCD - Supplier Approval Guidance Pre Qualification Questionnaire", time_of_creation: Time.now, created_at: Time.now, updated_at: Time.now, user: user }
     if (CustomQuestionnaire.find_by(name: custom_questionnaire[:name]).nil?)
       CustomQuestionnaire.create!(custom_questionnaire)
     end
