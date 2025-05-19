@@ -16,10 +16,8 @@
 #
 #  fk_rails_...  (audit_detail_id => audit_details.id)
 #
-
 FactoryBot.define do
   factory :audit_standard do
-    standard { "ISO 9001" }                
-    association :audit_detail
+    standard { "Standard 1" }
   end
 end

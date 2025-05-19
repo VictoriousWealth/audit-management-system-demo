@@ -383,6 +383,10 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
     t.index ["company_id"], name: "index_vendor_rpns_on_company_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "audit_assignments", "audits"
+  add_foreign_key "audit_assignments", "users"
   add_foreign_key "audit_closure_letters", "audits"
   add_foreign_key "audit_closure_letters", "users"
   add_foreign_key "audit_details", "audits"

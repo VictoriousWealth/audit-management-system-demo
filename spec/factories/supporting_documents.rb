@@ -22,8 +22,6 @@
 #  fk_rails_...  (audit_id => audits.id)
 #  fk_rails_...  (user_id => users.id)
 #
-
-#Create a supporting document for testing
 FactoryBot.define do
   factory :supporting_document do
     name { "MyString" }

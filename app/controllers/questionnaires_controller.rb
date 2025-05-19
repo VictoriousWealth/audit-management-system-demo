@@ -22,6 +22,8 @@ class QuestionnairesController < ApplicationController
     title = params[:title] # the inputted name of the questionnaire
     data = params[:data] # the section and question data submitted
 
+    puts data
+
     # Creating the custom questionnaire
     @custom_questionnaire = CustomQuestionnaire.create(name: title, user_id: current_user.id)
 
@@ -31,12 +33,9 @@ class QuestionnairesController < ApplicationController
       questions = sq[:questions] # the section's questions
       
       questions.map do |q|
+        puts "q: #{q}"
         # Adding the question if it doesn't already exist
-        question_bank_question = QuestionBank.where(question_text: q).first
-
-        if (question_bank_question == nil)
-          QuestionBank.create(question_text: q)
-        end
+        QuestionBank.find_or_create_by(question_text: q)
 
         # The current question in the database
         currQuestion = QuestionBank.where(question_text: q).first

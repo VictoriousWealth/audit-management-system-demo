@@ -6,6 +6,7 @@ module ActiveSupport
   end
 end
 
+#require 'logger'
 require 'devise'
 require "simplecov"
 

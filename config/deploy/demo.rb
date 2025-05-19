@@ -1,6 +1,6 @@
 ## Application deployment configuration
-set :server,      'DEMO_SERVER'
-set :user,        'DEMO_USER'
+set :server,      'epi-stu-hut-demo3.shef.ac.uk'
+set :user,        'demo.team17'
 set :deploy_to,   -> { "/srv/services/#{fetch(:user)}" }
 set :branch,      'demo'
 set :application, fetch(:user)

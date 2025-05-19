@@ -2,7 +2,6 @@ class CompanyModeController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_auditee!
 
-
   def company_mode
     scheduled_audits()
     in_progress_audits()
@@ -12,7 +11,7 @@ class CompanyModeController < ApplicationController
     bar_chart_data()
     compliance_score_graph_over_time()
 
-    audit_fidnings()
+    audit_findings()
     corrective_actions()
     documents()
     supplier_audit_histories()
@@ -85,10 +84,10 @@ class CompanyModeController < ApplicationController
       next unless audit.company_id == current_user.company_id
   
       # Determine progress based on status enum
-      progress = case c.status
-                 when 0 then 33  # pending
-                 when 1 then 66  # in_progress
-                 else 100        # completed
+      progress = case c.status.to_sym
+                 when :pending then 33  
+                 when :in_progress then 66  
+                 else 100       
                  end
   
       short_description = c.action_description.length > 15 ? "#{c.action_description[0...12]}..." : c.action_description
@@ -105,8 +104,8 @@ class CompanyModeController < ApplicationController
     end
   end
   
-  def audit_fidnings
-    @audit_fidnings = []
+  def audit_findings
+    @audit_findings = []
     return unless current_user.company_id
   
     AuditFinding.includes(report: { audit: :company }).find_each do |finding|
@@ -114,15 +113,15 @@ class CompanyModeController < ApplicationController
       next unless audit
       next unless audit.company_id == current_user.company_id
   
-      category = case finding.category
-                 when 0 then "critical"
-                 when 1 then "major"
+      category = case finding.category.to_sym
+                 when :critical then "critical"
+                 when :minor then "major"
                  else "minor"
                  end
   
       short_description = finding.description.length > 15 ? "#{finding.description[0...12]}..." : finding.description
   
-      @audit_fidnings << {
+      @audit_findings << {
         id: finding.id,
         audit_type: audit.audit_type,
         truncated_description: short_description,

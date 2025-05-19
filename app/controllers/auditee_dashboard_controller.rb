@@ -11,7 +11,7 @@ class AuditeeDashboardController < ApplicationController
     compliance_score_graph_over_time()
 
     calendar_events()
-    audit_fidnings()
+    audit_findings()
     corrective_actions()
     documents()
   end
@@ -70,7 +70,7 @@ class AuditeeDashboardController < ApplicationController
   end
   
 
-  def audit_fidnings
+  def audit_findings
     @audit_findings = []
   
     AuditFinding.includes(report: { audit: :audit_assignments }).find_each do |finding|

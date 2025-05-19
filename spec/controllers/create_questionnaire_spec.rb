@@ -1,6 +1,7 @@
 # Loading the Rails frameworks and all of the application code
 require 'rails_helper'
 
+# Tests for the Questionnaire Controller
 RSpec.describe QuestionnairesController, type: :controller do  
   # Creating test users
   let(:qa_manager) { create(:user, role: "qa_manager", email: "qamanager@gmail.com") }

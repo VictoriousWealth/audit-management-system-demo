@@ -23,6 +23,58 @@
     border-radius: 25px;
 }
 
+.extra-padding {
+    padding: 9rem;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.image-background {
+    background-image: url('images/home_background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.home-title {
+    font-family: "Helvetica";
+    font-size: 60px;
+    color: #444444;
+    letter-spacing: 1 !important;
+    text-shadow: 0 0 15px ghostwhite, 0 0 15px ghostwhite, 0 0 15px ghostwhite;
+}
+
+.shadow {
+    box-shadow: 0 0 15px ghostwhite, 0 0 15px ghostwhite, 0 0 15px ghostwhite;
+}
+
+.large-btn {
+    padding: 10px 20px 10px 20px;
+    background: #328171b3;
+    color: #FFFFFF;
+    border-color: #FFFFFF00;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 10px;
+    font-family: "Helvetica";
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 1px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.center-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+  }
+
 .questionnaire-title {
     margin: 40px 0 20px 0;
     color: #444444;

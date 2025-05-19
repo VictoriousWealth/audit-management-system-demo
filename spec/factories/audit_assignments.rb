@@ -12,42 +12,16 @@
 #  audit_id      :bigint           not null
 #  user_id       :bigint           not null
 #
-
+# Foreign Keys
+#
+#  fk_rails_...  (audit_id => audits.id)
+#  fk_rails_...  (user_id => users.id)
+#
 FactoryBot.define do
   factory :audit_assignment do
-    association :audit
-    association :user
-    association :assigner, factory: :user  # maps to `assigned_by`
-
-    role { :auditor }
-    status { :assigned }
-    time_accepted { nil }
-
-    trait :lead_auditor do
-      role { :lead_auditor }
-    end
-
-    trait :supporting_auditor do
-      role { :auditor }
-    end
-
-    trait :sme do
-      role { :sme }
-    end
-
-    trait :auditee do
-      role { :auditee }
-    end
-
-    trait :accepted do
-      status { :accepted }
-      time_accepted { Time.current }
-    end
-
-    trait :declined do
-      status { :declined }
-    end
-
-    
+    role { 1 }
+    status { 1 }
+    time_accepted { "2025-03-12 14:02:42" }
+    user { 1 }
   end
 end

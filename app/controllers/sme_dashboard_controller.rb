@@ -7,7 +7,7 @@ class SmeDashboardController < ApplicationController
     completed_audits()
 
     calendar_events()
-    audit_fidnings()
+    audit_findings()
     corrective_actions()
     documents()
   end
@@ -45,10 +45,10 @@ class SmeDashboardController < ApplicationController
       next unless relevant
   
       # Determine progress based on status enum
-      progress = case c.status
-                 when 0 then 33  # pending
-                 when 1 then 66  # in_progress
-                 else 100        # completed
+      progress = case c.status.to_sym
+                 when :pending then 33  
+                 when :in_progress then 66  
+                 else 100        
                  end
   
       short_description = c.action_description.length > 15 ? "#{c.action_description[0...12]}..." : c.action_description
@@ -68,8 +68,8 @@ class SmeDashboardController < ApplicationController
   end
   
 
-  def audit_fidnings
-    @audit_fidnings = []
+  def audit_findings
+    @audit_findings = []
   
     AuditFinding.includes(report: { audit: :audit_assignments }).find_each do |finding|
       audit = finding.report&.audit
@@ -81,15 +81,15 @@ class SmeDashboardController < ApplicationController
       end
       next unless relevant
   
-      category = case finding.category
-                 when 0 then "critical"
-                 when 1 then "major"
+      category = case finding.category.to_sym
+                 when :critical then "critical"
+                 when :major then "major"
                  else "minor"
                  end
   
       short_description = finding.description.length > 15 ? "#{finding.description[0...12]}..." : finding.description
   
-      @audit_fidnings << {
+      @audit_findings << {
         id: finding.id,
         audit_type: audit.audit_type,
         truncated_description: short_description,
@@ -157,222 +157,6 @@ class SmeDashboardController < ApplicationController
         description: "#{on_time_audits.count} audit(s) in progress (on time)"
       }
     end
-  end
-  
-  def compliance_score_graph_over_time
-    compliance_score_graph_over_time_all()
-    compliance_score_graph_over_time_day()
-    compliance_score_graph_over_time_week()
-    compliance_score_graph_over_time_month()
-  end
-
-  def compliance_score_graph_over_time_day
-    # Time range for today
-    today_range = Time.zone.today.beginning_of_day..Time.zone.today.end_of_day
-  
-    # All completed + scored audits today
-    all_daily_audits = Audit.where.not(score: nil)
-                            .where.not(actual_end_date: nil)
-                            .where(actual_end_date: today_range)
-                            .includes(:audit_assignments)
-                            .order(:actual_end_date)
-  
-    # Only audits where the current user is involved as sme
-    my_daily_audits = all_daily_audits.select do |audit|
-      audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[sme].include?(assignment.role)
-      end
-    end
-  
-    @compliance_score_by_day = [
-      {
-        name: "All Audits",
-        color: "#3498DB",
-        data: all_daily_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
-      },
-      {
-        name: "My Audits",
-        color: "#42CA68",
-        data: my_daily_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
-      }
-    ]
-  end
-  
-
-  def compliance_score_graph_over_time_week
-    # Time range for the current week
-    current_week_range = Time.zone.now.beginning_of_week..Time.zone.now.end_of_week
-  
-    # All completed + scored audits in the current week
-    all_weekly_audits = Audit.where.not(score: nil)
-                             .where.not(actual_end_date: nil)
-                             .where(actual_end_date: current_week_range)
-                             .includes(:audit_assignments)
-                             .order(:actual_end_date)
-  
-    # Only audits where the current user is involved as sme
-    my_weekly_audits = all_weekly_audits.select do |audit|
-      audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[sme].include?(assignment.role)
-      end
-    end
-  
-    @compliance_score_by_week = [
-      {
-        name: "All Audits",
-        color: "#3498DB",
-        data: all_weekly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
-      },
-      {
-        name: "My Audits",
-        color: "#42CA68",
-        data: my_weekly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
-      }
-    ]
-  end
-  
-
-  def compliance_score_graph_over_time_month
-    # Time range for the current month
-    current_month_range = Time.zone.now.beginning_of_month..Time.zone.now.end_of_month
-  
-    # All completed + scored audits in the current month
-    all_monthly_audits = Audit.where.not(score: nil)
-                              .where.not(actual_end_date: nil)
-                              .where(actual_end_date: current_month_range)
-                              .includes(:audit_assignments)
-                              .order(:actual_end_date)
-  
-    # Only audits where the current user is involved as sme
-    my_monthly_audits = all_monthly_audits.select do |audit|
-      audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[sme].include?(assignment.role)
-      end
-    end
-  
-    @compliance_score_by_month = [
-      {
-        name: "All Audits",
-        color: "#3498DB",
-        data: all_monthly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
-      },
-      {
-        name: "My Audits",
-        color: "#42CA68",
-        data: my_monthly_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
-      }
-    ]
-  end
-  
-
-  def compliance_score_graph_over_time_all
-    # Filter all scored + completed audits
-    all_scored_audits = Audit.where.not(score: nil).where.not(actual_end_date: nil).order(:actual_end_date)
-  
-    # Filter scored + completed audits where current_user is involved as sme
-    my_scored_audits = all_scored_audits.select do |audit|
-      audit.audit_assignments.any? do |assignment|
-        assignment.user_id == current_user.id && %w[sme].include?(assignment.role)
-      end
-    end
-  
-    @compliance_score_all = [
-      {
-        name: "All Audits",
-        color: "#3498DB",
-        data: all_scored_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
-      },
-      {
-        name: "My Audits",
-        color: "#42CA68",
-        data: my_scored_audits.map { |audit| [audit.actual_end_date.strftime("%d-%b-%Y %H:%M"), audit.score] }
-      }
-    ]
-  end
-  
-
-  def bar_chart_data
-    visible_audits = Audit
-      .includes(:audit_assignments)
-      .select { |audit|
-        audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[sme].include?(assignment.role)
-        end
-      }
-  
-    @bar_chart_data = [
-      { name: "Completed", data: [["Audits", visible_audits.count { |a| a.status == "completed" }]] },
-  
-      { name: "In Progress (on time)", data: [["Audits", visible_audits.count { |a|
-        a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date <= a.scheduled_start_date
-      }]] },
-  
-      { name: "In Progress (late)", data: [["Audits", visible_audits.count { |a|
-        a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date > a.scheduled_start_date
-      }]] },
-  
-      { name: "Not Started", data: [["Audits", visible_audits.count { |a| a.status == "not_started" }]] }
-    ]
-  
-    # Calculate suggested max for y-axis scaling
-    max_value = @bar_chart_data.map { |s| s[:data][0][1] }.max
-    suggested_max = (max_value * 1.1).ceil
-  
-    @bar_chart_library = {
-      title: { text: "Audit Status Overview", display: true },
-      scales: {
-        y: {
-          suggestedMax: suggested_max
-        }
-      },
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          fullSize: false,
-          labels: {
-            padding: 20,
-            usePointStyle: true,
-            pointStyle: 'circle',
-            color: "#000",
-            font: { weight: 'bold', size: 12 }
-          }
-        },
-        datalabels: {
-          anchor: 'end',
-          align: 'top',
-          color: '#000',
-          font: { weight: 'bold' }
-        }
-      }
-    }
-  end
-  
-
-  def pie_chart_data
-    visible_audits = Audit
-      .includes(:audit_assignments)
-      .select { |audit|
-        audit.audit_assignments.any? do |assignment|
-          assignment.user_id == current_user.id && %w[sme].include?(assignment.role)
-        end
-      }
-  
-    @pie_chart_data = {
-      "Completed": visible_audits.select { |a| a.status == "completed" }.count, # Any
-  
-      "In Progress (on time)": visible_audits
-                                .select { |a| a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date <= a.scheduled_start_date }
-                                # .select { |a| a.actual_end_date && a.scheduled_end_date && a.actual_end_date <= a.scheduled_end_date }
-                                .count, # to be replaced with scheduled_audits task
-  
-      "In Progress (late)": visible_audits
-                                .select { |a| a.status == "in_progress" && a.actual_start_date && a.scheduled_start_date && a.actual_start_date > a.scheduled_start_date }
-                                # .select { |a| a.actual_end_date && a.scheduled_end_date && a.actual_end_date > a.scheduled_end_date }
-                                .count, # to be replaced with scheduled_audits task
-  
-      "Not Started": visible_audits.select { |a| a.status == "not_started" }.count
-    }
   end
   
   def scheduled_audits

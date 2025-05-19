@@ -11,7 +11,7 @@ class AuditorDashboardController < ApplicationController
     compliance_score_graph_over_time()
 
     calendar_events()
-    audit_fidnings()
+    audit_findings()
     corrective_actions()
     documents()
   end
@@ -73,8 +73,8 @@ class AuditorDashboardController < ApplicationController
   end
   
 
-  def audit_fidnings
-    @audit_fidnings = []
+  def audit_findings
+    @audit_findings = []
   
     AuditFinding.includes(report: { audit: :audit_assignments }).find_each do |finding|
       audit = finding.report&.audit
@@ -94,7 +94,7 @@ class AuditorDashboardController < ApplicationController
   
       short_description = finding.description.length > 15 ? "#{finding.description[0...12]}..." : finding.description
   
-      @audit_fidnings << {
+      @audit_findings << {
         id: finding.id,
         audit_type: audit.audit_type,
         truncated_description: short_description,

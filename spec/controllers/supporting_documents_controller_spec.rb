@@ -1,10 +1,5 @@
 require 'rails_helper'
-# RSpec tests for the SupportingDocumentsController
-#
-# It tests that:
-# - The new action initialises an instance for a new supporting document
-# - The create action successfully saves a new supporting document with an uploaded file upload.
-#
+
 RSpec.describe SupportingDocumentsController, type: :controller do
   let!(:audit) { create (:audit) }
   let!(:user) { create(:user) }  # Create test user

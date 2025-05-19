@@ -1,10 +1,10 @@
 require "rails_helper"
 include ActiveJob::TestHelper
 
-RSpec.describe AuditorDashboardController, type: :controller do
+RSpec.describe SmeDashboardController, type: :controller do
   # === Test Setup ===
   let!(:qa_manager) { User.create!(email: "qa.manager@test.com", password: "password123", role: :qa_manager) }
-  let!(:auditor) { User.create!(email: "auditor@test.com", password: "password123", role: :auditor) }
+  let!(:sme) { User.create!(email: "sme@test.com", password: "password123", role: :sme) }
   let!(:company) { Company.create!(name: "Test Co", city: "City", postcode: "S1 2FF", street_name: "Street") }
   let!(:audit) {
     Audit.create!(
@@ -16,34 +16,34 @@ RSpec.describe AuditorDashboardController, type: :controller do
       time_of_creation: Time.zone.now
     )
   }
-  let!(:assignment) { AuditAssignment.create!(audit:, user: auditor, role: :auditor, assigned_by: qa_manager.id) }
+  let!(:assignment) { AuditAssignment.create!(audit:, user: sme, role: :sme, assigned_by: qa_manager.id) }
   let!(:report) { Report.create!(audit: audit, user: qa_manager) }
 
-  before { sign_in auditor }
-  after { sign_out auditor }
+  before { sign_in sme }
+  after { sign_out sme }
 
   # === General Access ===
-  describe "GET #auditor - 'general' section"  do
-    it "allows an auditor to visit their dashboard" do
-      get :auditor
+  describe "GET #sme - 'general' section"  do
+    it "allows an sme to visit their dashboard" do
+      get :sme
       expect(response).to have_http_status(:success)
     end
   end
 
   # === Supporting Documents ===
-  describe "GET #auditor - documents" do
+  describe "GET #sme - documents" do
     let!(:document) do
       SupportingDocument.create!(
         audit: audit,
-        user: auditor,
+        user: sme,
         name: "Evidence File",
         content: "Details about non-compliance",
         file: fixture_file_upload(Rails.root.join("spec/fixtures/files/sample.pdf"), "application/pdf")
       )
     end
 
-    it "loads supporting documents assigned to the current auditor" do
-      get :auditor
+    it "loads supporting documents assigned to the current sme" do
+      get :sme
 
       docs = assigns(:documents)
       expect(docs).to include(
@@ -58,11 +58,11 @@ RSpec.describe AuditorDashboardController, type: :controller do
 
 
   # === Corrective Actions ===
-  describe "GET #auditor - corrective actions" do
+  describe "GET #sme - corrective actions" do
     let!(:auditee) { User.create!(email: "auditee@test.com", password: "password123", role: :auditee, company: company) }
 
-    before { sign_in auditor }
-    after { sign_out auditor }
+    before { sign_in sme }
+    after { sign_out sme }
 
     let!(:audit) do
       audit = Audit.create!(
@@ -73,7 +73,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
         status: :in_progress,
         time_of_creation: Time.zone.now
       )
-      AuditAssignment.create!(audit: audit, user: auditor, role: :auditor, assigned_by: qa_manager.id)
+      AuditAssignment.create!(audit: audit, user: sme, role: :sme, assigned_by: qa_manager.id)
       AuditAssignment.create!(audit: audit, user: auditee, role: :auditee, assigned_by: qa_manager.id)
       audit
     end
@@ -85,7 +85,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
         status: :pending
       )
 
-      get :auditor
+      get :sme
 
       expect(assigns(:corrective_actions)).to include(
         hash_including(
@@ -104,7 +104,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
         status: :in_progress
       )
 
-      get :auditor
+      get :sme
 
       expect(assigns(:corrective_actions)).to include(
         hash_including(
@@ -123,7 +123,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
         status: :completed
       )
 
-      get :auditor
+      get :sme
 
       expect(assigns(:corrective_actions)).to include(
         hash_including(
@@ -138,7 +138,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
 
 
   # === Audit Findings ===
-  describe "GET #auditor - audit findings" do
+  describe "GET #sme - audit findings" do
     let!(:audit) do
       audit = Audit.create!(
         audit_type: "internal",
@@ -148,20 +148,20 @@ RSpec.describe AuditorDashboardController, type: :controller do
         status: :completed,
         time_of_creation: Time.zone.now
       )
-      AuditAssignment.create!(audit: audit, user: auditor, role: :auditor, assigned_by: qa_manager.id)
+      AuditAssignment.create!(audit: audit, user: sme, role: :sme, assigned_by: qa_manager.id)
       audit
     end
 
     let!(:report) { Report.create!(audit: audit, user: qa_manager) }
 
-    it "includes critical findings assigned to the auditor" do
+    it "includes critical findings assigned to the sme" do
       finding = AuditFinding.create!(
         report: report,
         description: "Major data breach affecting SOPs",
         category: :critical
       )
 
-      get :auditor
+      get :sme
 
       findings = assigns(:audit_findings)
       expect(findings).to include(
@@ -175,14 +175,14 @@ RSpec.describe AuditorDashboardController, type: :controller do
       )
     end
 
-    it "includes major findings assigned to the auditor" do
+    it "includes major findings assigned to the sme" do
       finding = AuditFinding.create!(
         report: report,
         description: "Major data breach affecting SOPs",
         category: :major
       )
 
-      get :auditor
+      get :sme
 
       findings = assigns(:audit_findings)
       expect(findings).to include(
@@ -196,14 +196,14 @@ RSpec.describe AuditorDashboardController, type: :controller do
       )
     end
 
-    it "includes minor findings assigned to the auditor" do
+    it "includes minor findings assigned to the sme" do
       finding = AuditFinding.create!(
         report: report,
         description: "Major data breach affecting SOPs",
         category: :minor
       )
 
-      get :auditor
+      get :sme
 
       findings = assigns(:audit_findings)
       expect(findings).to include(
@@ -220,7 +220,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
 
 
   # === Calendar Events ===
-  describe "GET #auditor - calendar events" do
+  describe "GET #sme - calendar events" do
     let(:today) { Time.zone.today }
 
     let!(:audit_due_today) do
@@ -232,7 +232,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
         status: :not_started,
         time_of_creation: Time.zone.now
       )
-      AuditAssignment.create!(audit: audit, user: auditor, role: :auditor, assigned_by: qa_manager.id)
+      AuditAssignment.create!(audit: audit, user: sme, role: :sme, assigned_by: qa_manager.id)
       audit
     end
 
@@ -245,12 +245,12 @@ RSpec.describe AuditorDashboardController, type: :controller do
         status: :in_progress,
         time_of_creation: Time.zone.now
       )
-      AuditAssignment.create!(audit: audit, user: auditor, role: :auditor, assigned_by: qa_manager.id)
+      AuditAssignment.create!(audit: audit, user: sme, role: :sme, assigned_by: qa_manager.id)
       audit
     end
 
     it "includes audits due today" do
-      get :auditor
+      get :sme
 
       events = assigns(:calendar_events)
       expect(events).to include(
@@ -263,7 +263,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
     end
 
     it "includes overdue audits" do
-      get :auditor
+      get :sme
 
       events = assigns(:calendar_events)
       expect(events).to include(
@@ -276,7 +276,7 @@ RSpec.describe AuditorDashboardController, type: :controller do
     end
 
     it "includes on-time in-progress audits" do
-      get :auditor
+      get :sme
 
       events = assigns(:calendar_events)
       expect(events).to include(
@@ -289,71 +289,40 @@ RSpec.describe AuditorDashboardController, type: :controller do
     end
   end
 
-  # === Compliance Score Graph ===
-  describe "GET #auditor - compliance score graph" do
-    let!(:today) { Time.zone.now }
-
-    let!(:my_audit) {
-      a = Audit.create!(audit_type: "internal", company: company, actual_end_date: today,
-        score: 85, status: :completed, time_of_creation: today)
-      AuditAssignment.create!(audit: a, user: auditor, role: :auditor, assigned_by: qa_manager.id)
-      a
-    }
-
-    let!(:other_audit) {
-      a = Audit.create!(audit_type: "internal", company: company, actual_end_date: today,
-        score: 70, status: :completed, time_of_creation: today)
-      AuditAssignment.create!(audit: a, user: qa_manager, role: :auditor, assigned_by: qa_manager.id)
-      a
-    }
-
-    it "assigns graph data correctly" do
-      get :auditor
-      graph_data = assigns(:compliance_score_by_day)
-
-      all_audits = graph_data.find { |s| s[:name] == "All Audits" }
-      my_audits = graph_data.find { |s| s[:name] == "My Audits" }
-
-      expect(all_audits[:data]).to include([today.strftime("%d-%b-%Y %H:%M"), 85])
-      expect(all_audits[:data]).to include([today.strftime("%d-%b-%Y %H:%M"), 70])
-      expect(my_audits[:data]).to include([today.strftime("%d-%b-%Y %H:%M"), 85])
-      expect(my_audits[:data]).not_to include([today.strftime("%d-%b-%Y %H:%M"), 70])
-    end
-  end
 
   # === Risk Level Calculation ===
-  describe "GET #auditor - risk_level" do
+  describe "GET #sme - risk_level" do
     def create_findings(count, category)
       count.times { AuditFinding.create!(report: report, description: "test", category: category) }
     end
 
     it "returns 'High Risk' for critical findings" do
       create_findings(1, :critical)
-      get :auditor
+      get :sme
       expect(controller.send(:risk_level, audit)).to eq("High Risk")
     end
 
     it "returns 'High Risk' for ≥ 5 major findings" do
       create_findings(5, :major)
-      get :auditor
+      get :sme
       expect(controller.send(:risk_level, audit)).to eq("High Risk")
     end
 
     it "returns 'Medium Risk' for 1–4 major findings" do
       create_findings(3, :major)
-      get :auditor
+      get :sme
       expect(controller.send(:risk_level, audit)).to eq("Medium Risk")
     end
 
     it "returns 'Medium Risk' for ≥ 5 minor findings" do
       create_findings(5, :minor)
-      get :auditor
+      get :sme
       expect(controller.send(:risk_level, audit)).to eq("Medium Risk")
     end
 
     it "returns 'Low Risk' for few minor findings" do
       create_findings(2, :minor)
-      get :auditor
+      get :sme
       expect(controller.send(:risk_level, audit)).to eq("Low Risk")
     end
   end
