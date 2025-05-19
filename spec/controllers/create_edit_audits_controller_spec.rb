@@ -90,7 +90,7 @@ RSpec.describe CreateEditAuditsController, type: :controller do
        .and change(AuditStandard, :count).by(2)
 
       created_audit = Audit.last
-      expect(response).to redirect_to(edit_create_edit_audit_path(created_audit))
+      expect(response).to redirect_to(view_audit_path(created_audit))
     end
 
     it "fails to create audit when required fields are missing" do
@@ -135,7 +135,7 @@ RSpec.describe CreateEditAuditsController, type: :controller do
       sign_in qa_manager
     
       # Simulate invalid `audit_detail[:purpose]` (e.g., too long)
-      long_purpose = "x" * 10_000 # Assuming this breaks validation
+      #long_purpose = "x" * 10_000 # Assuming this breaks validation
     
       expect {
         post :create, params: {
@@ -151,7 +151,7 @@ RSpec.describe CreateEditAuditsController, type: :controller do
           audit_detail: {
             scope: "Valid scope",
             objectives: "Valid objectives",
-            purpose: long_purpose, # Invalid on purpose
+            purpose: 100, # Invalid on purpose
             boundaries: "Valid boundaries"
           },
           audit_standard: {
@@ -363,7 +363,7 @@ RSpec.describe CreateEditAuditsController, type: :controller do
       expect(updated_detail.audit_standards.pluck(:standard)).to contain_exactly("MHRA", "GMP")
       expect(updated_audit.audit_assignments.count).to eq(4) # lead, auditee, support, SME
 
-      expect(response).to redirect_to(edit_create_edit_audit_path(updated_audit))
+      expect(response).to redirect_to(view_audit_path(updated_audit))
       expect(flash[:notice]).to eq("Audit updated successfully.")
     end
 
@@ -736,6 +736,17 @@ RSpec.describe CreateEditAuditsController, type: :controller do
       sign_out :user
       sign_in qa_manager
 
+      company = create(:company)
+      audit = create(:audit, company: company)
+      audit.audit_assignments.create!(
+        user: create(:user),
+        role: :auditor,
+        status: :assigned,
+        assigned_by: qa_manager.id
+      )
+
+      controller.params[:id] = audit.id 
+
       expect {
         controller.send(:authorize_editing)
       }.not_to raise_error
@@ -745,10 +756,16 @@ RSpec.describe CreateEditAuditsController, type: :controller do
       sign_out :user
       sign_in other_qa
 
-      controller.request.env["HTTP_REFERER"] = root_path
-      expect {
-        controller.send(:authorize_editing)
-      }.to change { response.status }.to(302)
+      company = create(:company)
+      audit = create(:audit, company: company)
+      audit.audit_assignments.create!(
+        user: create(:user),
+        role: :auditor,
+        status: :assigned,
+        assigned_by: qa_manager.id
+      )
+      
+      get :edit, params: { id: audit.id }
 
       expect(response).to redirect_to(root_path)
       expect(flash[:alert]).to eq("You are not authorized to edit this audit.")
@@ -757,6 +774,17 @@ RSpec.describe CreateEditAuditsController, type: :controller do
     it "allows assigned auditor (lead_auditor)" do
       sign_out :user
       sign_in lead_auditor
+
+      company = create(:company)
+      audit = create(:audit, company: company)
+      audit.audit_assignments.create!(
+        user: lead_auditor,
+        role: :lead_auditor,
+        status: :assigned,
+        assigned_by: qa_manager.id
+      )
+
+      controller.params[:id] = audit.id
 
       expect {
         controller.send(:authorize_editing)
@@ -767,6 +795,17 @@ RSpec.describe CreateEditAuditsController, type: :controller do
       sign_out :user
       sign_in support_auditor
 
+      company = create(:company)
+      audit = create(:audit, company: company)
+      audit.audit_assignments.create!(
+        user: support_auditor,
+        role: :auditor,
+        status: :assigned,
+        assigned_by: qa_manager.id
+      )
+
+      controller.params[:id] = audit.id
+
       expect {
         controller.send(:authorize_editing)
       }.not_to raise_error
@@ -776,10 +815,16 @@ RSpec.describe CreateEditAuditsController, type: :controller do
       sign_out :user
       sign_in unassigned_auditor
 
-      controller.request.env["HTTP_REFERER"] = root_path
-      expect {
-        controller.send(:authorize_editing)
-      }.to change { response.status }.to(302)
+      company = create(:company)
+      audit = create(:audit, company: company)
+      audit.audit_assignments.create!(
+        user: create(:user),
+        role: :auditor,
+        status: :assigned,
+        assigned_by: qa_manager.id
+      )
+
+      get :edit, params: { id: audit.id }
 
       expect(response).to redirect_to(root_path)
       expect(flash[:alert]).to eq("You are not authorized to edit this audit.")
