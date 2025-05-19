@@ -1,3 +1,11 @@
+# Workaround for ActiveSupport::LoggerThreadSafeLevel
+require "logger"
+module ActiveSupport
+  module LoggerThreadSafeLevel
+    Logger = ::Logger
+  end
+end
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'simplecov'
 SimpleCov.start 'rails'
@@ -51,8 +59,8 @@ RSpec.configure do |config|
   # config.include Rails.application.routes.url_helpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
-  
-  
+
+
 
   config.include ApplicationHelper, type: :feature
   config.include FactoryBot::Syntax::Methods
@@ -70,6 +78,7 @@ RSpec.configure do |config|
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
     ActionMailer::Base.deliveries.clear
+
   end
 
   # Can't use transaction strategy with Javascript tests because they are run in
@@ -134,6 +143,8 @@ end
 Capybara.configure do |config|
   config.server = :puma, { Silent: true }
   config.match  = :prefer_exact
+  #config.default_host = 'http://www.example.com'
+
 end
 
 Capybara.automatic_label_click = true
@@ -141,4 +152,3 @@ Capybara.automatic_label_click = true
 def sleep_for_js(sleep_time: 0.5)
   sleep sleep_time
 end
-

@@ -1,3 +1,11 @@
+# Workaround for ActiveSupport::LoggerThreadSafeLevel
+require "logger"
+module ActiveSupport
+  module LoggerThreadSafeLevel
+    Logger = ::Logger
+  end
+end
+
 require 'devise'
 require "simplecov"
 
@@ -107,4 +115,3 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
-

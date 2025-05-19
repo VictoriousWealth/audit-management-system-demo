@@ -19,7 +19,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "has the correct sender email" do
-      expect(mail.from).to eq(["GTIMC@mailer.com"])
+      expect(mail.from).to eq(["no-reply@GTIMC.com"])
     end
 
     it "has the recipient's email in the body" do

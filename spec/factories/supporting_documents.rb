@@ -31,4 +31,20 @@ FactoryBot.define do
     location { "MyString" }
     uploaded_at { "2025-03-12 14:48:41" }
   end
+
+  factory :supporting_document2, class: 'SupportingDocument' do
+    name { "Test Document" }
+    content { "Test content" }
+    association :user
+    association :audit
+
+    trait :with_file do
+      file {
+        Rack::Test::UploadedFile.new(
+          Rails.root.join("spec/fixtures/files/sample.pdf"),
+          'application/pdf'
+        )
+      }
+    end
+  end
 end

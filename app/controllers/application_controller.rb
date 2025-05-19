@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   #
   # @return [void]
   def authorise_qa_manager
-    unless current_user.role == qa_manager
+    unless current_user.role == "qa_manager"
       flash[:alert] = "You are not authorised to perform this action."
       redirect_to root_path
     end

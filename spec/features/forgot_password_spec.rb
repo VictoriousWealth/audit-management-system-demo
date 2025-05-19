@@ -9,7 +9,7 @@ require 'rails_helper'
 # - Mismatched password confirmation
 #
 RSpec.feature "Forgot Password", type: :feature do
-  let(:user) { create(:user) }
+  let(:auditor) { create(:user, :auditor) }
 
   scenario "User submits valid email for password reset" do
 
@@ -37,9 +37,7 @@ RSpec.feature "Forgot Password", type: :feature do
   end
 
   scenario "User submits invalid email for password reset" do
-
     visit new_user_password_path
-
     # Put in an invalid email
     fill_in "Email", with: "invalid@example.com"
     click_button "Send"
@@ -50,7 +48,6 @@ RSpec.feature "Forgot Password", type: :feature do
 
   scenario "User submits empty email field" do
     visit new_user_password_path
-
     # Leave the field blank
     fill_in "Email", with: ""
     click_button "Send"
@@ -61,7 +58,6 @@ RSpec.feature "Forgot Password", type: :feature do
 
 
   scenario "User changes their password successfully" do
-
     # Generate password reset token
     token = user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token)
@@ -86,7 +82,6 @@ RSpec.feature "Forgot Password", type: :feature do
   end
 
   scenario "User enters not matching password and confirmation" do
-
     # Generate password reset token
     token = user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token)

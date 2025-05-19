@@ -11,33 +11,35 @@ require 'rails_helper'
 RSpec.feature "User Profile", type: :feature do
 
   let(:user) { create(:user) }
-  let(:user2) { create(:user2) }
+  let(:auditee) { create(:user, :auditee) }
+  let(:qa_manager) { create(:user, :qa_manager) }
+  let(:auditor) { create(:user, :auditor) }
+
   let(:user3) { create(:user3) }
-  let(:user4) { create(:user4) }
 
 
   scenario "Get to profile page" do
     #Login
-    login_as(user, scope: :user)
+    login_as(auditor, scope: :user)
     visit profile_path
 
     #Check it has the correct user details
     expect(page).to have_current_path(profile_path)
-    expect(page).to have_content("#{user.first_name} #{user.last_name}")
-    expect(page).to have_content(user.email)
-    expect(page).to have_content(user.role)
+    expect(page).to have_content("#{auditor.first_name} #{auditor.last_name}")
+    expect(page).to have_content(auditor.email)
+    expect(page).to have_content(auditor.role)
   end
 
   scenario "Profile page should have company details if the user is an auditee" do
     #Login
-    login_as(user, scope: :user)
+    login_as(auditee, scope: :user)
     visit profile_path
 
     #Check it has the correct user details
     expect(page).to have_current_path(profile_path)
-    expect(page).to have_content("#{user.first_name} #{user.last_name}")
-    expect(page).to have_content(user.email)
-    expect(page).to have_content(user.role)
+    expect(page).to have_content("#{auditee.first_name} #{auditee.last_name}")
+    expect(page).to have_content(auditee.email)
+    expect(page).to have_content(auditee.role)
     expect(page).to have_content("Company")
     expect(page).to have_content("Address")
 
@@ -45,14 +47,14 @@ RSpec.feature "User Profile", type: :feature do
 
   scenario "Profile page shouldnt have company if the user isnt an auditee" do
     #Login
-    login_as(user3)
+    login_as(auditor, scope: :user)
     visit profile_path
 
     #Check it has the correct user details
     expect(page).to have_current_path(profile_path)
-    expect(page).to have_content("#{user3.first_name} #{user3.last_name}")
-    expect(page).to have_content(user3.email)
-    expect(page).to have_content(user3.role.humanize.capitalize)
+    expect(page).to have_content("#{auditor.first_name} #{auditor.last_name}")
+    expect(page).to have_content(auditor.email)
+    expect(page).to have_content(auditor.role.humanize.capitalize)
 
     #Company is there it just shouldnt be visible
     expect(page).to_not have_selector("b", text: "Company")
@@ -60,13 +62,9 @@ RSpec.feature "User Profile", type: :feature do
 
   end
 
-
-
-
-
   scenario "User visits the profile edit page" do
     #Login
-    login_as(user, scope: :user)
+    login_as(auditor, scope: :user)
     visit edit_user_registration_path
 
     #Check it has the right fields
@@ -82,7 +80,7 @@ RSpec.feature "User Profile", type: :feature do
   scenario "User updates profile with valid data" do
 
     #Login
-    login_as(user, scope: :user)
+    login_as(auditor, scope: :user)
     visit edit_user_registration_path
 
     #Enter the valid details
@@ -100,7 +98,7 @@ RSpec.feature "User Profile", type: :feature do
   scenario "User updates profile with invalid email" do
 
      #Login
-     login_as(user, scope: :user)
+     login_as(auditor, scope: :user)
      visit edit_user_registration_path
 
     #Enter invalid email
@@ -113,14 +111,14 @@ RSpec.feature "User Profile", type: :feature do
 
   scenario "User updates with existing email" do
     #Make a user with the email
-    create(:user, email: "QA@User.com", password: "password")
+    create(:user, email: "QA@auditor.com", password: "password")
 
     #Login
-    login_as(user, scope: :user)
+    login_as(auditor, scope: :user)
     visit edit_user_registration_path
 
    #Enter invalid email
-   fill_in "Enter new email", with: "QA@User.com"
+   fill_in "Enter new email", with: "QA@auditor.com"
    fill_in "Enter your current password", with: "Password"
    click_button "Update"
 
@@ -130,7 +128,7 @@ RSpec.feature "User Profile", type: :feature do
   scenario "User updates profile with mismatched passwords" do
 
      #Login
-     login_as(user, scope: :user)
+     login_as(auditor, scope: :user)
      visit edit_user_registration_path
 
     #Dont enter the same passwords
@@ -146,7 +144,7 @@ RSpec.feature "User Profile", type: :feature do
   scenario "User updates profile with incorrect current password" do
 
      #Login
-     login_as(user, scope: :user)
+     login_as(auditor, scope: :user)
      visit edit_user_registration_path
 
     #Enter incorrect password
@@ -160,7 +158,7 @@ RSpec.feature "User Profile", type: :feature do
   scenario "User clicks the 'Back' button" do
 
      #Login
-     login_as(user, scope: :user)
+     login_as(auditor, scope: :user)
      visit edit_user_registration_path
 
     #sHOULD TAKE USER TO PROFILE PAGE

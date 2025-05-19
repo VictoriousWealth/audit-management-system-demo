@@ -10,12 +10,13 @@ require 'rails_helper'
 #
 RSpec.feature "Making a user", type: :feature do
 
-  let(:user2) { create(:user2) }
+  let(:qa_manager) { create(:user, :qa_manager) }
+
 
 
   scenario "Create a user" do
     # Sign in
-    login_as(user2, scope: :user)
+    login_as(qa_manager, scope: :user)
     visit root_path
 
     # Check the link is there
@@ -80,7 +81,7 @@ RSpec.feature "Making a user", type: :feature do
 
   scenario "Create a non auditee" do
     #Sign in
-    login_as(user2, scope: :user)
+    login_as(qa_manager, scope: :user)
     visit root_path
     # Chdeck the link is there
     expect(page).to have_link('Add New User', href: new_admin_user_path)
@@ -108,7 +109,7 @@ RSpec.feature "Making a user", type: :feature do
   scenario "User tries to create an account with an existing email" do
 
     #Sign in
-    login_as(user2, scope: :user)
+    login_as(qa_manager, scope: :user)
     visit root_path
     # Chdeck the link is there
     expect(page).to have_link('Add New User', href: new_admin_user_path)

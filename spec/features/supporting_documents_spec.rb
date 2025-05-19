@@ -14,8 +14,9 @@ RSpec.feature "SupportingDocuments", type: :feature do
 
   let!(:company) { create(:company) }
   let!(:audit) { create(:audit,company: company) }
-  let(:user) { create(:user) }
-  let(:user2) { create(:user, role: "auditor") }
+  let(:auditee) { create(:user, :auditee) }
+  let(:auditor) { create(:user, :auditor) }
+
 
   #Check thwe view is correct for an auditee
   scenario "The user can see the supporting documents section" do
@@ -29,7 +30,7 @@ RSpec.feature "SupportingDocuments", type: :feature do
 
   #Check the view is correct for a non-auditee
   scenario "The non user should not see add button in the supporting documents section" do
-    login_as(user2, scope: :user)
+    login_as(auditor, scope: :user)
     visit view_audit_path(audit.id)
     #Check everything is correct
     expect(page).to have_content("Supporting Documents")
@@ -39,7 +40,7 @@ RSpec.feature "SupportingDocuments", type: :feature do
 
   #Check the button takes the user to the /new page
   scenario "The user can go to the add document page" do
-    login_as(user, scope: :user)
+    login_as(auditee, scope: :user)
     visit view_audit_path(audit.id)
     expect(page).to have_content("Supporting Documents")
     #Check the link to add new documents works
@@ -49,7 +50,7 @@ RSpec.feature "SupportingDocuments", type: :feature do
 
   #Check the new document page loads right
   scenario "shows the upload supporting documents headers" do
-    login_as(user, scope: :user)
+    login_as(auditee, scope: :user)
     visit view_audit_path(audit.id)
     expect(page).to have_content("Supporting Documents")
     click_link "Add Document"
@@ -66,7 +67,7 @@ RSpec.feature "SupportingDocuments", type: :feature do
 
   #Check what happens if no data is entered and the user tries to add
   scenario "validates required fields before submission", js: true do
-    login_as(user, scope: :user)
+    login_as(auditee, scope: :user)
     visit view_audit_path(audit.id)
     expect(page).to have_content("Supporting Documents")
     click_link "Add Document"
@@ -79,7 +80,7 @@ RSpec.feature "SupportingDocuments", type: :feature do
 
   #Add a new document
   scenario "User uploads a new supporting document", js: true do
-    login_as(user, scope: :user)
+    login_as(auditee, scope: :user)
     visit view_audit_path(audit.id)
     expect(page).to have_content("Supporting Documents")
     click_link "Add Document"

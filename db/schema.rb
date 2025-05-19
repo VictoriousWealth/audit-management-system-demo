@@ -257,6 +257,7 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
     t.index ["user_id"], name: "index_electronic_signatures_on_user_id"
   end
 
+  #DELETE
   create_table "login_attempts", force: :cascade do |t|
     t.datetime "attempt_time"
     t.boolean "success"
