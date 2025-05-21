@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "no-reply@sheffield.ac.uk"
+  default from: "mailhost.shef.ac.uk"
   layout "mailer"
 end
