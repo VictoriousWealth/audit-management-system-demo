@@ -47,12 +47,14 @@ class Admin::UsersController < ApplicationController
         c.city        = city
         c.postcode    = postcode
       end
+      company.save
       #Create a new user
       @user = User.new(user_params)
       @user.company_id = company.id if company.present?
+    else 
+      @user = User.new(user_params)
     end
 
-    @user = User.new(user_params)
 
     if @user.save
       # Send the welcome email after user is made

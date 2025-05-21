@@ -10,14 +10,15 @@
           %th.p-3 Date
           %th.p-3 Risk Level
       %tbody
-        - @risk_levels.each do |entry|
-          - if entry[:risk_level] == "High Risk"
-            - risk_class = 'text-bg-danger'
-          - elsif entry[:risk_level] == "Medium Risk"
-            - risk_class = 'text-bg-warning'
-          - else
-            - risk_class = 'text-bg-success'
+        -if @risk_levels.present?
+          - @risk_levels.each do |entry|
+            - if entry[:risk_level] == "High Risk"
+              - risk_class = 'text-bg-danger'
+            - elsif entry[:risk_level] == "Medium Risk"
+              - risk_class = 'text-bg-warning'
+            - else
+              - risk_class = 'text-bg-success'
 
-          %tr
-            %td.p-3= entry[:date] || "N/A"
-            %td.p-3{class: risk_class, data: { bs_toggle: 'tooltip' }, title: entry[:risk_level]}= entry[:risk_level] || "N/A"
+            %tr
+              %td.p-3= entry[:date] || "N/A"
+              %td.p-3{class: risk_class, data: { bs_toggle: 'tooltip' }, title: entry[:risk_level]}= entry[:risk_level] || "N/A"
