@@ -58,8 +58,7 @@ class Admin::UsersController < ApplicationController
 
     if @user.save
       # Send the welcome email after user is made
-      token = @user.send_reset_password_instructions
-      UserMailer.welcome_email(@user,token).deliver_now
+      UserMailer.welcome_email(@user).deliver_now
       redirect_to admin_users_path, notice: 'User created successfully.'
     else
       #If the user is not saved, alert the user
