@@ -1,7 +1,7 @@
 # Handles emails for welcome messages and account set up instructions
 class UserMailer < ApplicationMailer
   # Sets the default from address for all mail sent by this mailer
-  default from: 'no-reply@GTIMC.com'
+  default from: 'mailhost.shef.ac.uk'
 
   # Sends a welcome email to a new user, including a reset password link.
   #

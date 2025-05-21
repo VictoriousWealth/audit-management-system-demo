@@ -2,7 +2,7 @@
 class AuditMailer < ApplicationMailer
 
   # Sets the default from address for all mail sent by this mailer
-  default from: 'no-reply@GTIMC.com'
+  default from: 'mailhost.shef.ac.uk'
 
   # Sends an email notifying a user that they have been assigned to an audit
   #
