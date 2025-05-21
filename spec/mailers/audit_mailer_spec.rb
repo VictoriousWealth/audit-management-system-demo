@@ -9,8 +9,8 @@ require "rails_helper"
 RSpec.describe AuditMailer, type: :mailer do
 
   describe "notify_assignment" do
-    let(:auditor) { create(:user, :auditor) }
-    let(:qa_manager) { create(:user, :qa_manager) }
+    let(:auditor) { create(:user, :auditor, email: "auditor@test.com") }
+    let(:qa_manager) { create(:user, :qa_manager, email: "qa@test.com") }
 
 
     let(:company) { create(:company) }
@@ -29,7 +29,7 @@ RSpec.describe AuditMailer, type: :mailer do
     end
 
     it "has the correct sender email" do
-      expect(mail.from).to eq(["no-reply@GTIMC.com"])
+      expect(mail.from).to eq(["mailhost.shef.ac.uk"])
     end
 
     it "includes the user's first name in the body" do
@@ -67,7 +67,7 @@ RSpec.describe AuditMailer, type: :mailer do
     end
 
     it "has the correct sender email" do
-      expect(mail.from).to eq(["no-reply@GTIMC.com"])
+      expect(mail.from).to eq(["mailhost.shef.ac.uk"])
     end
 
     it "includes the user's first name in the body" do
