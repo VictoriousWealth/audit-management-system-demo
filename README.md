@@ -63,3 +63,4 @@ and in a second terminal or tab
 bin/shakapacker-dev-server
 ```
 to start up the application. You can now visit http://localhost:3000 to see your application running.
+
