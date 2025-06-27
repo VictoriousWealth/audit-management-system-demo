@@ -72,9 +72,6 @@ gem 'daemons'
 
 gem 'sanitize_email'
 
-gem 'sentry-ruby'
-gem 'sentry-rails'
-
 gem 'hotwire-rails'
 
 group :development do

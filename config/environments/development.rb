@@ -77,7 +77,7 @@ Rails.application.configure do
   # - -
   
   
-  config.action_mailer.default_url_options = { host: "localhost:3000" }
+  config.action_mailer.default_url_options = { host: "13.40.2.116", port: 4000 }
   # Set the delivery method to :smtp (for sending real emails)
   config.action_mailer.delivery_method = :smtp
 
@@ -98,4 +98,7 @@ Rails.application.configure do
 
   # Make sure we know about it if params haven't been whitelisted
   config.action_controller.action_on_unpermitted_parameters = :raise
+  
+
+  config.hosts << "13.40.2.116"
 end

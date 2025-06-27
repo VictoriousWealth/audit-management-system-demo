@@ -59,3 +59,15 @@ yarn-debug.log*
 
 # ignore mailmap used for git log, shortlog, and alike 
 .mailmap
+/config/credentials/production.key
+
+
+bin/bundle
+bin/yarn
+
+
+config/credentials/*.key
+/vendor/bundle_dev/
+/config/master.key
+/vendor/bundle_dev/
+config/credentials/production.yml.enc

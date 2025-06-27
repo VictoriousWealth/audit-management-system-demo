@@ -27,20 +27,26 @@ module ApplicationHelper
     Kramdown::Document.new(text).to_html
   end
 
+
   def cell_color(risk, value, max_value)
     base_colors = {
       "Low Risk" => [120, 60],    # Green
-      "Medium Risk" => [39, 100],  # Orange
-      "High Risk" => [0, 100]      # Red
+      "Medium Risk" => [39, 100], # Orange
+      "High Risk" => [0, 100]     # Red
     }
 
     hue, saturation = base_colors[risk]
-    base_lightness = 75 # was 90 before — makes initial green less bright
+    base_lightness = 75
     lightness_range = 45
 
-    lightness = base_lightness - ((value.to_f / max_value) * lightness_range).clamp(0, lightness_range)
+    # Avoid division by zero
+    safe_max = max_value.to_f
+    normalized = safe_max.positive? ? (value.to_f / safe_max).clamp(0, 1) : 0
+
+    lightness = base_lightness - (normalized * lightness_range)
     "hsl(#{hue}, #{saturation}%, #{lightness.round}%)"
   end
+
 
   def in_company_mode?
     controller_name == 'company_mode' && action_name == 'company_mode'

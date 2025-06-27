@@ -47,7 +47,7 @@ body, ul {
 
 // needs to change -- RESOLVED (TBC)
 // i removed .view-btn and link-btn from the list as i couldnt find it's use
-.form-actions>button, .login-container .form-group>button, .special-button>button, #profile_button button, .special-update-btn>.update-btn{
+.form-actions>button, .login-container .form-group>button, .special_bottom_button, .special-button>button, #profile_button button, .special-update-btn>.update-btn{
     background-color: #328166;
     color: white;
     border: none;
@@ -214,7 +214,7 @@ body>.navbar {
 
 }
 
-.bottom_button, link-btn {
+.bottom_button, .special_bottom_button, link-btn {
     width: 100%;
     padding: 10px;
     justify-content: center;
@@ -819,4 +819,25 @@ main.view-supporting-documents > .main-container > .back-link  {
 
 .bg-alice-blue {
     background-color: aliceblue;
+}
+
+
+.login-page-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+}
+
+.login-divider {
+  width: 2px;
+  background-color: #000000;
+  height: auto;
+  min-height: 200px;
+  margin: 0 20px;
+}
+
+.min-w-fit-content {
+  min-width: fit-content;
 }

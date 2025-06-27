@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 202503309183408) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_05_195401) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,8 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
     t.datetime "updated_at", null: false
     t.bigint "audit_id", null: false
     t.bigint "assigned_by"
+    t.index ["audit_id"], name: "index_audit_assignments_on_audit_id"
+    t.index ["user_id"], name: "index_audit_assignments_on_user_id"
   end
 
   create_table "audit_closure_letters", force: :cascade do |t|
@@ -257,7 +259,6 @@ ActiveRecord::Schema[7.0].define(version: 202503309183408) do
     t.index ["user_id"], name: "index_electronic_signatures_on_user_id"
   end
 
-  #DELETE
   create_table "login_attempts", force: :cascade do |t|
     t.datetime "attempt_time"
     t.boolean "success"

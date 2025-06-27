@@ -1,22 +1,40 @@
-<%# The log in page %>
-<div class = "login-container">
-  <%= image_pack_tag 'images/GTIMC Logo.png', alt: 'Logo', class: 'logo2' %>
-  <h2>Log in</h2>
-  <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <div class="form-inputs">
-      <%= f.input :email,
-                  required: false,
-                  autofocus: true,
-                  input_html: { autocomplete: "email" } %>
-      <%= f.input :password,
-                  required: false,
-                  input_html: { autocomplete: "current-password" } %>
-    </div>
+<div class="login-page-container align-items-stretch">
 
-    <div class="form-group">
-      <button type="submit" class="bottom_button">Login</button>
-    </div>
+  <div class="login-container m-3 me-4 min-w-fit-content">
+    <%= image_pack_tag 'images/GTIMC Logo.png', alt: 'Logo', class: 'logo2' %>
+    <h2 class="mt-3">Quick Login:</h2>
+    <div class="quick-login-buttons">
+      <% quick_logins = [
+        { role: "Senior Manager", email: "jane@sheffield.ac.uk" },
+        { role: "QA Manager", email: "nina@sheffield.ac.uk" },
+        { role: "Auditor", email: "bob@sheffield.ac.uk" },
+        { role: "Auditee", email: "alex@sheffield.ac.uk" },
+        { role: "SME", email: "mark@sheffield.ac.uk" }
+      ] %>
 
-  <% end %>
-  <%= render "devise/shared/links" %> 
+      <% quick_logins.each do |login| %>
+        <%= button_to "Login as #{login[:role]}", session_path(resource_name), method: :post, params: { user: { email: login[:email], password: 'Password1234' } }, class: "special_bottom_button" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="login-divider m-3 ms-5 me-5"></div>
+
+  <div class="login-container m-3 ms-4 min-w-fit-content">
+    <%= image_pack_tag 'images/GTIMC Logo.png', alt: 'Logo', class: 'logo2' %>
+    <h2 class="mt-3">Manual Login:</h2>
+    <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="form-inputs">
+        <%= f.input :email, required: false, autofocus: true, input_html: { autocomplete: "email" } %>
+        <%= f.input :password, required: false, input_html: { autocomplete: "current-password" } %>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="bottom_button">Login</button>
+      </div>
+      
+    <% end %>
+    <%= render "devise/shared/links" %>
+  </div>
+
 </div>
