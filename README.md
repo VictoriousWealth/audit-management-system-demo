@@ -1,4 +1,16 @@
-# README
+# CHECK OUT DEMO HERE!
+To view a publicly available demo, go to this link: https://audit-management-system-demo.nick-efe-oni.dev/
+
+To log in as different users, here are the details:
+- username: "jane@sheffield.ac.uk", password: "Password1234" (senior manager).
+- username: "nina@sheffield.ac.uk", password: "Password1234" (QA manager).
+- username: "alex@sheffield.ac.uk", password: "Password1234" (auditee).
+- username: "bob@sheffield.ac.uk", password: "Password1234" (auditor).
+- username: "mark@sheffield.ac.uk", password: "Password1234" (subject matter expert).
+
+**Note: Check the menu bar and bell icons to view the different pages (some will not work, as expected, due to this demo being a part of the larger actual system).
+
+---
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
