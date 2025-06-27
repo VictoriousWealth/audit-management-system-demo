@@ -1,5 +1,3 @@
-# README
-
 ---
 
 # CHECK OUT DEMO HERE!
