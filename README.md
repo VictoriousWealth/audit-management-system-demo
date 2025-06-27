@@ -1,5 +1,3 @@
----
-
 # CHECK OUT DEMO HERE!
 To view a publicly available demo, go to this link: https://audit-management-system-demo.nick-efe-oni.dev/
 
